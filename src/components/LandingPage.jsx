@@ -1,0 +1,314 @@
+import { useState, useEffect, useRef } from 'react'
+import './LandingPage.css'
+
+const integrations = [
+  { name: 'Zoom', logo: <svg viewBox="0 0 24 24" fill="currentColor" className="integration-logo"><path d="M4.58 4.58C2.33 6.84 2.33 10.46 2.33 17.69v.63c0 1.1.89 1.99 1.99 1.99h.63c7.23 0 10.84 0 13.1-2.26 2.26-2.26 2.26-5.87 2.26-13.1v-.63c0-1.1-.89-1.99-1.99-1.99h-.63c-7.23 0-10.84 0-13.1 2.26z"/></svg> },
+  { name: 'Teams', logo: <svg viewBox="0 0 24 24" fill="currentColor" className="integration-logo"><path d="M20 7h-4V4c0-.55-.45-1-1-1H9c-.55 0-1 .45-1 1v3H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h16c.55 0 1-.45 1-1V8c0-.55-.45-1-1-1zM9 4h6v3H9V4zm10 13H5V8h14v9z"/><circle cx="17" cy="5" r="2.5"/></svg> },
+  { name: 'Google Meet', logo: <svg viewBox="0 0 24 24" fill="currentColor" className="integration-logo"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> },
+  { name: 'Discord', logo: <svg viewBox="0 0 24 24" fill="currentColor" className="integration-logo"><path d="M20.32 4.37a19.8 19.8 0 00-4.89-1.52.07.07 0 00-.08.04c-.21.37-.44.86-.61 1.25a18.27 18.27 0 00-5.49 0 12.64 12.64 0 00-.62-1.25.08.08 0 00-.08-.04 19.74 19.74 0 00-4.89 1.52.07.07 0 00-.03.03C.53 9.05-.32 13.58.1 18.06a.08.08 0 00.03.05 19.9 19.9 0 005.99 3.03.08.08 0 00.08-.03c.46-.63.87-1.3 1.23-1.99a.08.08 0 00-.04-.11 13.11 13.11 0 01-1.87-.89.08.08 0 01-.01-.13c.13-.1.25-.2.37-.29a.07.07 0 01.08-.01c3.93 1.79 8.18 1.79 12.06 0a.07.07 0 01.08.01c.12.1.25.2.37.29a.08.08 0 01-.01.13c-.6.35-1.22.65-1.87.89a.08.08 0 00-.04.11c.36.7.77 1.36 1.23 1.99a.08.08 0 00.08.03 19.84 19.84 0 006-3.03.08.08 0 00.03-.05c.5-5.18-.84-9.67-3.55-13.66a.06.06 0 00-.03-.03zM8.02 15.33c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.96 2.42-2.16 2.42zm7.97 0c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.95 2.42-2.16 2.42z"/></svg> },
+  { name: 'Slack', logo: <svg viewBox="0 0 24 24" fill="currentColor" className="integration-logo"><path d="M5.04 15.17a2.53 2.53 0 01-2.52 2.52A2.53 2.53 0 010 15.17a2.53 2.53 0 012.52-2.52h2.52v2.52zm1.27 0a2.53 2.53 0 012.52-2.52 2.53 2.53 0 012.52 2.52v6.31A2.53 2.53 0 018.83 24a2.53 2.53 0 01-2.52-2.52v-6.31zM8.83 5.04a2.53 2.53 0 01-2.52-2.52A2.53 2.53 0 018.83 0a2.53 2.53 0 012.52 2.52v2.52H8.83zm0 1.27a2.53 2.53 0 012.52 2.52 2.53 2.53 0 01-2.52 2.52H2.52A2.53 2.53 0 010 8.83a2.53 2.53 0 012.52-2.52h6.31zm10.13 2.52a2.53 2.53 0 012.52-2.52A2.53 2.53 0 0124 8.83a2.53 2.53 0 01-2.52 2.52h-2.52V8.83zm-1.27 0a2.53 2.53 0 01-2.52 2.52 2.53 2.53 0 01-2.52-2.52V2.52A2.53 2.53 0 0115.17 0a2.53 2.53 0 012.52 2.52v6.31zm-2.52 10.13a2.53 2.53 0 012.52 2.52A2.53 2.53 0 0115.17 24a2.53 2.53 0 01-2.52-2.52v-2.52h2.52zm0-1.27a2.53 2.53 0 01-2.52-2.52 2.53 2.53 0 012.52-2.52h6.31A2.53 2.53 0 0124 15.17a2.53 2.53 0 01-2.52 2.52h-6.31z"/></svg> },
+  { name: 'Skype', logo: <svg viewBox="0 0 24 24" fill="currentColor" className="integration-logo"><path d="M12.07 18.87c-4.02 0-5.82-1.98-5.82-3.46 0-.77.56-1.3 1.33-1.3 1.72 0 1.27 2.48 4.49 2.48 1.64 0 2.55-.9 2.55-1.81 0-.55-.27-1.16-1.35-1.43l-3.58-.9c-2.88-.72-3.4-2.28-3.4-3.75 0-3.05 2.86-4.19 5.55-4.19 2.47 0 5.39 1.37 5.39 3.2 0 .78-.69 1.24-1.45 1.24-1.47 0-1.2-2.04-4.16-2.04-1.47 0-2.3.66-2.3 1.62s1.15 1.26 2.16 1.49l2.64.59c2.89.65 3.62 2.35 3.62 3.94 0 2.48-1.9 4.32-5.72 4.32z"/></svg> },
+  { name: 'WebEx', logo: <svg viewBox="0 0 24 24" fill="currentColor" className="integration-logo"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> },
+  { name: 'FaceTime', logo: <svg viewBox="0 0 24 24" fill="currentColor" className="integration-logo"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg> },
+]
+
+const faqs = [
+  { question: 'Is Acira safe to use?', answer: 'Absolutely. Acira operates with minimal system permissions and only makes changes necessary to fix detected issues. All actions are logged. We never access your personal data.' },
+  { question: 'Does Acira change my system settings?', answer: 'Acira only modifies settings directly related to audio/video functionality. It never makes unnecessary changes and works within safe parameters.' },
+  { question: 'Which operating systems are supported?', answer: 'We\'re launching first on Windows 10/11 and macOS. Linux support is planned for a future release.' },
+  { question: 'When will I get access?', answer: 'We\'re rolling out access in waves starting Q1 2025. Join the waitlist to secure your spot—early supporters get priority access.' },
+  { question: 'Is there a free version?', answer: 'Yes! We\'ll offer a free tier with basic diagnostics and fixes. Premium features will be available in paid plans.' },
+  { question: 'How does Acira detect issues?', answer: 'Acira uses intelligent system monitoring to detect when your mic, camera, or audio stops working and applies proven fixes automatically.' }
+]
+
+const problems = [
+  { title: 'Mic Not Detected', description: 'Your meeting starts and suddenly your mic disappears from the app.', iconType: 'mic' },
+  { title: 'Camera Issues', description: 'Black screen or frozen video right when you need to present.', iconType: 'camera' },
+  { title: 'Audio Glitches', description: 'Crackling, echoes, or complete audio dropouts mid-conversation.', iconType: 'audio' },
+  { title: 'Permission Chaos', description: 'Apps have access but devices still don\'t work properly.', iconType: 'settings' },
+  { title: 'Restart Roulette', description: 'Constantly restarting apps and devices hoping it\'ll fix itself.', iconType: 'refresh' },
+  { title: 'Wasted Time', description: 'Minutes turning into hours troubleshooting instead of working.', iconType: 'clock' }
+]
+
+const ProblemIcon = ({ type }) => {
+  const icons = {
+    mic: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/><line x1="4" y1="4" x2="20" y2="20" stroke="#ef4444" strokeWidth="2"/></svg>,
+    camera: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/><line x1="2" y1="2" x2="22" y2="22" stroke="#ef4444" strokeWidth="2"/></svg>,
+    audio: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="#ef4444"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14" stroke="#ef4444" strokeDasharray="2 2"/></svg>,
+    settings: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>,
+    refresh: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>,
+    clock: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+  }
+  return <div className="problem-icon">{icons[type]}</div>
+}
+
+const howItWorks = [
+  { step: '01', title: 'Intelligent Detection', description: 'Acira monitors your system and apps for audio/video issues—detecting problems the moment they occur.', iconType: 'search' },
+  { step: '02', title: 'Root Cause Analysis', description: 'Our AI identifies the exact cause, whether it\'s a driver conflict, permission problem, or app misconfiguration.', iconType: 'brain' },
+  { step: '03', title: 'Autonomous Fix', description: 'Acira automatically applies the right fix—no manual intervention needed. You stay in your meeting.', iconType: 'zap' }
+]
+
+const StepIcon = ({ type }) => {
+  const icons = {
+    search: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>,
+    brain: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/></svg>,
+    zap: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+  }
+  return <div className="step-icon">{icons[type]}</div>
+}
+
+const whyAcira = [
+  { title: 'No Manual Troubleshooting', description: 'Stop Googling error messages. Acira handles everything automatically.', iconType: 'block' },
+  { title: 'Works in Real-Time', description: 'Fixes happen while you\'re in your meeting—not after you\'ve missed the discussion.', iconType: 'zap' },
+  { title: 'Learns Your System', description: 'Acira adapts to your hardware, software, and usage patterns.', iconType: 'brain' },
+  { title: 'Zero Technical Knowledge', description: 'No need to understand drivers or permissions. Just install and forget.', iconType: 'sparkle' }
+]
+
+const WhyIcon = ({ type }) => {
+  const icons = {
+    block: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>,
+    zap: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
+    brain: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/></svg>,
+    sparkle: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3Z"/></svg>
+  }
+  return <div className="why-icon">{icons[type]}</div>
+}
+
+function LandingPage({ onJoinWaitlist }) {
+  const [waitlistCount, setWaitlistCount] = useState(2847)
+  const [activeNavItem, setActiveNavItem] = useState('')
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [openFaq, setOpenFaq] = useState(null)
+  const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' })
+  const [contactSubmitted, setContactSubmitted] = useState(false)
+  const [isDarkMode, setIsDarkMode] = useState(false)
+  
+  const heroRef = useRef(null), featuresRef = useRef(null), faqsRef = useRef(null), contactRef = useRef(null)
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark-mode')
+    } else {
+      document.documentElement.classList.remove('dark-mode')
+    }
+  }, [isDarkMode])
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50)
+      const sections = [{ id: 'features', ref: featuresRef }, { id: 'faqs', ref: faqsRef }, { id: 'contact', ref: contactRef }]
+      for (const section of sections) {
+        if (section.ref.current) {
+          const rect = section.ref.current.getBoundingClientRect()
+          if (rect.top <= 100 && rect.bottom >= 100) { setActiveNavItem(section.id); break }
+        }
+      }
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  useEffect(() => {
+    const interval = setInterval(() => setWaitlistCount(p => p + Math.floor(Math.random() * 3)), 30000)
+    return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add('animate-in') }), { threshold: 0.1, rootMargin: '0px 0px -50px 0px' })
+    document.querySelectorAll('.animate-on-scroll').forEach((el) => observer.observe(el))
+    return () => observer.disconnect()
+  }, [])
+
+  const scrollToSection = (ref) => ref.current?.scrollIntoView({ behavior: 'smooth' })
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
+  const handleContactSubmit = (e) => { e.preventDefault(); setContactSubmitted(true); setTimeout(() => { setContactSubmitted(false); setContactForm({ name: '', email: '', message: '' }) }, 3000) }
+  const toggleTheme = () => setIsDarkMode(!isDarkMode)
+
+  return (
+    <div className="landing-page">
+      <div className="animated-background">
+        <div className="gradient-orb gradient-orb-1"></div>
+        <div className="gradient-orb gradient-orb-2"></div>
+        <div className="gradient-orb gradient-orb-3"></div>
+        <div className="mesh-gradient"></div>
+        <div className="animated-curves">
+          <div className="curve-line"></div>
+          <div className="curve-line"></div>
+          <div className="curve-line"></div>
+        </div>
+      </div>
+
+      <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
+        <div className="nav-container">
+          <a href="#" className="nav-logo" onClick={scrollToTop}>
+            <svg viewBox="0 0 125 154" fill="none" xmlns="http://www.w3.org/2000/svg" className="logo-svg">
+              <path d="M14.2842 49.4305C17.6372 49.8449 20.4444 51.4305 23.2656 53.2254C23.9091 53.6264 24.5529 54.0269 25.1973 54.4265C25.5218 54.6282 25.8463 54.8301 26.1807 55.0379C28.3443 56.3599 30.5586 57.5953 32.7637 58.8445C34.1182 59.663 34.1181 59.6637 35.1104 60.6687C35.2385 62.1134 35.2387 62.1137 35.2451 63.9861C35.2477 64.3269 35.2503 64.6682 35.2529 65.0193C35.258 65.7608 35.2608 66.5024 35.2617 67.2439C35.2635 68.4211 35.2711 69.5981 35.2812 70.7752C35.3087 74.1225 35.3247 77.4698 35.3369 80.8172C35.3448 82.8644 35.3598 84.9116 35.3789 86.9588C35.3847 87.7362 35.3876 88.5143 35.3877 89.2918C35.3881 93.9989 35.425 98.1424 37.9492 102.264C39.4167 103.715 40.9862 104.665 42.7695 105.674C43.1309 105.883 43.4919 106.094 43.8643 106.309C44.6518 106.765 45.4406 107.219 46.2305 107.671C47.6024 108.458 48.9681 109.256 50.333 110.055C51.2741 110.605 52.2159 111.155 53.1572 111.704C53.6081 111.967 54.0589 112.231 54.5234 112.503C55.157 112.87 55.1575 112.87 55.8037 113.245C56.1787 113.463 56.5541 113.681 56.9404 113.906C58.9953 115.006 60.7232 115.021 63.0176 115.033C63.6544 115.04 64.2912 115.047 64.9473 115.054C66.8852 114.937 68.484 114.501 70.335 113.934C70.3927 117.778 70.437 121.622 70.4639 125.467C70.4768 127.252 70.4942 129.038 70.5225 130.824C70.5549 132.882 70.5662 134.94 70.5771 136.998C70.5899 137.631 70.603 138.265 70.6162 138.918C70.6176 143.251 69.9742 146.815 66.9688 150.068C62.8461 153.934 57.9843 154.913 52.6602 152.978C50.5425 151.986 48.5344 150.804 46.5215 149.612C45.863 149.228 45.8622 149.227 45.1904 148.836C42.6889 147.377 40.1969 145.902 37.7109 144.416C34.7249 142.635 31.7127 140.903 28.6914 139.184C24.9994 137.081 21.3271 134.95 17.6846 132.761C15.7752 131.614 13.8542 130.493 11.917 129.395C2.17355 123.857 2.17372 123.856 0.381836 118.457C0.251427 117.228 0.251132 117.227 0.242188 115.918C0.236523 115.419 0.230445 114.919 0.224609 114.405C0.222946 113.592 0.223377 113.591 0.22168 112.762C0.214292 111.898 0.214569 111.898 0.207031 111.017C0.192546 109.114 0.185171 107.211 0.179688 105.307C0.173979 103.982 0.168803 102.657 0.163086 101.332C0.153596 98.9077 0.14754 96.4835 0.144531 94.0594C0.140091 90.5019 0.122526 86.9448 0.09375 83.3875C0.06963 80.2974 0.0622605 77.2071 0.0605469 74.117C0.0575494 72.8071 0.0491874 71.4971 0.0361328 70.1873C0.0191372 68.3507 0.0209198 66.5151 0.0273438 64.6785C0.0182004 64.1414 0.00942045 63.604 0 63.0506C0.0415309 59.246 1.01005 56.6217 3.3584 53.6336C6.70555 50.4526 9.74764 49.5186 14.2842 49.4305ZM57.3154 3.87479C61.4381 0.0089718 66.2998 -0.970463 71.624 0.96463C73.7418 1.95684 75.7507 3.1393 77.7637 4.33084C78.4217 4.71454 78.4221 4.71463 79.0938 5.10623C81.5953 6.56526 84.0872 8.04007 86.5732 9.52615C89.5593 11.3073 92.5715 13.0387 95.5928 14.7576C99.2849 16.8606 102.957 18.9927 106.6 21.1824C108.509 22.3292 110.43 23.4497 112.367 24.5476C122.111 30.0863 122.111 30.0863 123.903 35.4861C124.034 36.7148 124.033 36.715 124.042 38.0242C124.048 38.5235 124.054 39.0234 124.06 39.5379C124.061 40.3508 124.061 40.351 124.062 41.1805C124.07 42.0437 124.071 42.0439 124.078 42.9246C124.093 44.8282 124.099 46.7319 124.104 48.6355C124.11 49.9604 124.116 51.2853 124.122 52.6101C124.132 55.0342 124.137 57.4586 124.14 59.8826C124.144 63.44 124.162 66.9972 124.19 70.5545C124.215 73.6446 124.222 76.7348 124.224 79.825C124.227 81.1349 124.235 82.4448 124.248 83.7547C124.265 85.5913 124.263 87.4278 124.257 89.2644C124.266 89.8013 124.275 90.3382 124.284 90.8914C124.243 94.696 123.274 97.3212 120.926 100.309C117.579 103.49 114.536 104.423 110 104.512C106.647 104.097 103.841 102.512 101.02 100.718C100.376 100.316 99.7314 99.9151 99.0869 99.5154C98.7624 99.3137 98.4379 99.1119 98.1035 98.9041C95.94 97.5821 93.7265 96.3466 91.5215 95.0974C90.1668 94.2789 90.1661 94.2792 89.1738 93.2742C89.0457 91.8294 89.0465 91.8289 89.04 89.9568C89.0374 89.616 89.0349 89.2748 89.0322 88.9236C89.0271 88.1819 89.0234 87.4397 89.0225 86.698C89.0206 85.521 89.013 84.3437 89.0029 83.1668C88.9754 79.8196 88.9605 76.472 88.9482 73.1248C88.9403 71.0775 88.9253 69.0304 88.9062 66.9832C88.9005 66.2059 88.8975 65.4285 88.8975 64.6512C88.897 59.9438 88.8593 55.7996 86.335 51.6775C84.8676 50.227 83.2987 49.2765 81.5156 48.2683C81.1542 48.0588 80.7923 47.8494 80.4199 47.6336C79.6324 47.1777 78.8436 46.724 78.0537 46.2722C76.6818 45.485 75.3161 44.6872 73.9512 43.8875C73.0101 43.3377 72.0692 42.7874 71.1279 42.2381C70.6768 41.9744 70.2255 41.7109 69.7607 41.4392C69.1271 41.072 69.127 41.0717 68.4805 40.6971C68.1055 40.479 67.7301 40.2615 67.3438 40.0369C65.289 38.9368 63.5618 38.9205 61.2676 38.909C60.6306 38.9018 59.9932 38.8948 59.3369 38.8875C57.3989 39.0047 55.8002 39.4416 53.9492 40.0086C53.8915 36.1644 53.8471 32.3199 53.8203 28.4754C53.8074 26.6897 53.79 24.9044 53.7617 23.1189C53.7293 21.0607 53.7179 19.0026 53.707 16.9441C53.6942 16.3106 53.6812 15.6769 53.668 15.0242C53.6666 10.6909 54.3102 7.12782 57.3154 3.87479Z" fill="url(#paint0_linear_7_20)"/>
+              <defs>
+                <linearGradient id="paint0_linear_7_20" x1="120" y1="21.9996" x2="-11.5" y2="125.5" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#35F2FF"/>
+                  <stop offset="0.432692" stopColor="#578BFB"/>
+                  <stop offset="0.6875" stopColor="#0051FF"/>
+                  <stop offset="1" stopColor="#ED94FF"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <span className="logo-text gradient-text-animated">Acira</span>
+          </a>
+          <div className="nav-links">
+            <a href="#features" className={activeNavItem === 'features' ? 'active' : ''} onClick={(e) => { e.preventDefault(); scrollToSection(featuresRef) }}>Features</a>
+            <a href="#faqs" className={activeNavItem === 'faqs' ? 'active' : ''} onClick={(e) => { e.preventDefault(); scrollToSection(faqsRef) }}>FAQs</a>
+            <a href="#contact" className={activeNavItem === 'contact' ? 'active' : ''} onClick={(e) => { e.preventDefault(); scrollToSection(contactRef) }}>Contact Us</a>
+          </div>
+          <div className="nav-actions">
+            <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
+              {isDarkMode ? (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="theme-icon sun-icon">
+                  <circle cx="12" cy="12" r="4"/>
+                  <path d="M12 2v2"/>
+                  <path d="M12 20v2"/>
+                  <path d="m4.93 4.93 1.41 1.41"/>
+                  <path d="m17.66 17.66 1.41 1.41"/>
+                  <path d="M2 12h2"/>
+                  <path d="M20 12h2"/>
+                  <path d="m6.34 17.66-1.41 1.41"/>
+                  <path d="m19.07 4.93-1.41 1.41"/>
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="theme-icon moon-icon">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+              )}
+            </button>
+            <button className="nav-cta" onClick={onJoinWaitlist}>Join Now</button>
+          </div>
+        </div>
+      </nav>
+
+      <section className="hero" ref={heroRef}>
+        <div className="hero-container">
+          <div className="hero-left animate-on-scroll">
+            <div className="hero-badge"><span className="badge-dot"></span><span>Now accepting early access requests</span></div>
+            <h1 className="hero-title">Never miss a meeting because of<span className="gradient-text-animated"> tech issues</span> again</h1>
+            <p className="hero-description">Acira automatically detects and fixes mic, camera, and audio problems in real-time—so you can focus on what matters.</p>
+            <div className="hero-cta">
+              <button className="btn-primary" onClick={onJoinWaitlist}>
+                Join Now
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
+              <div className="waitlist-count"><span className="count-number">{waitlistCount.toLocaleString()}</span><span className="count-label">people waiting</span></div>
+            </div>
+          </div>
+          <div className="hero-right animate-on-scroll">
+            <div className="dashboard-preview">
+              <div className="dashboard-window">
+                <div className="window-chrome">
+                  <div className="window-buttons"><span className="btn-close"></span><span className="btn-minimize"></span><span className="btn-maximize"></span></div>
+                  <div className="window-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span>Acira</span></div>
+                  <div className="window-actions"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></div>
+                </div>
+                <div className="dashboard-content">
+                  <div className="dashboard-header"><div className="dashboard-status"><div className="status-indicator online"></div><span>System Health</span></div><span className="dashboard-live">Live</span></div>
+                  <div className="device-list">
+                    <div className="device-item healthy"><div className="device-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg></div><div className="device-info"><span className="device-name">Microphone</span><span className="device-detail">MacBook Pro Microphone</span></div><div className="device-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+                    <div className="device-item fixing"><div className="device-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg></div><div className="device-info"><span className="device-name">Camera</span><span className="device-detail fixing-detail">Fixing driver conflict...</span></div><div className="device-spinner"></div><div className="fixing-bar"><div className="fixing-progress"></div></div></div>
+                    <div className="device-item healthy"><div className="device-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg></div><div className="device-info"><span className="device-name">Audio Output</span><span className="device-detail">External Speakers</span></div><div className="device-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+                  </div>
+                  <div className="dashboard-log"><span className="log-time">2s ago</span><span className="log-text">Detected camera driver conflict</span></div>
+                </div>
+              </div>
+              <div className="float-notif"><div className="notif-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg></div><div><span className="notif-title">Issue Fixed</span><span className="notif-text">Camera is now working</span></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="integrations">
+        <div className="container">
+          <p className="integrations-label animate-on-scroll">Works with your favorite apps</p>
+          <div className="integrations-track"><div className="integrations-slide">{[...integrations, ...integrations].map((i, idx) => <div key={idx} className="integration-item">{i.logo}<span className="integration-name">{i.name}</span></div>)}</div></div>
+        </div>
+      </section>
+
+      <section className="problems">
+        <div className="container">
+          <div className="section-header animate-on-scroll"><span className="section-label gradient-text-animated">The Problem</span><h2 className="gradient-text-animated">Sound familiar?</h2><p>These issues cost professionals hours every week.</p></div>
+          <div className="problems-grid">{problems.map((p, i) => <div key={i} className="problem-card animate-on-scroll" style={{ animationDelay: `${i * 0.1}s` }}><ProblemIcon type={p.iconType} /><h4>{p.title}</h4><p>{p.description}</p></div>)}</div>
+        </div>
+      </section>
+
+      <section className="how-it-works" ref={featuresRef} id="features">
+        <div className="container">
+          <div className="section-header animate-on-scroll"><span className="section-label gradient-text-animated">How Acira Works</span><h2 className="gradient-text-animated">Intelligent fixes, zero effort</h2><p>Three steps to stress-free meetings</p></div>
+          <div className="steps-container">{howItWorks.map((s, i) => <div key={i} className="step-card animate-on-scroll" style={{ animationDelay: `${i * 0.15}s` }}><div className="step-number">{s.step}</div><StepIcon type={s.iconType} /><h3>{s.title}</h3><p>{s.description}</p></div>)}</div>
+        </div>
+      </section>
+
+      <section className="why-acira">
+        <div className="container">
+          <div className="section-header animate-on-scroll"><span className="section-label gradient-text-animated">Why Acira</span><h2 className="gradient-text-animated">What makes us different</h2><p>No one else does what we do</p></div>
+          <div className="why-grid">{whyAcira.map((w, i) => <div key={i} className="why-card animate-on-scroll" style={{ animationDelay: `${i * 0.1}s` }}><WhyIcon type={w.iconType} /><div><h4>{w.title}</h4><p>{w.description}</p></div></div>)}</div>
+        </div>
+      </section>
+
+      <section className="starting-scope">
+        <div className="container">
+          <div className="scope-content animate-on-scroll">
+            <div className="scope-text">
+              <span className="section-label gradient-text-animated">Our Vision</span>
+              <h2 className="gradient-text-animated">Starting with audio & video. Building toward everything.</h2>
+              <p>We're launching with mic, camera, and audio fixes—the issues that disrupt your most important moments. But our vision goes far beyond that.</p>
+              <p>Acira is built to become your complete system health companion—automatically detecting and resolving issues across your entire computer.</p>
+              <ul className="scope-list"><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>Audio & video device management</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>App-specific troubleshooting</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>System performance optimization</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>Proactive issue prevention</li></ul>
+            </div>
+            <div className="scope-visual"><div className="scope-circles"><div className="scope-ring scope-ring-3"><span>System</span></div><div className="scope-ring scope-ring-2"><span>Apps</span></div><div className="scope-ring scope-ring-1"><span>Audio/Video</span></div></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section className="extra-cta">
+        <div className="container"><div className="cta-card animate-on-scroll"><h2 className="gradient-text-animated">Ready to fix your tech problems forever?</h2><p>Join thousands of professionals who are tired of troubleshooting.</p><button className="btn-primary btn-large" onClick={onJoinWaitlist}>Join Now<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div></div>
+      </section>
+
+      <section className="faqs" ref={faqsRef} id="faqs">
+        <div className="container">
+          <div className="section-header animate-on-scroll"><span className="section-label gradient-text-animated">FAQs</span><h2 className="gradient-text-animated">Common questions</h2><p>Everything you need to know about Acira</p></div>
+          <div className="faq-list">{faqs.map((f, i) => <div key={i} className={`faq-item animate-on-scroll ${openFaq === i ? 'open' : ''}`} style={{ animationDelay: `${i * 0.05}s` }} onClick={() => setOpenFaq(openFaq === i ? null : i)}><button className="faq-question"><span>{f.question}</span><svg className="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg></button><div className="faq-answer"><p>{f.answer}</p></div></div>)}</div>
+        </div>
+      </section>
+
+      <section className="contact" ref={contactRef} id="contact">
+        <div className="container">
+          <div className="contact-wrapper">
+            <div className="contact-info animate-on-scroll"><span className="section-label gradient-text-animated">Contact Us</span><h2 className="gradient-text-animated">Have questions? Let's talk.</h2><p>We'd love to hear from you. Whether you have a question about features, pricing, or anything else.</p><div className="contact-email"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg><span>hello@acira.ai</span></div></div>
+            <div className="contact-form-wrapper animate-on-scroll">{contactSubmitted ? <div className="contact-success"><div className="success-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg></div><h3>Message sent!</h3><p>We'll get back to you soon.</p></div> : <form className="contact-form" onSubmit={handleContactSubmit}><div className="form-group"><label>Name</label><input type="text" value={contactForm.name} onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })} required placeholder="Your name"/></div><div className="form-group"><label>Email</label><input type="email" value={contactForm.email} onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })} required placeholder="you@example.com"/></div><div className="form-group"><label>Message</label><textarea value={contactForm.message} onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })} required placeholder="How can we help?" rows="4"/></div><button type="submit" className="btn-primary">Send Message</button></form>}</div>
+          </div>
+        </div>
+      </section>
+
+      <footer className="footer">
+        <div className="container">
+          <div className="footer-content">
+            <div className="footer-brand"><a href="#" className="nav-logo" onClick={scrollToTop}>
+              <svg viewBox="0 0 125 154" fill="none" xmlns="http://www.w3.org/2000/svg" className="logo-svg">
+                <path d="M14.2842 49.4305C17.6372 49.8449 20.4444 51.4305 23.2656 53.2254C23.9091 53.6264 24.5529 54.0269 25.1973 54.4265C25.5218 54.6282 25.8463 54.8301 26.1807 55.0379C28.3443 56.3599 30.5586 57.5953 32.7637 58.8445C34.1182 59.663 34.1181 59.6637 35.1104 60.6687C35.2385 62.1134 35.2387 62.1137 35.2451 63.9861C35.2477 64.3269 35.2503 64.6682 35.2529 65.0193C35.258 65.7608 35.2608 66.5024 35.2617 67.2439C35.2635 68.4211 35.2711 69.5981 35.2812 70.7752C35.3087 74.1225 35.3247 77.4698 35.3369 80.8172C35.3448 82.8644 35.3598 84.9116 35.3789 86.9588C35.3847 87.7362 35.3876 88.5143 35.3877 89.2918C35.3881 93.9989 35.425 98.1424 37.9492 102.264C39.4167 103.715 40.9862 104.665 42.7695 105.674C43.1309 105.883 43.4919 106.094 43.8643 106.309C44.6518 106.765 45.4406 107.219 46.2305 107.671C47.6024 108.458 48.9681 109.256 50.333 110.055C51.2741 110.605 52.2159 111.155 53.1572 111.704C53.6081 111.967 54.0589 112.231 54.5234 112.503C55.157 112.87 55.1575 112.87 55.8037 113.245C56.1787 113.463 56.5541 113.681 56.9404 113.906C58.9953 115.006 60.7232 115.021 63.0176 115.033C63.6544 115.04 64.2912 115.047 64.9473 115.054C66.8852 114.937 68.484 114.501 70.335 113.934C70.3927 117.778 70.437 121.622 70.4639 125.467C70.4768 127.252 70.4942 129.038 70.5225 130.824C70.5549 132.882 70.5662 134.94 70.5771 136.998C70.5899 137.631 70.603 138.265 70.6162 138.918C70.6176 143.251 69.9742 146.815 66.9688 150.068C62.8461 153.934 57.9843 154.913 52.6602 152.978C50.5425 151.986 48.5344 150.804 46.5215 149.612C45.863 149.228 45.8622 149.227 45.1904 148.836C42.6889 147.377 40.1969 145.902 37.7109 144.416C34.7249 142.635 31.7127 140.903 28.6914 139.184C24.9994 137.081 21.3271 134.95 17.6846 132.761C15.7752 131.614 13.8542 130.493 11.917 129.395C2.17355 123.857 2.17372 123.856 0.381836 118.457C0.251427 117.228 0.251132 117.227 0.242188 115.918C0.236523 115.419 0.230445 114.919 0.224609 114.405C0.222946 113.592 0.223377 113.591 0.22168 112.762C0.214292 111.898 0.214569 111.898 0.207031 111.017C0.192546 109.114 0.185171 107.211 0.179688 105.307C0.173979 103.982 0.168803 102.657 0.163086 101.332C0.153596 98.9077 0.14754 96.4835 0.144531 94.0594C0.140091 90.5019 0.122526 86.9448 0.09375 83.3875C0.06963 80.2974 0.0622605 77.2071 0.0605469 74.117C0.0575494 72.8071 0.0491874 71.4971 0.0361328 70.1873C0.0191372 68.3507 0.0209198 66.5151 0.0273438 64.6785C0.0182004 64.1414 0.00942045 63.604 0 63.0506C0.0415309 59.246 1.01005 56.6217 3.3584 53.6336C6.70555 50.4526 9.74764 49.5186 14.2842 49.4305ZM57.3154 3.87479C61.4381 0.0089718 66.2998 -0.970463 71.624 0.96463C73.7418 1.95684 75.7507 3.1393 77.7637 4.33084C78.4217 4.71454 78.4221 4.71463 79.0938 5.10623C81.5953 6.56526 84.0872 8.04007 86.5732 9.52615C89.5593 11.3073 92.5715 13.0387 95.5928 14.7576C99.2849 16.8606 102.957 18.9927 106.6 21.1824C108.509 22.3292 110.43 23.4497 112.367 24.5476C122.111 30.0863 122.111 30.0863 123.903 35.4861C124.034 36.7148 124.033 36.715 124.042 38.0242C124.048 38.5235 124.054 39.0234 124.06 39.5379C124.061 40.3508 124.061 40.351 124.062 41.1805C124.07 42.0437 124.071 42.0439 124.078 42.9246C124.093 44.8282 124.099 46.7319 124.104 48.6355C124.11 49.9604 124.116 51.2853 124.122 52.6101C124.132 55.0342 124.137 57.4586 124.14 59.8826C124.144 63.44 124.162 66.9972 124.19 70.5545C124.215 73.6446 124.222 76.7348 124.224 79.825C124.227 81.1349 124.235 82.4448 124.248 83.7547C124.265 85.5913 124.263 87.4278 124.257 89.2644C124.266 89.8013 124.275 90.3382 124.284 90.8914C124.243 94.696 123.274 97.3212 120.926 100.309C117.579 103.49 114.536 104.423 110 104.512C106.647 104.097 103.841 102.512 101.02 100.718C100.376 100.316 99.7314 99.9151 99.0869 99.5154C98.7624 99.3137 98.4379 99.1119 98.1035 98.9041C95.94 97.5821 93.7265 96.3466 91.5215 95.0974C90.1668 94.2789 90.1661 94.2792 89.1738 93.2742C89.0457 91.8294 89.0465 91.8289 89.04 89.9568C89.0374 89.616 89.0349 89.2748 89.0322 88.9236C89.0271 88.1819 89.0234 87.4397 89.0225 86.698C89.0206 85.521 89.013 84.3437 89.0029 83.1668C88.9754 79.8196 88.9605 76.472 88.9482 73.1248C88.9403 71.0775 88.9253 69.0304 88.9062 66.9832C88.9005 66.2059 88.8975 65.4285 88.8975 64.6512C88.897 59.9438 88.8593 55.7996 86.335 51.6775C84.8676 50.227 83.2987 49.2765 81.5156 48.2683C81.1542 48.0588 80.7923 47.8494 80.4199 47.6336C79.6324 47.1777 78.8436 46.724 78.0537 46.2722C76.6818 45.485 75.3161 44.6872 73.9512 43.8875C73.0101 43.3377 72.0692 42.7874 71.1279 42.2381C70.6768 41.9744 70.2255 41.7109 69.7607 41.4392C69.1271 41.072 69.127 41.0717 68.4805 40.6971C68.1055 40.479 67.7301 40.2615 67.3438 40.0369C65.289 38.9368 63.5618 38.9205 61.2676 38.909C60.6306 38.9018 59.9932 38.8948 59.3369 38.8875C57.3989 39.0047 55.8002 39.4416 53.9492 40.0086C53.8915 36.1644 53.8471 32.3199 53.8203 28.4754C53.8074 26.6897 53.79 24.9044 53.7617 23.1189C53.7293 21.0607 53.7179 19.0026 53.707 16.9441C53.6942 16.3106 53.6812 15.6769 53.668 15.0242C53.6666 10.6909 54.3102 7.12782 57.3154 3.87479Z" fill="url(#paint0_linear_footer)"/>
+                <defs>
+                  <linearGradient id="paint0_linear_footer" x1="120" y1="21.9996" x2="-11.5" y2="125.5" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#35F2FF"/>
+                    <stop offset="0.432692" stopColor="#578BFB"/>
+                    <stop offset="0.6875" stopColor="#0051FF"/>
+                    <stop offset="1" stopColor="#ED94FF"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+              <span className="logo-text gradient-text-animated">Acira</span>
+            </a><p>Intelligent fixes for your tech problems.</p></div>
+            <div className="footer-links"><div className="footer-column"><h4>Product</h4><a href="#features" onClick={(e) => { e.preventDefault(); scrollToSection(featuresRef) }}>Features</a><a href="#faqs" onClick={(e) => { e.preventDefault(); scrollToSection(faqsRef) }}>FAQs</a><a href="#" onClick={onJoinWaitlist}>Join Now</a></div><div className="footer-column"><h4>Company</h4><a href="#contact" onClick={(e) => { e.preventDefault(); scrollToSection(contactRef) }}>Contact</a><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div></div>
+          </div>
+          <div className="footer-bottom"><p>© 2025 Acira AI. All rights reserved.</p><button className="back-to-top" onClick={scrollToTop}>Back to top<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 15l-6-6-6 6"/></svg></button></div>
+        </div>
+      </footer>
+    </div>
+  )
+}
+
+export default LandingPage
