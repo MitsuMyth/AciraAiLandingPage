@@ -272,7 +272,7 @@ function LandingPage({ onJoinWaitlist }) {
       <section className="faqs" ref={faqsRef} id="faqs">
         <div className="container">
           <div className="section-header animate-on-scroll"><span className="section-label gradient-text-animated">FAQs</span><h2 className="gradient-text-animated">Common questions</h2><p>Everything you need to know about Acira</p></div>
-          <div className="faq-list">{faqs.map((f, i) => <div key={i} className={`faq-item animate-on-scroll ${openFaq === i ? 'open' : ''}`} style={{ animationDelay: `${i * 0.05}s` }} onClick={() => setOpenFaq(openFaq === i ? null : i)}><button className="faq-question"><span>{f.question}</span><svg className="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg></button><div className="faq-answer"><p>{f.answer}</p></div></div>)}</div>
+          <div className="faq-list">{faqs.map((f, i) => <div key={i} className={`faq-item animate-on-scroll ${openFaq === i ? 'open' : ''}`} style={{ animationDelay: `${i * 0.05}s` }}><div className="faq-question" onClick={() => setOpenFaq(openFaq === i ? null : i)}><span>{f.question}</span><svg className="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg></div><div className="faq-answer"><p>{f.answer}</p></div></div>)}</div>
         </div>
       </section>
 
