@@ -13,12 +13,16 @@ const integrations = [
 ]
 
 const faqs = [
-  { question: 'Is Acira safe to use?', answer: 'Absolutely. Acira operates with minimal system permissions and only makes changes necessary to fix detected issues. All actions are logged. We never access your personal data.' },
-  { question: 'Does Acira change my system settings?', answer: 'Acira only modifies settings directly related to audio/video functionality. It never makes unnecessary changes and works within safe parameters.' },
-  { question: 'Which operating systems are supported?', answer: 'We\'re launching first on Windows 10/11 and macOS. Linux support is planned for a future release.' },
-  { question: 'When will I get access?', answer: 'We\'re rolling out access in waves starting Q1 2025. Join the waitlist to secure your spot—early supporters get priority access.' },
-  { question: 'Is there a free version?', answer: 'Yes! We\'ll offer a free tier with basic diagnostics and fixes. Premium features will be available in paid plans.' },
-  { question: 'How does Acira detect issues?', answer: 'Acira uses intelligent system monitoring to detect when your mic, camera, or audio stops working and applies proven fixes automatically.' }
+  { question: 'What does Acira actually do?', answer: 'Acira fixes computer problems for you. You describe the issue in plain language, and Acira analyzes your system and applies the fix automatically. Today, it focuses on audio and video problems.' },
+  { question: 'Is Acira just giving instructions, or does it actually fix things?', answer: 'Acira actually fixes things. It runs a local agent on your computer that applies changes for you instead of telling you what to click or try.' },
+  { question: 'What kinds of problems does Acira support today?', answer: 'Acira currently supports audio and video issues such as microphones, cameras, device routing, and permissions across apps and the system. Broader system fixes are coming next.' },
+  { question: 'Is Acira like a chatbot or Copilot?', answer: 'No. Acira is not a general chat assistant. It analyzes real system and application data, finds the root cause of the problem, and applies the fix automatically through a local agent.' },
+  { question: 'Does Acira run on my computer or in the cloud?', answer: 'Both. Acira uses cloud based analysis to understand the problem and a local agent on your computer to apply the fix safely.' },
+  { question: 'Is it safe to let Acira change my system settings?', answer: 'Yes. Acira only applies targeted fixes related to the problem you describe. For sensitive or critical changes, Acira will ask before proceeding.' },
+  { question: 'What about privacy and my data?', answer: 'Acira only collects the data needed to diagnose and fix the problem you describe. It does not access personal files, messages, or unrelated apps.' },
+  { question: 'Which platforms does Acira support?', answer: 'Acira currently supports Windows. Support for additional platforms is planned.' },
+  { question: 'When can I try Acira?', answer: 'You can join the waitlist to get early access. We will invite users to try Acira as soon as it is available.' },
+  { question: 'Is Acira free?', answer: 'Early access details will be shared with waitlist users.' }
 ]
 
 const problems = [
@@ -126,38 +130,16 @@ function LandingPage({ onJoinWaitlist }) {
 
   return (
     <div className="landing-page">
-      <div className="animated-background">
-        <div className="gradient-orb gradient-orb-1"></div>
-        <div className="gradient-orb gradient-orb-2"></div>
-        <div className="gradient-orb gradient-orb-3"></div>
-        <div className="mesh-gradient"></div>
-        <div className="animated-curves">
-          <div className="curve-line"></div>
-          <div className="curve-line"></div>
-          <div className="curve-line"></div>
-        </div>
-      </div>
-
       <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
-        <div className="nav-container">
+        <div className="nav-container container">
           <a href="#" className="nav-logo" onClick={scrollToTop}>
-            <svg viewBox="0 0 125 154" fill="none" xmlns="http://www.w3.org/2000/svg" className="logo-svg">
-              <path d="M14.2842 49.4305C17.6372 49.8449 20.4444 51.4305 23.2656 53.2254C23.9091 53.6264 24.5529 54.0269 25.1973 54.4265C25.5218 54.6282 25.8463 54.8301 26.1807 55.0379C28.3443 56.3599 30.5586 57.5953 32.7637 58.8445C34.1182 59.663 34.1181 59.6637 35.1104 60.6687C35.2385 62.1134 35.2387 62.1137 35.2451 63.9861C35.2477 64.3269 35.2503 64.6682 35.2529 65.0193C35.258 65.7608 35.2608 66.5024 35.2617 67.2439C35.2635 68.4211 35.2711 69.5981 35.2812 70.7752C35.3087 74.1225 35.3247 77.4698 35.3369 80.8172C35.3448 82.8644 35.3598 84.9116 35.3789 86.9588C35.3847 87.7362 35.3876 88.5143 35.3877 89.2918C35.3881 93.9989 35.425 98.1424 37.9492 102.264C39.4167 103.715 40.9862 104.665 42.7695 105.674C43.1309 105.883 43.4919 106.094 43.8643 106.309C44.6518 106.765 45.4406 107.219 46.2305 107.671C47.6024 108.458 48.9681 109.256 50.333 110.055C51.2741 110.605 52.2159 111.155 53.1572 111.704C53.6081 111.967 54.0589 112.231 54.5234 112.503C55.157 112.87 55.1575 112.87 55.8037 113.245C56.1787 113.463 56.5541 113.681 56.9404 113.906C58.9953 115.006 60.7232 115.021 63.0176 115.033C63.6544 115.04 64.2912 115.047 64.9473 115.054C66.8852 114.937 68.484 114.501 70.335 113.934C70.3927 117.778 70.437 121.622 70.4639 125.467C70.4768 127.252 70.4942 129.038 70.5225 130.824C70.5549 132.882 70.5662 134.94 70.5771 136.998C70.5899 137.631 70.603 138.265 70.6162 138.918C70.6176 143.251 69.9742 146.815 66.9688 150.068C62.8461 153.934 57.9843 154.913 52.6602 152.978C50.5425 151.986 48.5344 150.804 46.5215 149.612C45.863 149.228 45.8622 149.227 45.1904 148.836C42.6889 147.377 40.1969 145.902 37.7109 144.416C34.7249 142.635 31.7127 140.903 28.6914 139.184C24.9994 137.081 21.3271 134.95 17.6846 132.761C15.7752 131.614 13.8542 130.493 11.917 129.395C2.17355 123.857 2.17372 123.856 0.381836 118.457C0.251427 117.228 0.251132 117.227 0.242188 115.918C0.236523 115.419 0.230445 114.919 0.224609 114.405C0.222946 113.592 0.223377 113.591 0.22168 112.762C0.214292 111.898 0.214569 111.898 0.207031 111.017C0.192546 109.114 0.185171 107.211 0.179688 105.307C0.173979 103.982 0.168803 102.657 0.163086 101.332C0.153596 98.9077 0.14754 96.4835 0.144531 94.0594C0.140091 90.5019 0.122526 86.9448 0.09375 83.3875C0.06963 80.2974 0.0622605 77.2071 0.0605469 74.117C0.0575494 72.8071 0.0491874 71.4971 0.0361328 70.1873C0.0191372 68.3507 0.0209198 66.5151 0.0273438 64.6785C0.0182004 64.1414 0.00942045 63.604 0 63.0506C0.0415309 59.246 1.01005 56.6217 3.3584 53.6336C6.70555 50.4526 9.74764 49.5186 14.2842 49.4305ZM57.3154 3.87479C61.4381 0.0089718 66.2998 -0.970463 71.624 0.96463C73.7418 1.95684 75.7507 3.1393 77.7637 4.33084C78.4217 4.71454 78.4221 4.71463 79.0938 5.10623C81.5953 6.56526 84.0872 8.04007 86.5732 9.52615C89.5593 11.3073 92.5715 13.0387 95.5928 14.7576C99.2849 16.8606 102.957 18.9927 106.6 21.1824C108.509 22.3292 110.43 23.4497 112.367 24.5476C122.111 30.0863 122.111 30.0863 123.903 35.4861C124.034 36.7148 124.033 36.715 124.042 38.0242C124.048 38.5235 124.054 39.0234 124.06 39.5379C124.061 40.3508 124.061 40.351 124.062 41.1805C124.07 42.0437 124.071 42.0439 124.078 42.9246C124.093 44.8282 124.099 46.7319 124.104 48.6355C124.11 49.9604 124.116 51.2853 124.122 52.6101C124.132 55.0342 124.137 57.4586 124.14 59.8826C124.144 63.44 124.162 66.9972 124.19 70.5545C124.215 73.6446 124.222 76.7348 124.224 79.825C124.227 81.1349 124.235 82.4448 124.248 83.7547C124.265 85.5913 124.263 87.4278 124.257 89.2644C124.266 89.8013 124.275 90.3382 124.284 90.8914C124.243 94.696 123.274 97.3212 120.926 100.309C117.579 103.49 114.536 104.423 110 104.512C106.647 104.097 103.841 102.512 101.02 100.718C100.376 100.316 99.7314 99.9151 99.0869 99.5154C98.7624 99.3137 98.4379 99.1119 98.1035 98.9041C95.94 97.5821 93.7265 96.3466 91.5215 95.0974C90.1668 94.2789 90.1661 94.2792 89.1738 93.2742C89.0457 91.8294 89.0465 91.8289 89.04 89.9568C89.0374 89.616 89.0349 89.2748 89.0322 88.9236C89.0271 88.1819 89.0234 87.4397 89.0225 86.698C89.0206 85.521 89.013 84.3437 89.0029 83.1668C88.9754 79.8196 88.9605 76.472 88.9482 73.1248C88.9403 71.0775 88.9253 69.0304 88.9062 66.9832C88.9005 66.2059 88.8975 65.4285 88.8975 64.6512C88.897 59.9438 88.8593 55.7996 86.335 51.6775C84.8676 50.227 83.2987 49.2765 81.5156 48.2683C81.1542 48.0588 80.7923 47.8494 80.4199 47.6336C79.6324 47.1777 78.8436 46.724 78.0537 46.2722C76.6818 45.485 75.3161 44.6872 73.9512 43.8875C73.0101 43.3377 72.0692 42.7874 71.1279 42.2381C70.6768 41.9744 70.2255 41.7109 69.7607 41.4392C69.1271 41.072 69.127 41.0717 68.4805 40.6971C68.1055 40.479 67.7301 40.2615 67.3438 40.0369C65.289 38.9368 63.5618 38.9205 61.2676 38.909C60.6306 38.9018 59.9932 38.8948 59.3369 38.8875C57.3989 39.0047 55.8002 39.4416 53.9492 40.0086C53.8915 36.1644 53.8471 32.3199 53.8203 28.4754C53.8074 26.6897 53.79 24.9044 53.7617 23.1189C53.7293 21.0607 53.7179 19.0026 53.707 16.9441C53.6942 16.3106 53.6812 15.6769 53.668 15.0242C53.6666 10.6909 54.3102 7.12782 57.3154 3.87479Z" fill="url(#paint0_linear_7_20)"/>
-              <defs>
-                <linearGradient id="paint0_linear_7_20" x1="120" y1="21.9996" x2="-11.5" y2="125.5" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#35F2FF"/>
-                  <stop offset="0.432692" stopColor="#578BFB"/>
-                  <stop offset="0.6875" stopColor="#0051FF"/>
-                  <stop offset="1" stopColor="#ED94FF"/>
-                </linearGradient>
-              </defs>
-            </svg>
+            <img src="/logo.svg" alt="Acira Logo" className="logo-svg" />
             <span className="logo-text gradient-text-animated">Acira</span>
           </a>
           <div className="nav-links">
             <a href="#features" className={activeNavItem === 'features' ? 'active' : ''} onClick={(e) => { e.preventDefault(); scrollToSection(featuresRef) }}>Features</a>
             <a href="#faqs" className={activeNavItem === 'faqs' ? 'active' : ''} onClick={(e) => { e.preventDefault(); scrollToSection(faqsRef) }}>FAQs</a>
-            <a href="#contact" className={activeNavItem === 'contact' ? 'active' : ''} onClick={(e) => { e.preventDefault(); scrollToSection(contactRef) }}>Contact Us</a>
+            <a href="#contact" className={activeNavItem === 'contact' ? 'active' : ''} onClick={(e) => { e.preventDefault(); scrollToSection(contactRef) }}>Contact</a>
           </div>
           <div className="nav-actions">
             <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
@@ -179,7 +161,7 @@ function LandingPage({ onJoinWaitlist }) {
                 </svg>
               )}
             </button>
-            <button className="nav-cta" onClick={onJoinWaitlist}>Join Now</button>
+            <button className="nav-cta" onClick={onJoinWaitlist}>Join Waitlist</button>
           </div>
         </div>
       </nav>
@@ -192,7 +174,7 @@ function LandingPage({ onJoinWaitlist }) {
             <p className="hero-description">Acira automatically detects and fixes mic, camera, and audio problems in real-time—so you can focus on what matters.</p>
             <div className="hero-cta">
               <button className="btn-primary" onClick={onJoinWaitlist}>
-                Join Now
+                Join Waitlist
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </button>
               <div className="waitlist-count"><span className="count-number">{waitlistCount.toLocaleString()}</span><span className="count-label">people waiting</span></div>
@@ -266,7 +248,23 @@ function LandingPage({ onJoinWaitlist }) {
       </section>
 
       <section className="extra-cta">
-        <div className="container"><div className="cta-card animate-on-scroll"><h2 className="gradient-text-animated">Ready to fix your tech problems forever?</h2><p>Join thousands of professionals who are tired of troubleshooting.</p><button className="btn-primary btn-large" onClick={onJoinWaitlist}>Join Now<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div></div>
+        <div className="container">
+          <div className="cta-card animate-on-scroll">
+            <div className="cta-content">
+              <div className="cta-text">
+                <h2 className="gradient-text-animated">Get Early Access</h2>
+                <p>Join thousands of professionals who are ready to fix their tech problems forever.</p>
+                <button className="btn-primary btn-large" onClick={onJoinWaitlist}>
+                  Join Waitlist
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+              </div>
+              <div className="cta-image">
+                <img src="/laptophd.jpg" alt="Acira" className="cta-logo" />
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section className="faqs" ref={faqsRef} id="faqs">
@@ -289,20 +287,10 @@ function LandingPage({ onJoinWaitlist }) {
         <div className="container">
           <div className="footer-content">
             <div className="footer-brand"><a href="#" className="nav-logo" onClick={scrollToTop}>
-              <svg viewBox="0 0 125 154" fill="none" xmlns="http://www.w3.org/2000/svg" className="logo-svg">
-                <path d="M14.2842 49.4305C17.6372 49.8449 20.4444 51.4305 23.2656 53.2254C23.9091 53.6264 24.5529 54.0269 25.1973 54.4265C25.5218 54.6282 25.8463 54.8301 26.1807 55.0379C28.3443 56.3599 30.5586 57.5953 32.7637 58.8445C34.1182 59.663 34.1181 59.6637 35.1104 60.6687C35.2385 62.1134 35.2387 62.1137 35.2451 63.9861C35.2477 64.3269 35.2503 64.6682 35.2529 65.0193C35.258 65.7608 35.2608 66.5024 35.2617 67.2439C35.2635 68.4211 35.2711 69.5981 35.2812 70.7752C35.3087 74.1225 35.3247 77.4698 35.3369 80.8172C35.3448 82.8644 35.3598 84.9116 35.3789 86.9588C35.3847 87.7362 35.3876 88.5143 35.3877 89.2918C35.3881 93.9989 35.425 98.1424 37.9492 102.264C39.4167 103.715 40.9862 104.665 42.7695 105.674C43.1309 105.883 43.4919 106.094 43.8643 106.309C44.6518 106.765 45.4406 107.219 46.2305 107.671C47.6024 108.458 48.9681 109.256 50.333 110.055C51.2741 110.605 52.2159 111.155 53.1572 111.704C53.6081 111.967 54.0589 112.231 54.5234 112.503C55.157 112.87 55.1575 112.87 55.8037 113.245C56.1787 113.463 56.5541 113.681 56.9404 113.906C58.9953 115.006 60.7232 115.021 63.0176 115.033C63.6544 115.04 64.2912 115.047 64.9473 115.054C66.8852 114.937 68.484 114.501 70.335 113.934C70.3927 117.778 70.437 121.622 70.4639 125.467C70.4768 127.252 70.4942 129.038 70.5225 130.824C70.5549 132.882 70.5662 134.94 70.5771 136.998C70.5899 137.631 70.603 138.265 70.6162 138.918C70.6176 143.251 69.9742 146.815 66.9688 150.068C62.8461 153.934 57.9843 154.913 52.6602 152.978C50.5425 151.986 48.5344 150.804 46.5215 149.612C45.863 149.228 45.8622 149.227 45.1904 148.836C42.6889 147.377 40.1969 145.902 37.7109 144.416C34.7249 142.635 31.7127 140.903 28.6914 139.184C24.9994 137.081 21.3271 134.95 17.6846 132.761C15.7752 131.614 13.8542 130.493 11.917 129.395C2.17355 123.857 2.17372 123.856 0.381836 118.457C0.251427 117.228 0.251132 117.227 0.242188 115.918C0.236523 115.419 0.230445 114.919 0.224609 114.405C0.222946 113.592 0.223377 113.591 0.22168 112.762C0.214292 111.898 0.214569 111.898 0.207031 111.017C0.192546 109.114 0.185171 107.211 0.179688 105.307C0.173979 103.982 0.168803 102.657 0.163086 101.332C0.153596 98.9077 0.14754 96.4835 0.144531 94.0594C0.140091 90.5019 0.122526 86.9448 0.09375 83.3875C0.06963 80.2974 0.0622605 77.2071 0.0605469 74.117C0.0575494 72.8071 0.0491874 71.4971 0.0361328 70.1873C0.0191372 68.3507 0.0209198 66.5151 0.0273438 64.6785C0.0182004 64.1414 0.00942045 63.604 0 63.0506C0.0415309 59.246 1.01005 56.6217 3.3584 53.6336C6.70555 50.4526 9.74764 49.5186 14.2842 49.4305ZM57.3154 3.87479C61.4381 0.0089718 66.2998 -0.970463 71.624 0.96463C73.7418 1.95684 75.7507 3.1393 77.7637 4.33084C78.4217 4.71454 78.4221 4.71463 79.0938 5.10623C81.5953 6.56526 84.0872 8.04007 86.5732 9.52615C89.5593 11.3073 92.5715 13.0387 95.5928 14.7576C99.2849 16.8606 102.957 18.9927 106.6 21.1824C108.509 22.3292 110.43 23.4497 112.367 24.5476C122.111 30.0863 122.111 30.0863 123.903 35.4861C124.034 36.7148 124.033 36.715 124.042 38.0242C124.048 38.5235 124.054 39.0234 124.06 39.5379C124.061 40.3508 124.061 40.351 124.062 41.1805C124.07 42.0437 124.071 42.0439 124.078 42.9246C124.093 44.8282 124.099 46.7319 124.104 48.6355C124.11 49.9604 124.116 51.2853 124.122 52.6101C124.132 55.0342 124.137 57.4586 124.14 59.8826C124.144 63.44 124.162 66.9972 124.19 70.5545C124.215 73.6446 124.222 76.7348 124.224 79.825C124.227 81.1349 124.235 82.4448 124.248 83.7547C124.265 85.5913 124.263 87.4278 124.257 89.2644C124.266 89.8013 124.275 90.3382 124.284 90.8914C124.243 94.696 123.274 97.3212 120.926 100.309C117.579 103.49 114.536 104.423 110 104.512C106.647 104.097 103.841 102.512 101.02 100.718C100.376 100.316 99.7314 99.9151 99.0869 99.5154C98.7624 99.3137 98.4379 99.1119 98.1035 98.9041C95.94 97.5821 93.7265 96.3466 91.5215 95.0974C90.1668 94.2789 90.1661 94.2792 89.1738 93.2742C89.0457 91.8294 89.0465 91.8289 89.04 89.9568C89.0374 89.616 89.0349 89.2748 89.0322 88.9236C89.0271 88.1819 89.0234 87.4397 89.0225 86.698C89.0206 85.521 89.013 84.3437 89.0029 83.1668C88.9754 79.8196 88.9605 76.472 88.9482 73.1248C88.9403 71.0775 88.9253 69.0304 88.9062 66.9832C88.9005 66.2059 88.8975 65.4285 88.8975 64.6512C88.897 59.9438 88.8593 55.7996 86.335 51.6775C84.8676 50.227 83.2987 49.2765 81.5156 48.2683C81.1542 48.0588 80.7923 47.8494 80.4199 47.6336C79.6324 47.1777 78.8436 46.724 78.0537 46.2722C76.6818 45.485 75.3161 44.6872 73.9512 43.8875C73.0101 43.3377 72.0692 42.7874 71.1279 42.2381C70.6768 41.9744 70.2255 41.7109 69.7607 41.4392C69.1271 41.072 69.127 41.0717 68.4805 40.6971C68.1055 40.479 67.7301 40.2615 67.3438 40.0369C65.289 38.9368 63.5618 38.9205 61.2676 38.909C60.6306 38.9018 59.9932 38.8948 59.3369 38.8875C57.3989 39.0047 55.8002 39.4416 53.9492 40.0086C53.8915 36.1644 53.8471 32.3199 53.8203 28.4754C53.8074 26.6897 53.79 24.9044 53.7617 23.1189C53.7293 21.0607 53.7179 19.0026 53.707 16.9441C53.6942 16.3106 53.6812 15.6769 53.668 15.0242C53.6666 10.6909 54.3102 7.12782 57.3154 3.87479Z" fill="url(#paint0_linear_footer)"/>
-                <defs>
-                  <linearGradient id="paint0_linear_footer" x1="120" y1="21.9996" x2="-11.5" y2="125.5" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#35F2FF"/>
-                    <stop offset="0.432692" stopColor="#578BFB"/>
-                    <stop offset="0.6875" stopColor="#0051FF"/>
-                    <stop offset="1" stopColor="#ED94FF"/>
-                  </linearGradient>
-                </defs>
-              </svg>
+              <img src="/logo.svg" alt="Acira Logo" className="logo-svg" />
               <span className="logo-text gradient-text-animated">Acira</span>
             </a><p>Intelligent fixes for your tech problems.</p></div>
-            <div className="footer-links"><div className="footer-column"><h4>Product</h4><a href="#features" onClick={(e) => { e.preventDefault(); scrollToSection(featuresRef) }}>Features</a><a href="#faqs" onClick={(e) => { e.preventDefault(); scrollToSection(faqsRef) }}>FAQs</a><a href="#" onClick={onJoinWaitlist}>Join Now</a></div><div className="footer-column"><h4>Company</h4><a href="#contact" onClick={(e) => { e.preventDefault(); scrollToSection(contactRef) }}>Contact</a><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div></div>
+            <div className="footer-links"><div className="footer-column"><h4>Product</h4><a href="#features" onClick={(e) => { e.preventDefault(); scrollToSection(featuresRef) }}>Features</a><a href="#faqs" onClick={(e) => { e.preventDefault(); scrollToSection(faqsRef) }}>FAQs</a><a href="#" onClick={onJoinWaitlist}>Join Waitlist</a></div><div className="footer-column"><h4>Company</h4><a href="#contact" onClick={(e) => { e.preventDefault(); scrollToSection(contactRef) }}>Contact</a><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div></div>
           </div>
           <div className="footer-bottom"><p>© 2025 Acira AI. All rights reserved.</p><button className="back-to-top" onClick={scrollToTop}>Back to top<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 15l-6-6-6 6"/></svg></button></div>
         </div>

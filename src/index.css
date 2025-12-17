@@ -1,3 +1,12 @@
+/* PowerGrotesk Font */
+@font-face {
+  font-family: 'PowerGrotesk';
+  src: url('./assets/fonts/PowerGrotesk-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* WF Visual Sans Variable Font */
 @font-face {
   font-family: 'WF Visual Sans';
@@ -7,7 +16,7 @@
   font-display: swap;
 }
 
-/* CSS Variables - Premium color palette matching logo gradient */
+/* CSS Variables - Modern Professional Palette */
 :root {
   /* Primary colors - Light Mode */
   --color-white: #ffffff;
@@ -63,6 +72,7 @@
   
   /* Typography */
   --font-family: 'WF Visual Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+  --font-logo: 'PowerGrotesk', var(--font-family);
   
   /* Spacing */
   --spacing-xs: 0.25rem;
@@ -148,23 +158,27 @@ h1, h2, h3, h4, h5, h6 {
 h1 {
   font-size: clamp(2.5rem, 6vw, 4.5rem);
   font-weight: 700;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
 }
 
 h2 {
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 600;
-  letter-spacing: -0.025em;
+  font-size: clamp(2.25rem, 4.5vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
 }
 
 h3 {
   font-size: clamp(1.5rem, 3vw, 2rem);
   font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 h4 {
   font-size: clamp(1.25rem, 2vw, 1.5rem);
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 p {
@@ -206,7 +220,7 @@ img {
   max-width: var(--container-md);
 }
 
-/* Improved Scrollbar - Premium Design */
+/* Modern Scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
