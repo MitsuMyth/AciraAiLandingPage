@@ -170,8 +170,8 @@ function LandingPage({ onJoinWaitlist }) {
         <div className="hero-container">
           <div className="hero-left animate-on-scroll">
             <div className="hero-badge"><span className="badge-dot"></span><span>Now accepting early access requests</span></div>
-            <h1 className="hero-title">Never miss a meeting because of<span className="gradient-text-animated"> tech issues</span> again</h1>
-            <p className="hero-description">Acira automatically detects and fixes mic, camera, and audio problems in real-time—so you can focus on what matters.</p>
+            <h1 className="hero-title">Your computer fixes itself. <span className="gradient-text-animated">Automatically.</span></h1>
+            <p className="hero-description">Just describe the problem in plain language. Acira runs on your computer, understands the issue across apps and the system, and fixes audio and video problems on its own. Broader system fixes are coming next!</p>
             <div className="hero-cta">
               <button className="btn-primary" onClick={onJoinWaitlist}>
                 Join Waitlist
@@ -260,7 +260,7 @@ function LandingPage({ onJoinWaitlist }) {
                 </button>
               </div>
               <div className="cta-image">
-                <img src="/laptophd.jpg" alt="Acira" className="cta-logo" />
+                <img src="/laptopacira.png" alt="Acira" className="cta-logo" />
               </div>
             </div>
           </div>
@@ -270,7 +270,7 @@ function LandingPage({ onJoinWaitlist }) {
       <section className="faqs" ref={faqsRef} id="faqs">
         <div className="container">
           <div className="section-header animate-on-scroll"><span className="section-label gradient-text-animated">FAQs</span><h2 className="gradient-text-animated">Common questions</h2><p>Everything you need to know about Acira</p></div>
-          <div className="faq-list">{faqs.map((f, i) => <div key={i} className={`faq-item animate-on-scroll ${openFaq === i ? 'open' : ''}`} style={{ animationDelay: `${i * 0.05}s` }}><div className="faq-question" onClick={() => setOpenFaq(openFaq === i ? null : i)}><span>{f.question}</span><svg className="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg></div><div className="faq-answer"><p>{f.answer}</p></div></div>)}</div>
+          <div className="faq-list">{faqs.map((f, i) => <div key={i} className={`faq-item ${openFaq === i ? 'open' : ''}`} style={{ animationDelay: `${i * 0.05}s` }}><div className="faq-question" onClick={() => setOpenFaq(openFaq === i ? null : i)}><span>{f.question}</span><svg className="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg></div><div className="faq-answer"><p>{f.answer}</p></div></div>)}</div>
         </div>
       </section>
 
