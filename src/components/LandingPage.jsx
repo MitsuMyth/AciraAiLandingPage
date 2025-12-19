@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import './LandingPage.css'
+import AIProblemSolver from './AIProblemSolver'
 
 const integrations = [
   { name: 'Zoom', logo: <svg viewBox="0 0 24 24" fill="currentColor" className="integration-logo"><path d="M4.58 4.58C2.33 6.84 2.33 10.46 2.33 17.69v.63c0 1.1.89 1.99 1.99 1.99h.63c7.23 0 10.84 0 13.1-2.26 2.26-2.26 2.26-5.87 2.26-13.1v-.63c0-1.1-.89-1.99-1.99-1.99h-.63c-7.23 0-10.84 0-13.1 2.26z"/></svg> },
@@ -13,16 +14,16 @@ const integrations = [
 ]
 
 const faqs = [
-  { question: 'What does Acira actually do?', answer: 'Acira fixes computer problems for you. You describe the issue in plain language, and Acira analyzes your system and applies the fix automatically. Today, it focuses on audio and video problems.' },
-  { question: 'Is Acira just giving instructions, or does it actually fix things?', answer: 'Acira actually fixes things. It runs a local agent on your computer that applies changes for you instead of telling you what to click or try.' },
-  { question: 'What kinds of problems does Acira support today?', answer: 'Acira currently supports audio and video issues such as microphones, cameras, device routing, and permissions across apps and the system. Broader system fixes are coming next.' },
-  { question: 'Is Acira like a chatbot or Copilot?', answer: 'No. Acira is not a general chat assistant. It analyzes real system and application data, finds the root cause of the problem, and applies the fix automatically through a local agent.' },
-  { question: 'Does Acira run on my computer or in the cloud?', answer: 'Both. Acira uses cloud based analysis to understand the problem and a local agent on your computer to apply the fix safely.' },
-  { question: 'Is it safe to let Acira change my system settings?', answer: 'Yes. Acira only applies targeted fixes related to the problem you describe. For sensitive or critical changes, Acira will ask before proceeding.' },
-  { question: 'What about privacy and my data?', answer: 'Acira only collects the data needed to diagnose and fix the problem you describe. It does not access personal files, messages, or unrelated apps.' },
-  { question: 'Which platforms does Acira support?', answer: 'Acira currently supports Windows. Support for additional platforms is planned.' },
-  { question: 'When can I try Acira?', answer: 'You can join the waitlist to get early access. We will invite users to try Acira as soon as it is available.' },
-  { question: 'Is Acira free?', answer: 'Early access details will be shared with waitlist users.' }
+  { id: 1, question: 'What does Acira actually do?', answer: 'Acira fixes computer problems for you. You describe the issue in plain language, and Acira analyzes your system and applies the fix automatically. Today, it focuses on audio and video problems.' },
+  { id: 2, question: 'Is Acira just giving instructions, or does it actually fix things?', answer: 'Acira actually fixes things. It runs a local agent on your computer that applies changes for you instead of telling you what to click or try.' },
+  { id: 3, question: 'What kinds of problems does Acira support today?', answer: 'Acira currently supports audio and video issues such as microphones, cameras, device routing, and permissions across apps and the system. Broader system fixes are coming next.' },
+  { id: 4, question: 'Is Acira like a chatbot or Copilot?', answer: 'No. Acira is not a general chat assistant. It analyzes real system and application data, finds the root cause of the problem, and applies the fix automatically through a local agent.' },
+  { id: 5, question: 'Does Acira run on my computer or in the cloud?', answer: 'Both. Acira uses cloud based analysis to understand the problem and a local agent on your computer to apply the fix safely.' },
+  { id: 6, question: 'Is it safe to let Acira change my system settings?', answer: 'Yes. Acira only applies targeted fixes related to the problem you describe. For sensitive or critical changes, Acira will ask before proceeding.' },
+  { id: 7, question: 'What about privacy and my data?', answer: 'Acira only collects the data needed to diagnose and fix the problem you describe. It does not access personal files, messages, or unrelated apps.' },
+  { id: 8, question: 'Which platforms does Acira support?', answer: 'Acira currently supports Windows. Support for additional platforms is planned.' },
+  { id: 9, question: 'When can I try Acira?', answer: 'You can join the waitlist to get early access. We will invite users to try Acira as soon as it is available.' },
+  { id: 10, question: 'Is Acira free?', answer: 'Early access details will be shared with waitlist users.' }
 ]
 
 const problems = [
@@ -79,7 +80,8 @@ const WhyIcon = ({ type }) => {
 }
 
 function LandingPage({ onJoinWaitlist }) {
-  const [waitlistCount, setWaitlistCount] = useState(2847)
+  const [waitlistCount, setWaitlistCount] = useState(0)
+  const [isLoadingCount, setIsLoadingCount] = useState(true)
   const [activeNavItem, setActiveNavItem] = useState('')
   const [isScrolled, setIsScrolled] = useState(false)
   const [openFaq, setOpenFaq] = useState(null)
@@ -88,6 +90,31 @@ function LandingPage({ onJoinWaitlist }) {
   const [isDarkMode, setIsDarkMode] = useState(false)
   
   const heroRef = useRef(null), featuresRef = useRef(null), faqsRef = useRef(null), contactRef = useRef(null)
+
+  // Fetch real waitlist count from CountAPI
+  useEffect(() => {
+    const fetchWaitlistCount = async () => {
+      try {
+        const response = await fetch('https://api.countapi.xyz/get/acira-ai/waitlist')
+        const data = await response.json()
+        
+        if (data.value !== undefined) {
+          setWaitlistCount(data.value)
+        }
+        setIsLoadingCount(false)
+      } catch (error) {
+        console.error('Failed to fetch waitlist count:', error)
+        setWaitlistCount(0)
+        setIsLoadingCount(false)
+      }
+    }
+
+    fetchWaitlistCount()
+    
+    // Refresh count every 30 seconds
+    const interval = setInterval(fetchWaitlistCount, 30000)
+    return () => clearInterval(interval)
+  }, [])
 
   useEffect(() => {
     if (isDarkMode) {
@@ -113,11 +140,6 @@ function LandingPage({ onJoinWaitlist }) {
   }, [])
 
   useEffect(() => {
-    const interval = setInterval(() => setWaitlistCount(p => p + Math.floor(Math.random() * 3)), 30000)
-    return () => clearInterval(interval)
-  }, [])
-
-  useEffect(() => {
     const observer = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add('animate-in') }), { threshold: 0.1, rootMargin: '0px 0px -50px 0px' })
     document.querySelectorAll('.animate-on-scroll').forEach((el) => observer.observe(el))
     return () => observer.disconnect()
@@ -127,6 +149,7 @@ function LandingPage({ onJoinWaitlist }) {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
   const handleContactSubmit = (e) => { e.preventDefault(); setContactSubmitted(true); setTimeout(() => { setContactSubmitted(false); setContactForm({ name: '', email: '', message: '' }) }, 3000) }
   const toggleTheme = () => setIsDarkMode(!isDarkMode)
+  const toggleFaq = (id) => setOpenFaq(openFaq === id ? null : id)
 
   return (
     <div className="landing-page">
@@ -134,7 +157,8 @@ function LandingPage({ onJoinWaitlist }) {
         <div className="nav-container container">
           <a href="#" className="nav-logo" onClick={scrollToTop}>
             <img src="/logo.svg" alt="Acira Logo" className="logo-svg" />
-            <span className="logo-text gradient-text-animated">Acira</span>
+
+            <span className="ai-label">Acira AI</span>
           </a>
           <div className="nav-links">
             <a href="#features" className={activeNavItem === 'features' ? 'active' : ''} onClick={(e) => { e.preventDefault(); scrollToSection(featuresRef) }}>Features</a>
@@ -144,7 +168,7 @@ function LandingPage({ onJoinWaitlist }) {
           <div className="nav-actions">
             <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
               {isDarkMode ? (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="theme-icon sun-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="theme-icon">
                   <circle cx="12" cy="12" r="4"/>
                   <path d="M12 2v2"/>
                   <path d="M12 20v2"/>
@@ -156,12 +180,15 @@ function LandingPage({ onJoinWaitlist }) {
                   <path d="m19.07 4.93-1.41 1.41"/>
                 </svg>
               ) : (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="theme-icon moon-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="theme-icon">
                   <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
                 </svg>
               )}
             </button>
-            <button className="nav-cta" onClick={onJoinWaitlist}>Join Waitlist</button>
+            <button className="nav-cta nav-cta-glow" onClick={onJoinWaitlist}>
+              <span>Get Early Access</span>
+             
+            </button>
           </div>
         </div>
       </nav>
@@ -169,37 +196,35 @@ function LandingPage({ onJoinWaitlist }) {
       <section className="hero" ref={heroRef}>
         <div className="hero-container">
           <div className="hero-left animate-on-scroll">
-            <div className="hero-badge"><span className="badge-dot"></span><span>Now accepting early access requests</span></div>
+            <div className="hero-badge">
+              <span className="badge-dot"></span>
+              <span>Limited early access spots</span>
+            </div>
             <h1 className="hero-title">Your computer fixes itself. <span className="gradient-text-animated">Automatically.</span></h1>
             <p className="hero-description">Just describe the problem in plain language. Acira runs on your computer, understands the issue across apps and the system, and fixes audio and video problems on its own. Broader system fixes are coming next!</p>
             <div className="hero-cta">
-              <button className="btn-primary" onClick={onJoinWaitlist}>
-                Join Waitlist
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <button className="btn-primary btn-large btn-glow" onClick={onJoinWaitlist}>
+                <span className="btn-glow-bg"></span>
+                <span className="btn-content">
+                  Join Now
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                  </svg>
+                </span>
               </button>
-              <div className="waitlist-count"><span className="count-number">{waitlistCount.toLocaleString()}</span><span className="count-label">people waiting</span></div>
+              <div className="waitlist-count">
+                {isLoadingCount ? (
+                  <span className="count-number count-loading">•••</span>
+                ) : (
+                  <span className="count-number">{waitlistCount.toLocaleString()}</span>
+                )}
+                <span className="count-label">professionals waiting</span>
+              </div>
             </div>
           </div>
+          
           <div className="hero-right animate-on-scroll">
-            <div className="dashboard-preview">
-              <div className="dashboard-window">
-                <div className="window-chrome">
-                  <div className="window-buttons"><span className="btn-close"></span><span className="btn-minimize"></span><span className="btn-maximize"></span></div>
-                  <div className="window-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span>Acira</span></div>
-                  <div className="window-actions"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></div>
-                </div>
-                <div className="dashboard-content">
-                  <div className="dashboard-header"><div className="dashboard-status"><div className="status-indicator online"></div><span>System Health</span></div><span className="dashboard-live">Live</span></div>
-                  <div className="device-list">
-                    <div className="device-item healthy"><div className="device-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg></div><div className="device-info"><span className="device-name">Microphone</span><span className="device-detail">MacBook Pro Microphone</span></div><div className="device-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg></div></div>
-                    <div className="device-item fixing"><div className="device-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg></div><div className="device-info"><span className="device-name">Camera</span><span className="device-detail fixing-detail">Fixing driver conflict...</span></div><div className="device-spinner"></div><div className="fixing-bar"><div className="fixing-progress"></div></div></div>
-                    <div className="device-item healthy"><div className="device-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg></div><div className="device-info"><span className="device-name">Audio Output</span><span className="device-detail">External Speakers</span></div><div className="device-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg></div></div>
-                  </div>
-                  <div className="dashboard-log"><span className="log-time">2s ago</span><span className="log-text">Detected camera driver conflict</span></div>
-                </div>
-              </div>
-              <div className="float-notif"><div className="notif-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg></div><div><span className="notif-title">Issue Fixed</span><span className="notif-text">Camera is now working</span></div></div>
-            </div>
+            <AIProblemSolver />
           </div>
         </div>
       </section>
@@ -252,15 +277,20 @@ function LandingPage({ onJoinWaitlist }) {
           <div className="cta-card animate-on-scroll">
             <div className="cta-content">
               <div className="cta-text">
-                <h2 className="gradient-text-animated">Get Early Access</h2>
-                <p>Join thousands of professionals who are ready to fix their tech problems forever.</p>
-                <button className="btn-primary btn-large" onClick={onJoinWaitlist}>
-                  Join Waitlist
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                <h2>Get Early Access</h2>
+                <p>Join {waitlistCount > 0 ? `${waitlistCount.toLocaleString()}+ ` : ''}professionals who are ready to fix their tech problems forever.</p>
+                <button className="btn-primary btn-large btn-glow" onClick={onJoinWaitlist}>
+                  <span className="btn-glow-bg"></span>
+                  <span className="btn-content">
+                    Claim Your Spot
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                  </span>
                 </button>
               </div>
               <div className="cta-image">
-                <img src="/laptopacira.png" alt="Acira" className="cta-logo" />
+                <img src="/laptopacirav2.png" alt="Acira" className="cta-logo" />
               </div>
             </div>
           </div>
@@ -270,7 +300,7 @@ function LandingPage({ onJoinWaitlist }) {
       <section className="faqs" ref={faqsRef} id="faqs">
         <div className="container">
           <div className="section-header animate-on-scroll"><span className="section-label gradient-text-animated">FAQs</span><h2 className="gradient-text-animated">Common questions</h2><p>Everything you need to know about Acira</p></div>
-          <div className="faq-list">{faqs.map((f, i) => <div key={i} className={`faq-item ${openFaq === i ? 'open' : ''}`} style={{ animationDelay: `${i * 0.05}s` }}><div className="faq-question" onClick={() => setOpenFaq(openFaq === i ? null : i)}><span>{f.question}</span><svg className="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg></div><div className="faq-answer"><p>{f.answer}</p></div></div>)}</div>
+          <div className="faq-list">{faqs.map((f) => <div key={f.id} className={`faq-item ${openFaq === f.id ? 'open' : ''}`}><button className="faq-question" onClick={() => toggleFaq(f.id)}><span>{f.question}</span><svg className="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg></button><div className="faq-answer"><p>{f.answer}</p></div></div>)}</div>
         </div>
       </section>
 
@@ -288,6 +318,7 @@ function LandingPage({ onJoinWaitlist }) {
           <div className="footer-content">
             <div className="footer-brand"><a href="#" className="nav-logo" onClick={scrollToTop}>
               <img src="/logo.svg" alt="Acira Logo" className="logo-svg" />
+
               <span className="logo-text gradient-text-animated">Acira</span>
             </a><p>Intelligent fixes for your tech problems.</p></div>
             <div className="footer-links"><div className="footer-column"><h4>Product</h4><a href="#features" onClick={(e) => { e.preventDefault(); scrollToSection(featuresRef) }}>Features</a><a href="#faqs" onClick={(e) => { e.preventDefault(); scrollToSection(faqsRef) }}>FAQs</a><a href="#" onClick={onJoinWaitlist}>Join Waitlist</a></div><div className="footer-column"><h4>Company</h4><a href="#contact" onClick={(e) => { e.preventDefault(); scrollToSection(contactRef) }}>Contact</a><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div></div>

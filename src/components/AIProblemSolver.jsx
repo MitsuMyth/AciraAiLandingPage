@@ -2,11 +2,9 @@ import { useState, useEffect, useRef } from 'react'
 import './AIProblemSolver.css'
 
 const AIProblemSolver = () => {
-  const [inputValue, setInputValue] = useState('')
-  const [phase, setPhase] = useState('input') // 'input' | 'thinking' | 'responding' | 'complete'
+  const [phase, setPhase] = useState('initial') // 'initial' | 'thinking' | 'responding' | 'complete'
   const [displayedText, setDisplayedText] = useState('')
   const [showCursor, setShowCursor] = useState(true)
-  const inputRef = useRef(null)
   const cursorBlinkInterval = useRef(null)
 
   // Mock AI response with rich formatting
@@ -86,12 +84,9 @@ I can fix all of these automatically. Would you like me to proceed?`
     }
   }, [phase])
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (!inputValue.trim()) return
-
-    // Phase transition: input → thinking → responding
+  const handleDemo = () => {
     setPhase('thinking')
+    setDisplayedText('')
     
     setTimeout(() => {
       setPhase('responding')
@@ -99,8 +94,7 @@ I can fix all of these automatically. Would you like me to proceed?`
   }
 
   const handleReset = () => {
-    setPhase('input')
-    setInputValue('')
+    setPhase('initial')
     setDisplayedText('')
   }
 
@@ -117,30 +111,37 @@ I can fix all of these automatically. Would you like me to proceed?`
 
   return (
     <div className="ai-problem-solver">
-      {phase === 'input' && (
-        <form onSubmit={handleSubmit} className="ai-input-form">
-          <div className="input-wrapper">
-            <input
-              ref={inputRef}
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Describe your problem…"
-              className="ai-input"
-              autoFocus
-            />
-            <div className="input-glow" />
+      {phase === 'initial' && (
+        <div className="demo-prompt">
+          <div className="demo-mockup">
+            <div className="mockup-header">
+              <div className="mockup-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <span className="mockup-title">Acira Dashboard</span>
+            </div>
+            <div className="mockup-content">
+              <div className="mockup-input">
+                <span className="mockup-placeholder">My microphone isn't working in Zoom...</span>
+              </div>
+              <div className="mockup-status">
+                <div className="status-dot"></div>
+                <span>AI analyzing system</span>
+              </div>
+            </div>
           </div>
-          <button 
-            type="submit" 
-            className="ai-submit-btn"
-            disabled={!inputValue.trim()}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
+          
+          <button onClick={handleDemo} className="demo-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polygon points="5 3 19 12 5 21 5 3"/>
             </svg>
+            See AI in Action
           </button>
-        </form>
+          
+          <p className="demo-hint">Watch how Acira diagnoses and fixes problems automatically</p>
+        </div>
       )}
 
       {phase === 'thinking' && (
@@ -150,7 +151,7 @@ I can fix all of these automatically. Would you like me to proceed?`
             <span className="dot" style={{ animationDelay: '0.2s' }} />
             <span className="dot" style={{ animationDelay: '0.4s' }} />
           </div>
-          <p className="thinking-text">Analyzing your system...</p>
+          <p className="thinking-text">Analyzing system configuration...</p>
         </div>
       )}
 
@@ -158,9 +159,8 @@ I can fix all of these automatically. Would you like me to proceed?`
         <div className="ai-response">
           <div className="response-header">
             <div className="ai-avatar">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-              </svg>
+              <img src="/logo.svg" alt="Acira Logo" className="logo-svg" />
+
             </div>
             <span className="ai-label">Acira AI</span>
           </div>
@@ -172,7 +172,7 @@ I can fix all of these automatically. Would you like me to proceed?`
 
           {phase === 'complete' && (
             <button onClick={handleReset} className="reset-btn">
-              Try another problem
+              Try another demo
             </button>
           )}
         </div>

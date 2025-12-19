@@ -1,19 +1,26 @@
 import { useState } from 'react'
 import LandingPage from './components/LandingPage'
 import JoinWaitlist from './components/JoinWaitlist'
+import './index.css'
 
 function App() {
-  const [showWaitlist, setShowWaitlist] = useState(false)
+  const [currentPage, setCurrentPage] = useState('landing') // 'landing' | 'waitlist'
 
-  const openWaitlist = () => setShowWaitlist(true)
-  const closeWaitlist = () => setShowWaitlist(false)
+  const handleJoinWaitlist = () => {
+    setCurrentPage('waitlist')
+    window.scrollTo(0, 0)
+  }
 
-  return (
-    <>
-      <LandingPage onJoinWaitlist={openWaitlist} />
-      {showWaitlist && <JoinWaitlist onClose={closeWaitlist} />}
-    </>
-  )
+  const handleWaitlistComplete = () => {
+    setCurrentPage('landing')
+    window.scrollTo(0, 0)
+  }
+
+  if (currentPage === 'waitlist') {
+    return <JoinWaitlist onComplete={handleWaitlistComplete} />
+  }
+
+  return <LandingPage onJoinWaitlist={handleJoinWaitlist} />
 }
 
 export default App
