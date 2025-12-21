@@ -2,181 +2,226 @@ import { useState, useEffect, useRef } from 'react'
 import './AIProblemSolver.css'
 
 const AIProblemSolver = () => {
-  const [phase, setPhase] = useState('initial') // 'initial' | 'thinking' | 'responding' | 'complete'
-  const [displayedText, setDisplayedText] = useState('')
-  const [showCursor, setShowCursor] = useState(true)
-  const cursorBlinkInterval = useRef(null)
+  const [phase, setPhase] = useState('scanning') // 'scanning' | 'analyzing' | 'fixing' | 'complete'
+  const [progress, setProgress] = useState(0)
+  const [currentIssue, setCurrentIssue] = useState(0)
+  const [fixedIssues, setFixedIssues] = useState([])
+  
+  const issues = [
+    { 
+      id: 1, 
+      name: 'Audio Driver Conflict', 
+      status: 'Detected',
+      icon: 'alert',
+      color: '#ef4444'
+    },
+    { 
+      id: 2, 
+      name: 'Zoom Permissions', 
+      status: 'Missing Access',
+      icon: 'lock',
+      color: '#f59e0b'
+    },
+    { 
+      id: 3, 
+      name: 'Default Device Mismatch', 
+      status: 'Configuration Error',
+      icon: 'settings',
+      color: '#ef4444'
+    }
+  ]
 
-  // Mock AI response with rich formatting
-  const aiResponse = `I've identified **3 potential causes** for your microphone issue:
+  const systemStats = [
+    { label: 'CPU', value: '23%' },
+    { label: 'Memory', value: '4.2 GB' },
+    { label: 'Network', value: 'Stable' }
+  ]
 
-**1. Audio driver conflict** — Your system has multiple audio drivers competing for the same device. I can reset the priority settings.
-
-**2. App permissions** — Zoom doesn't have full microphone access. I'll update the system permissions.
-
-**3. Default device mismatch** — Windows is routing audio to a different device than Zoom expects.
-
-I can fix all of these automatically. Would you like me to proceed?`
-
-  // Typewriter animation with variable speed and pauses
+  // Auto-play the demo sequence
   useEffect(() => {
-    if (phase !== 'responding') return
-
-    let index = 0
-    const text = aiResponse
-    
-    const typeCharacter = () => {
-      if (index >= text.length) {
-        setPhase('complete')
-        return
-      }
-
-      const char = text[index]
+    const sequence = async () => {
+      // Phase 1: Scanning (0-25%)
+      setPhase('scanning')
+      await animateProgress(0, 25, 2000)
       
-      // Strategic pauses for intelligence illusion
-      let delay = 50 // base speed
+      // Phase 2: Analyzing (25-50%)
+      setPhase('analyzing')
+      await animateProgress(25, 50, 1500)
       
-      // Slower for punctuation (thinking pause)
-      if (char === '.' || char === ',' || char === '?') {
-        delay = 300
+      // Phase 3: Fixing issues one by one (50-100%)
+      setPhase('fixing')
+      for (let i = 0; i < issues.length; i++) {
+        setCurrentIssue(i)
+        await animateProgress(50 + (i * 16), 50 + ((i + 1) * 16), 1200)
+        setFixedIssues(prev => [...prev, issues[i].id])
+        await delay(400)
       }
-      // Slower for asterisks (emphasis)
-      else if (char === '*') {
-        delay = 100
-      }
-      // Faster for spaces
-      else if (char === ' ') {
-        delay = 30
-      }
-      // Variable speed for letters
-      else {
-        delay = 40 + Math.random() * 40
-      }
-
-      // Pause before important words
-      const nextWord = text.slice(index + 1, index + 15).toLowerCase()
-      if (nextWord.includes('driver') || nextWord.includes('permission') || nextWord.includes('fix')) {
-        delay += 200
-      }
-
-      setTimeout(() => {
-        setDisplayedText(text.slice(0, index + 1))
-        index++
-        typeCharacter()
-      }, delay)
+      
+      // Complete
+      await animateProgress(98, 100, 300)
+      setPhase('complete')
+      
+      // Reset and loop after 4 seconds
+      await delay(4000)
+      resetDemo()
     }
 
-    typeCharacter()
-  }, [phase])
+    sequence()
+  }, [])
 
-  // Cursor blink animation
-  useEffect(() => {
-    if (phase === 'responding' || phase === 'complete') {
-      cursorBlinkInterval.current = setInterval(() => {
-        setShowCursor(prev => !prev)
-      }, 530)
-    }
-    
-    return () => {
-      if (cursorBlinkInterval.current) {
-        clearInterval(cursorBlinkInterval.current)
+  const animateProgress = (from, to, duration) => {
+    return new Promise(resolve => {
+      const startTime = Date.now()
+      const animate = () => {
+        const elapsed = Date.now() - startTime
+        const progress = Math.min(elapsed / duration, 1)
+        const eased = easeOutCubic(progress)
+        const current = from + (to - from) * eased
+        
+        setProgress(current)
+        
+        if (progress < 1) {
+          requestAnimationFrame(animate)
+        } else {
+          resolve()
+        }
       }
-    }
-  }, [phase])
-
-  const handleDemo = () => {
-    setPhase('thinking')
-    setDisplayedText('')
-    
-    setTimeout(() => {
-      setPhase('responding')
-    }, 1800)
-  }
-
-  const handleReset = () => {
-    setPhase('initial')
-    setDisplayedText('')
-  }
-
-  // Format text with bold support
-  const formatText = (text) => {
-    const parts = text.split(/(\*\*.*?\*\*)/)
-    return parts.map((part, i) => {
-      if (part.startsWith('**') && part.endsWith('**')) {
-        return <strong key={i}>{part.slice(2, -2)}</strong>
-      }
-      return part
+      requestAnimationFrame(animate)
     })
+  }
+
+  const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+
+  const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3)
+
+  const resetDemo = () => {
+    setPhase('scanning')
+    setProgress(0)
+    setCurrentIssue(0)
+    setFixedIssues([])
+  }
+
+  const getPhaseText = () => {
+    switch(phase) {
+      case 'scanning': return 'Scanning system components...'
+      case 'analyzing': return 'Analyzing detected issues...'
+      case 'fixing': return `Fixing ${issues[currentIssue]?.name}...`
+      case 'complete': return 'All issues resolved'
+      default: return 'Initializing...'
+    }
   }
 
   return (
     <div className="ai-problem-solver">
-      {phase === 'initial' && (
-        <div className="demo-prompt">
-          <div className="demo-mockup">
-            <div className="mockup-header">
-              <div className="mockup-dots">
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-              <span className="mockup-title">Acira Dashboard</span>
-            </div>
-            <div className="mockup-content">
-              <div className="mockup-input">
-                <span className="mockup-placeholder">My microphone isn't working in Zoom...</span>
-              </div>
-              <div className="mockup-status">
-                <div className="status-dot"></div>
-                <span>AI analyzing system</span>
-              </div>
+      <div className="solver-container">
+        {/* Header */}
+        <div className="solver-header">
+          <div className="header-left">
+            <div className="status-indicator">
+              <div className={`status-dot ${phase === 'complete' ? 'complete' : 'active'}`}></div>
+              <span className="status-text">
+                {phase === 'complete' ? 'System Healthy' : 'Active Repair'}
+              </span>
             </div>
           </div>
-          
-          <button onClick={handleDemo} className="demo-btn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <polygon points="5 3 19 12 5 21 5 3"/>
-            </svg>
-            See AI in Action
-          </button>
-          
-          <p className="demo-hint">Watch how Acira diagnoses and fixes problems automatically</p>
-        </div>
-      )}
-
-      {phase === 'thinking' && (
-        <div className="ai-thinking">
-          <div className="thinking-dots">
-            <span className="dot" style={{ animationDelay: '0s' }} />
-            <span className="dot" style={{ animationDelay: '0.2s' }} />
-            <span className="dot" style={{ animationDelay: '0.4s' }} />
+          <div className="header-right">
+            <span className="progress-text">{Math.round(progress)}%</span>
           </div>
-          <p className="thinking-text">Analyzing system configuration...</p>
         </div>
-      )}
 
-      {(phase === 'responding' || phase === 'complete') && (
-        <div className="ai-response">
-          <div className="response-header">
-            <div className="ai-avatar">
-              <img src="/logo.svg" alt="Acira Logo" className="logo-svg" />
-
+        {/* Progress Bar */}
+        <div className="solver-progress">
+          <div className="progress-track">
+            <div 
+              className="progress-fill" 
+              style={{ width: `${progress}%` }}
+            >
+              <div className="progress-glow"></div>
             </div>
-            <span className="ai-label">Acira AI</span>
+          </div>
+          <p className="phase-text">{getPhaseText()}</p>
+        </div>
+
+        {/* Issues List */}
+        <div className="issues-section">
+          <div className="section-header">
+            <h3>Detected Issues</h3>
+            <span className="issue-count">{fixedIssues.length}/{issues.length}</span>
           </div>
           
-          <div className="response-content">
-            {formatText(displayedText)}
-            {phase === 'responding' && showCursor && <span className="cursor">|</span>}
-          </div>
+          <div className="issues-list">
+            {issues.map((issue, index) => (
+              <div 
+                key={issue.id} 
+                className={`issue-item ${
+                  fixedIssues.includes(issue.id) ? 'fixed' : 
+                  currentIssue === index && phase === 'fixing' ? 'fixing' : 
+                  ''
+                }`}
+              >
+                <div className="issue-icon">
+                  {fixedIssues.includes(issue.id) ? (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  ) : currentIssue === index && phase === 'fixing' ? (
+                    <div className="spinner-small"></div>
+                  ) : (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <line x1="12" y1="8" x2="12" y2="12"/>
+                      <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                  )}
+                </div>
+                
+                <div className="issue-details">
+                  <div className="issue-name">{issue.name}</div>
+                  <div className="issue-status">
+                    {fixedIssues.includes(issue.id) ? 'Resolved' : 
+                     currentIssue === index && phase === 'fixing' ? 'Fixing...' : 
+                     issue.status}
+                  </div>
+                </div>
 
-          {phase === 'complete' && (
-            <button onClick={handleReset} className="reset-btn">
-              Try another demo
-            </button>
-          )}
+                {currentIssue === index && phase === 'fixing' && (
+                  <div className="issue-progress">
+                    <div className="issue-progress-bar"></div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
-      )}
+
+        {/* System Stats */}
+        <div className="stats-section">
+          <div className="stats-grid">
+            {systemStats.map((stat, index) => (
+              <div key={index} className="stat-item">
+                <div className="stat-label">{stat.label}</div>
+                <div className="stat-value">{stat.value}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Complete State */}
+        {phase === 'complete' && (
+          <div className="complete-banner">
+            <div className="complete-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </div>
+            <div className="complete-text">
+              <div className="complete-title">System Optimized</div>
+              <div className="complete-subtitle">All issues resolved automatically</div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

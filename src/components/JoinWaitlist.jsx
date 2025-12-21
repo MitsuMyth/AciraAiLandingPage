@@ -220,7 +220,7 @@ Submitted: ${new Date().toLocaleString()}
     try {
       // Format data for Web3Forms
       const formData = {
-        access_key: "d4c6c834-cc2b-498c-8d7e-994811b9fee7", // Replace with your actual key
+        access_key: "f09d058e-268b-42d5-9f30-5ca1a9364445",
         name: name,
         email: email,
         company: company || 'Not provided',
@@ -243,6 +243,16 @@ Submitted: ${new Date().toLocaleString()}
 
       if (result.success) {
         console.log('Waitlist submission successful:', result)
+        
+        // Increment the waitlist counter
+        try {
+          await fetch('https://api.countapi.xyz/hit/acira-ai/waitlist')
+          console.log('Waitlist counter incremented')
+        } catch (countError) {
+          console.error('Failed to increment counter:', countError)
+          // Don't fail the submission if counter increment fails
+        }
+        
         setIsComplete(true)
       } else {
         throw new Error(result.message || 'Submission failed')
@@ -306,7 +316,7 @@ Submitted: ${new Date().toLocaleString()}
         <div className="waitlist-header-content">
           <button onClick={onComplete} className="header-logo">
             <img src="/logo.svg" alt="Acira Logo" className="logo-svg" />
-              <span className="ai-label">Acira AI</span>
+            <span className="ai-label">Acira AI</span>
           </button>
           <button onClick={onComplete} className="header-back">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
