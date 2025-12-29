@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
+import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import './LandingPage.css'
-import AIProblemSolver from './AIProblemSolver'
+import Earth from './Earth'
+import { AnimatedCounter } from './AnimatedCounter'
 
 const integrations = [
   { name: 'Zoom', logo: <svg viewBox="0 0 24 24" fill="currentColor" className="integration-logo"><path d="M2 8v7a1 1 0 001 1h12a1 1 0 001-1V8a1 1 0 00-1-1H3a1 1 0 00-1 1zm19.5 1.5l-4 2.5v-4l4 2.5z"/></svg> },
@@ -26,57 +28,41 @@ const faqs = [
   { id: 10, question: 'Is Acira free?', answer: 'Early access details will be shared with waitlist users.' }
 ]
 
-const problems = [
-  { title: 'Mic Not Detected', description: 'Your meeting starts and suddenly your mic disappears from the app.', iconType: 'mic' },
-  { title: 'Camera Issues', description: 'Black screen or frozen video right when you need to present.', iconType: 'camera' },
-  { title: 'Audio Glitches', description: 'Crackling, echoes, or complete audio dropouts mid-conversation.', iconType: 'audio' },
-  { title: 'Permission Chaos', description: 'Apps have access but devices still don\'t work properly.', iconType: 'settings' },
-  { title: 'Restart Roulette', description: 'Constantly restarting apps and devices hoping it\'ll fix itself.', iconType: 'refresh' },
-  { title: 'Wasted Time', description: 'Minutes turning into hours troubleshooting instead of working.', iconType: 'clock' }
-]
-
-const ProblemIcon = ({ type }) => {
-  const icons = {
-    mic: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>,
-    camera: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m23 7-7 5 7 5V7z"/><rect width="15" height="14" x="1" y="5" rx="2" ry="2"/></svg>,
-    audio: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>,
-    settings: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>,
-    refresh: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>,
-    clock: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-  }
-  return <div className="problem-icon">{icons[type]}</div>
-}
-
-const howItWorks = [
-  { step: '01', title: 'Intelligent Detection', description: 'Acira monitors your system and apps for audio/video issues—detecting problems the moment they occur.', iconType: 'search' },
-  { step: '02', title: 'Root Cause Analysis', description: 'Our AI identifies the exact cause, whether it\'s a driver conflict, permission problem, or app misconfiguration.', iconType: 'brain' },
-  { step: '03', title: 'Autonomous Fix', description: 'Acira automatically applies the right fix—no manual intervention needed. You stay in your meeting.', iconType: 'zap' }
-]
-
-const StepIcon = ({ type }) => {
-  const icons = {
-    search: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>,
-    brain: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>,
-    zap: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-  }
-  return <div className="step-icon">{icons[type]}</div>
-}
-
-const whyAcira = [
-  { title: 'No Manual Troubleshooting', description: 'Stop Googling error messages. Acira handles everything automatically.', iconType: 'block' },
-  { title: 'Works in Real-Time', description: 'Fixes happen while you\'re in your meeting—not after you\'ve missed the discussion.', iconType: 'zap' },
-  { title: 'Learns Your System', description: 'Acira adapts to your hardware, software, and usage patterns.', iconType: 'brain' },
-  { title: 'Zero Technical Knowledge', description: 'No need to understand drivers or permissions. Just install and forget.', iconType: 'sparkle' }
-]
-
 const WhyIcon = ({ type }) => {
   const icons = {
     block: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>,
     zap: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
     brain: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>,
-    sparkle: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
+    sparkle: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>,
+    shield: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
+    cpu: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
   }
   return <div className="why-icon">{icons[type]}</div>
+}
+
+// Animated text rotation component
+const RotatingText = ({ words }) => {
+  const [index, setIndex] = useState(0)
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % words.length)
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [words.length])
+  
+  return (
+    <motion.span
+      key={index}
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: -20, opacity: 0 }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      className="rotating-word"
+    >
+      {words[index]}
+    </motion.span>
+  )
 }
 
 function LandingPage({ onJoinWaitlist }) {
@@ -89,15 +75,16 @@ function LandingPage({ onJoinWaitlist }) {
   const [contactSubmitted, setContactSubmitted] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(false)
   
-  const heroRef = useRef(null), featuresRef = useRef(null), faqsRef = useRef(null), contactRef = useRef(null)
+  const heroRef = useRef(null)
+  const featuresRef = useRef(null)
+  const faqsRef = useRef(null)
+  const contactRef = useRef(null)
 
-  // Fetch real waitlist count from CountAPI
   useEffect(() => {
     const fetchWaitlistCount = async () => {
       try {
         const response = await fetch('https://api.countapi.xyz/get/acira-ai/waitlist')
         const data = await response.json()
-        
         if (data.value !== undefined) {
           setWaitlistCount(data.value)
         }
@@ -108,10 +95,7 @@ function LandingPage({ onJoinWaitlist }) {
         setIsLoadingCount(false)
       }
     }
-
     fetchWaitlistCount()
-    
-    // Refresh count every 30 seconds
     const interval = setInterval(fetchWaitlistCount, 30000)
     return () => clearInterval(interval)
   }, [])
@@ -127,11 +111,18 @@ function LandingPage({ onJoinWaitlist }) {
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50)
-      const sections = [{ id: 'features', ref: featuresRef }, { id: 'faqs', ref: faqsRef }, { id: 'contact', ref: contactRef }]
+      const sections = [
+        { id: 'features', ref: featuresRef },
+        { id: 'faqs', ref: faqsRef },
+        { id: 'contact', ref: contactRef }
+      ]
       for (const section of sections) {
         if (section.ref.current) {
           const rect = section.ref.current.getBoundingClientRect()
-          if (rect.top <= 100 && rect.bottom >= 100) { setActiveNavItem(section.id); break }
+          if (rect.top <= 100 && rect.bottom >= 100) {
+            setActiveNavItem(section.id)
+            break
+          }
         }
       }
     }
@@ -139,25 +130,27 @@ function LandingPage({ onJoinWaitlist }) {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add('animate-in') }), { threshold: 0.1, rootMargin: '0px 0px -50px 0px' })
-    document.querySelectorAll('.animate-on-scroll').forEach((el) => observer.observe(el))
-    return () => observer.disconnect()
-  }, [])
-
   const scrollToSection = (ref) => ref.current?.scrollIntoView({ behavior: 'smooth' })
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
-  const handleContactSubmit = (e) => { e.preventDefault(); setContactSubmitted(true); setTimeout(() => { setContactSubmitted(false); setContactForm({ name: '', email: '', message: '' }) }, 3000) }
   const toggleTheme = () => setIsDarkMode(!isDarkMode)
   const toggleFaq = (id) => setOpenFaq(openFaq === id ? null : id)
+  
+  const handleContactSubmit = (e) => {
+    e.preventDefault()
+    setContactSubmitted(true)
+    setTimeout(() => {
+      setContactSubmitted(false)
+      setContactForm({ name: '', email: '', message: '' })
+    }, 3000)
+  }
 
   return (
     <div className="landing-page">
+      {/* NAVBAR */}
       <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
         <div className="nav-container container">
           <a href="#" className="nav-logo" onClick={scrollToTop}>
             <img src="/logo.svg" alt="Acira Logo" className="logo-svg" />
-
             <span className="ai-label">Acira</span>
           </a>
           <div className="nav-links">
@@ -170,14 +163,10 @@ function LandingPage({ onJoinWaitlist }) {
               {isDarkMode ? (
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="theme-icon">
                   <circle cx="12" cy="12" r="4"/>
-                  <path d="M12 2v2"/>
-                  <path d="M12 20v2"/>
-                  <path d="m4.93 4.93 1.41 1.41"/>
-                  <path d="m17.66 17.66 1.41 1.41"/>
-                  <path d="M2 12h2"/>
-                  <path d="M20 12h2"/>
-                  <path d="m6.34 17.66-1.41 1.41"/>
-                  <path d="m19.07 4.93-1.41 1.41"/>
+                  <path d="M12 2v2"/><path d="M12 20v2"/>
+                  <path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/>
+                  <path d="M2 12h2"/><path d="M20 12h2"/>
+                  <path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
                 </svg>
               ) : (
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="theme-icon">
@@ -187,143 +176,728 @@ function LandingPage({ onJoinWaitlist }) {
             </button>
             <button className="nav-cta nav-cta-glow" onClick={onJoinWaitlist}>
               <span>Get Early Access</span>
-             
             </button>
           </div>
         </div>
       </nav>
 
-      <section className="hero" ref={heroRef}>
+      {/* HERO SECTION - BIRD.COM STYLE (Left-aligned) */}
+      <section className="hero-bird" ref={heroRef}>
         <div className="hero-container">
-          <div className="hero-left animate-on-scroll">
-            <div className="hero-badge">
-              <span className="badge-dot"></span>
+          <motion.div 
+            className="hero-content-bird"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+          >
+            <motion.div 
+              className="hero-badge-bird"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <span className="badge-dot-new"></span>
               <span>Limited early access spots</span>
-            </div>
-            <h1 className="hero-title">Your computer fixes itself. <span className="gradient-text-animated">Automatically.</span></h1>
-            <p className="hero-description">Just describe the problem in plain language. Acira runs on your computer, understands the issue across apps and the system, and fixes audio and video problems on its own. Broader system fixes are coming next!</p>
-            <div className="hero-cta">
-              <button className="btn-primary btn-large btn-glow" onClick={onJoinWaitlist}>
-                <span className="btn-glow-bg"></span>
-                <span className="btn-content">
-                  Join Now
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M5 12h14M12 5l7 7-7 7"/>
-                  </svg>
-                </span>
-              </button>
-              <div className="waitlist-count">
-                {isLoadingCount ? (
-                  <span className="count-number count-loading">•••</span>
-                ) : (
-                  <span className="count-number">{waitlistCount.toLocaleString()}</span>
-                )}
-                <span className="count-label">professionals waiting</span>
-              </div>
-            </div>
-          </div>
-          
-          <div className="hero-right animate-on-scroll">
+            </motion.div>
             
-          </div>
-        </div>
-      </section>
+            <motion.h1 
+              className="hero-title-bird"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              Your computer fixes itself.{' '}
+              <span className="gradient-word">
+                <RotatingText words={['Automatically.', 'Instantly.', 'Intelligently.']} />
+              </span>
+            </motion.h1>
+            
+            <motion.p 
+              className="hero-description-bird"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
+              Just describe the problem in plain language. Acira runs on your computer, 
+              understands the issue across apps and the system, and fixes audio and video 
+              problems on its own.
+            </motion.p>
+            
+            <motion.div 
+              className="hero-cta-bird"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+            >
+              <motion.button 
+                className="btn-primary-bird" 
+                onClick={onJoinWaitlist}
+                whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(13, 82, 255, 0.3)' }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <span className="btn-shimmer"></span>
+                <span className="btn-text">Join Now</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </motion.button>
+              
+              <motion.button 
+                className="btn-secondary-bird"
+                onClick={() => scrollToSection(featuresRef)}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <span>How it works</span>
+              </motion.button>
+            </motion.div>
 
-      <section className="integrations">
-        <div className="container">
-          <p className="integrations-label animate-on-scroll">Works with your favorite apps</p>
-          <div className="integrations-track"><div className="integrations-slide">{[...integrations, ...integrations].map((i, idx) => <div key={idx} className="integration-item">{i.logo}<span className="integration-name">{i.name}</span></div>)}</div></div>
-        </div>
-      </section>
-
-      <section className="problems">
-        <div className="container">
-          <div className="section-header animate-on-scroll"><span className="section-label gradient-text-animated">The Problem</span><h2 className="gradient-text-animated">Sound familiar?</h2><p>These issues cost professionals hours every week.</p></div>
-          <div className="problems-grid">{problems.map((p, i) => <div key={i} className="problem-card animate-on-scroll" style={{ animationDelay: `${i * 0.1}s` }}><ProblemIcon type={p.iconType} /><h4>{p.title}</h4><p>{p.description}</p></div>)}</div>
-        </div>
-      </section>
-
-      <section className="how-it-works" ref={featuresRef} id="features">
-        <div className="container">
-          <div className="section-header animate-on-scroll"><span className="section-label gradient-text-animated">How Acira Works</span><h2 className="gradient-text-animated">Intelligent fixes, zero effort</h2><p>Three steps to stress-free meetings</p></div>
-          <div className="steps-container">{howItWorks.map((s, i) => <div key={i} className="step-card animate-on-scroll" style={{ animationDelay: `${i * 0.15}s` }}><div className="step-number">{s.step}</div><StepIcon type={s.iconType} /><h3>{s.title}</h3><p>{s.description}</p></div>)}</div>
-        </div>
-      </section>
-
-      <section className="why-acira">
-        <div className="container">
-          <div className="section-header animate-on-scroll"><span className="section-label gradient-text-animated">Why Acira</span><h2 className="gradient-text-animated">What makes us different</h2><p>No one else does what we do</p></div>
-          <div className="why-grid">{whyAcira.map((w, i) => <div key={i} className="why-card animate-on-scroll" style={{ animationDelay: `${i * 0.1}s` }}><WhyIcon type={w.iconType} /><div><h4>{w.title}</h4><p>{w.description}</p></div></div>)}</div>
-        </div>
-      </section>
-
-      <section className="starting-scope">
-        <div className="container">
-          <div className="scope-content animate-on-scroll">
-            <div className="scope-text">
-              <span className="section-label gradient-text-animated">Our Vision</span>
-              <h2 className="gradient-text-animated">Starting with audio & video. Building toward everything.</h2>
-              <p>We're launching with mic, camera, and audio fixes—the issues that disrupt your most important moments. But our vision goes far beyond that.</p>
-              <p>Acira is built to become your complete system health companion—automatically detecting and resolving issues across your entire computer.</p>
-              <ul className="scope-list"><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>Audio & video device management</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>App-specific troubleshooting</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>System performance optimization</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>Proactive issue prevention</li></ul>
-            </div>
-            <div className="scope-visual"><div className="scope-circles"><div className="scope-ring scope-ring-3"><span>System</span></div><div className="scope-ring scope-ring-2"><span>Apps</span></div><div className="scope-ring scope-ring-1"><span>Audio/Video</span></div></div></div>
-          </div>
-        </div>
-      </section>
-
-      <section className="extra-cta">
-        <div className="container">
-          <div className="cta-card animate-on-scroll">
-            <div className="cta-content">
-              <div className="cta-text">
-                <h2>Get Early Access</h2>
-                <p>Join {waitlistCount > 0 ? `${waitlistCount.toLocaleString()}+ ` : ''}professionals who are ready to fix their tech problems forever.</p>
-                <button className="btn-primary btn-large btn-glow" onClick={onJoinWaitlist}>
-                  <span className="btn-glow-bg"></span>
-                  <span className="btn-content">
-                    Claim Your Spot
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
+            <motion.div 
+              className="hero-stats-bird"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1 }}
+            >
+              <div className="stat-item-bird">
+                {isLoadingCount ? (
+                  <span className="stat-number-bird loading">•••</span>
+                ) : (
+                  <span className="stat-number-bird">
+                    <AnimatedCounter value={waitlistCount} />+
                   </span>
-                </button>
+                )}
+                <span className="stat-label-bird">Professionals waiting</span>
               </div>
-              <div className="cta-image">
-                <img src="/laptopacirav2.png" alt="Acira" className="cta-logo" />
+              <div className="stat-divider"></div>
+              <div className="stat-item-bird">
+                <span className="stat-number-bird">95%</span>
+                <span className="stat-label-bird">Issues auto-resolved</span>
               </div>
+              <div className="stat-divider"></div>
+              <div className="stat-item-bird">
+                <span className="stat-number-bird">&lt;30s</span>
+                <span className="stat-label-bird">Average fix time</span>
+              </div>
+            </motion.div>
+          </motion.div>
+
+          <motion.div 
+            className="hero-visual-bird"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.5 }}
+          >
+            <div className="hero-visual-wrapper">
+              <div className="terminal-window">
+                <div className="terminal-header">
+                  <div className="terminal-dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <span className="terminal-title">Acira Agent</span>
+                </div>
+                <div className="terminal-body">
+                  <div className="terminal-line">
+                    <span className="terminal-prompt">$</span>
+                    <span className="terminal-text typing">"My microphone isn't working in Zoom"</span>
+                  </div>
+                  <div className="terminal-line output">
+                    <span className="terminal-status success">✓</span>
+                    <span>Scanning audio devices...</span>
+                  </div>
+                  <div className="terminal-line output">
+                    <span className="terminal-status success">✓</span>
+                    <span>Found: Microphone access blocked</span>
+                  </div>
+                  <div className="terminal-line output">
+                    <span className="terminal-status success">✓</span>
+                    <span>Fixed: Enabled microphone permissions</span>
+                  </div>
+                  <div className="terminal-line result">
+                    <span className="terminal-emoji">🎤</span>
+                    <span>Your microphone is now working!</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* INTEGRATIONS MARQUEE */}
+      <section className="integrations-intelly">
+        <motion.p 
+          className="integrations-title"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          Works with your favorite apps
+        </motion.p>
+        
+        <div className="marquee-container">
+          <div className="marquee-track">
+            {[...integrations, ...integrations, ...integrations].map((integration, idx) => (
+              <motion.div 
+                key={idx} 
+                className="integration-card"
+                whileHover={{ scale: 1.1, y: -5 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                {integration.logo}
+                <span>{integration.name}</span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PROBLEMS SECTION - Horizontal Scrolling Questions */}
+      <section className="problems-section-intelly">
+        <div className="container-intelly">
+          <motion.div 
+            className="section-header-intelly"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <span className="section-label-intelly">The Problem</span>
+            <h2>Common roadblocks to <span className="gradient-word">productivity</span></h2>
+            <p>Tech problems disrupt your flow and waste hours every week</p>
+          </motion.div>
+          
+          <div className="questions-marquee">
+            <div className="questions-track-scroll track-1">
+              {['Why is my mic not working?', 'How do I fix my camera?', 'Why can\'t people hear me?', 'My headphones aren\'t detected', 'Audio is playing from wrong speaker'].map((q, i) => (
+                <div key={i} className="question-pill">
+                  <span className="question-mark">?</span>
+                  <span>{q}</span>
+                </div>
+              ))}
+              {['Why is my mic not working?', 'How do I fix my camera?', 'Why can\'t people hear me?', 'My headphones aren\'t detected', 'Audio is playing from wrong speaker'].map((q, i) => (
+                <div key={`dup1-${i}`} className="question-pill">
+                  <span className="question-mark">?</span>
+                  <span>{q}</span>
+                </div>
+              ))}
+            </div>
+            
+            <div className="questions-track-scroll track-2">
+              {['My audio is crackling', 'Why is my video lagging?', 'Speakers aren\'t detected', 'Echo in my calls', 'Screen share has no audio'].map((q, i) => (
+                <div key={i} className="question-pill">
+                  <span className="question-mark">?</span>
+                  <span>{q}</span>
+                </div>
+              ))}
+              {['My audio is crackling', 'Why is my video lagging?', 'Speakers aren\'t detected', 'Echo in my calls', 'Screen share has no audio'].map((q, i) => (
+                <div key={`dup2-${i}`} className="question-pill">
+                  <span className="question-mark">?</span>
+                  <span>{q}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="questions-track-scroll track-3">
+              {['Zoom can\'t find my camera', 'Audio keeps cutting out', 'Wrong device selected', 'Permissions are confusing', 'Volume too low'].map((q, i) => (
+                <div key={i} className="question-pill">
+                  <span className="question-mark">?</span>
+                  <span>{q}</span>
+                </div>
+              ))}
+              {['Zoom can\'t find my camera', 'Audio keeps cutting out', 'Wrong device selected', 'Permissions are confusing', 'Volume too low'].map((q, i) => (
+                <div key={`dup3-${i}`} className="question-pill">
+                  <span className="question-mark">?</span>
+                  <span>{q}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      <section className="faqs" ref={faqsRef} id="faqs">
-        <div className="container">
-          <div className="section-header animate-on-scroll"><span className="section-label gradient-text-animated">FAQs</span><h2 className="gradient-text-animated">Common questions</h2><p>Everything you need to know about Acira</p></div>
-         <div className="faq-list-wide">{faqs.map((f) => <div key={f.id} className={`faq-item ${openFaq === f.id ? 'open' : ''}`}><button className="faq-question" onClick={() => toggleFaq(f.id)}><span>{f.question}</span><svg className="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg></button><div className="faq-answer"><p>{f.answer}</p></div></div>)}</div>
-        </div>
-      </section>
+      {/* FEATURES SECTION - Clean Intelly Style */}
+      <section className="features-section" ref={featuresRef} id="features">
+        <div className="container-intelly">
+          <motion.div 
+            className="section-header-intelly"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <span className="section-label-intelly">The features</span>
+            <h2>Monitor and improve performance with <span className="gradient-word">real-time data</span></h2>
+          </motion.div>
 
-      <section className="contact" ref={contactRef} id="contact">
-        <div className="container">
-          <div className="contact-wrapper">
-            <div className="contact-info animate-on-scroll"><span className="section-label gradient-text-animated">Contact Us</span><h2 className="gradient-text-animated">Have questions? Let's talk.</h2><p>We'd love to hear from you. Whether you have a question about features, pricing, or anything else.</p><div className="contact-email"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg><span>hello@acira.ai</span></div></div>
-            <div className="contact-form-wrapper animate-on-scroll">{contactSubmitted ? <div className="contact-success"><div className="success-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg></div><h3>Message sent!</h3><p>We'll get back to you soon.</p></div> : <form className="contact-form" onSubmit={handleContactSubmit}><div className="form-group"><label>Name</label><input type="text" value={contactForm.name} onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })} required placeholder="Your name"/></div><div className="form-group"><label>Email</label><input type="email" value={contactForm.email} onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })} required placeholder="you@example.com"/></div><div className="form-group"><label>Message</label><textarea value={contactForm.message} onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })} required placeholder="How can we help?" rows="4"/></div><button type="submit" className="btn-primary">Send Message</button></form>}</div>
+          <div className="features-bento">
+            {/* Main Feature Card - Large */}
+            <motion.div 
+              className="feature-card feature-card-main"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="feature-card-visual">
+                <div className="feature-mockup">
+                  <div className="mockup-window">
+                    <div className="mockup-header">
+                      <div className="mockup-dots"><span></span><span></span><span></span></div>
+                    </div>
+                    <div className="mockup-content">
+                      <div className="mockup-sidebar">
+                        <div className="sidebar-item active"></div>
+                        <div className="sidebar-item"></div>
+                        <div className="sidebar-item"></div>
+                        <div className="sidebar-item"></div>
+                      </div>
+                      <div className="mockup-main">
+                        <div className="mockup-stat-cards">
+                          <div className="mockup-stat">
+                            <span className="mockup-stat-value"><AnimatedCounter value={95} />%</span>
+                            <span className="mockup-stat-label">Success Rate</span>
+                          </div>
+                          <div className="mockup-stat">
+                            <span className="mockup-stat-value"><AnimatedCounter value={847} /></span>
+                            <span className="mockup-stat-label">Issues Fixed</span>
+                          </div>
+                        </div>
+                        <div className="mockup-chart">
+                          <svg viewBox="0 0 200 60" className="chart-line">
+                            <path d="M0,50 Q30,45 50,35 T100,25 T150,15 T200,10" fill="none" stroke="url(#chartGradient)" strokeWidth="2"/>
+                            <defs>
+                              <linearGradient id="chartGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stopColor="#0D52FF" />
+                                <stop offset="100%" stopColor="#00D4FF" />
+                              </linearGradient>
+                            </defs>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="feature-card-content">
+                <h3>Understand your system</h3>
+                <p>Gain comprehensive insights into your audio and video configuration with AI-powered diagnostics.</p>
+              </div>
+            </motion.div>
+
+            {/* Secondary Feature Card */}
+            <motion.div 
+              className="feature-card feature-card-secondary"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              <div className="feature-card-visual">
+                <div className="feature-icons-grid">
+                  <div className="feature-icon-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                      <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                    </svg>
+                  </div>
+                  <div className="feature-icon-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <polygon points="23 7 16 12 23 17 23 7"/>
+                      <rect x="1" y="5" width="15" height="14" rx="2"/>
+                    </svg>
+                  </div>
+                  <div className="feature-icon-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+                      <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z"/>
+                      <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+                    </svg>
+                  </div>
+                  <div className="feature-icon-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <rect x="2" y="3" width="20" height="14" rx="2"/>
+                      <path d="M8 21h8"/>
+                      <path d="M12 17v4"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div className="feature-card-content">
+                <h3>24/7 Support</h3>
+                <p>Our AI agent works around the clock to diagnose and fix your issues automatically.</p>
+              </div>
+            </motion.div>
+
+            {/* AI Card */}
+            <motion.div 
+              className="feature-card feature-card-ai"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <div className="ai-badge-pill">AI Integrated</div>
+              <div className="feature-card-visual">
+                <div className="ai-glow-orb">
+                  <div className="orb-core"></div>
+                  <div className="orb-ring"></div>
+                </div>
+              </div>
+              <div className="feature-card-content">
+                <h3>Powered by Advanced AI</h3>
+                <p>Machine learning that understands your unique system configuration.</p>
+              </div>
+            </motion.div>
+
+            {/* Stats Row */}
+            <motion.div 
+              className="feature-card feature-card-stats"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <div className="stats-row">
+                <div className="stat-block">
+                  <span className="stat-value"><AnimatedCounter value={30} />s</span>
+                  <span className="stat-label">Avg. Fix Time</span>
+                </div>
+                <div className="stat-divider-v"></div>
+                <div className="stat-block">
+                  <span className="stat-value"><AnimatedCounter value={4} />h+</span>
+                  <span className="stat-label">Saved Monthly</span>
+                </div>
+                <div className="stat-divider-v"></div>
+                <div className="stat-block">
+                  <span className="stat-value"><AnimatedCounter value={waitlistCount || 1000} />+</span>
+                  <span className="stat-label">Professionals</span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Wide Feature Card */}
+            <motion.div 
+              className="feature-card feature-card-wide"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              <div className="wide-content">
+                <div className="wide-text">
+                  <h3>Enhance Your Experience with AI Automation</h3>
+                  <p>Transform your workflow by leveraging advanced AI technology. Our platform provides automated diagnostics and instant fixes for all your audio and video issues.</p>
+                </div>
+                <div className="wide-visual">
+                  <div className="automation-flow">
+                    <div className="flow-step">
+                      <div className="flow-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                          <circle cx="12" cy="12" r="10"/>
+                          <path d="M12 6v6l4 2"/>
+                        </svg>
+                      </div>
+                      <span>Detect</span>
+                    </div>
+                    <div className="flow-arrow">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                      </svg>
+                    </div>
+                    <div className="flow-step">
+                      <div className="flow-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                        </svg>
+                      </div>
+                      <span>Analyze</span>
+                    </div>
+                    <div className="flow-arrow">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                      </svg>
+                    </div>
+                    <div className="flow-step">
+                      <div className="flow-icon success">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                          <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                      </div>
+                      <span>Resolve</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      <footer className="footer">
-        <div className="container">
-          <div className="footer-content">
-            <div className="footer-brand"><a href="#" className="nav-logo" onClick={scrollToTop}>
-              <img src="/logo.svg" alt="Acira Logo" className="logo-svg" />
+      {/* WHY ACIRA - Better Image Cards */}
+      <section className="why-acira-intelly">
+        <div className="container-intelly">
+          <motion.div 
+            className="section-header-intelly"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <span className="section-label-intelly">Why Acira</span>
+            <h2>What makes us <span className="gradient-word">different</span></h2>
+          </motion.div>
+          
+          <div className="features-grid-intelly">
+            <motion.div 
+              className="feature-card-intelly feature-large"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              whileHover={{ y: -8 }}
+            >
+              <div className="feature-image-wrapper">
+                <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=80" alt="Real-time" />
+                <div className="feature-image-overlay"></div>
+              </div>
+              <div className="feature-content-overlay">
+                <WhyIcon type="zap" />
+                <h3>Real-Time Fixes</h3>
+                <p>Problems are detected and resolved instantly, without interrupting your workflow. No waiting, no restarts.</p>
+              </div>
+            </motion.div>
 
-              <span className="logo-text gradient-text-animated">Acira</span>
-            </a><p>Intelligent fixes for your tech problems.</p></div>
-            <div className="footer-links"><div className="footer-column"><h4>Product</h4><a href="#features" onClick={(e) => { e.preventDefault(); scrollToSection(featuresRef) }}>Features</a><a href="#faqs" onClick={(e) => { e.preventDefault(); scrollToSection(faqsRef) }}>FAQs</a><a href="#" onClick={onJoinWaitlist}>Join Waitlist</a></div><div className="footer-column"><h4>Company</h4><a href="#contact" onClick={(e) => { e.preventDefault(); scrollToSection(contactRef) }}>Contact</a><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div></div>
+            <motion.div 
+              className="feature-card-intelly"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.15 }}
+              whileHover={{ y: -8 }}
+            >
+              <div className="feature-image-wrapper">
+                <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80" alt="AI-powered" />
+                <div className="feature-image-overlay"></div>
+              </div>
+              <div className="feature-content-overlay">
+                <WhyIcon type="brain" />
+                <h3>AI-Powered Intelligence</h3>
+                <p>Advanced machine learning understands your system's unique configuration and context.</p>
+              </div>
+            </motion.div>
+
+            <motion.div 
+              className="feature-card-intelly"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              whileHover={{ y: -8 }}
+            >
+              <div className="feature-image-wrapper">
+                <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&q=80" alt="Secure" />
+                <div className="feature-image-overlay"></div>
+              </div>
+              <div className="feature-content-overlay">
+                <WhyIcon type="shield" />
+                <h3>Privacy First</h3>
+                <p>Your data stays on your machine. We only collect what's needed to diagnose and fix issues.</p>
+              </div>
+            </motion.div>
           </div>
-          <div className="footer-bottom"><p>© 2025 Acira AI. All rights reserved.</p><button className="back-to-top" onClick={scrollToTop}>Back to top<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 15l-6-6-6 6"/></svg></button></div>
+        </div>
+      </section>
+
+      {/* FAQS */}
+      <section className="faqs-intelly" ref={faqsRef} id="faqs">
+        <div className="container-intelly">
+          <motion.div 
+            className="section-header-intelly"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <span className="section-label-intelly">FAQs</span>
+            <h2>Common <span className="gradient-word">questions</span></h2>
+            <p>Everything you need to know about Acira</p>
+          </motion.div>
+          
+          <div className="faq-grid">
+            {faqs.map((faq, i) => (
+              <motion.div 
+                key={faq.id} 
+                className={`faq-item-intelly ${openFaq === faq.id ? 'open' : ''}`}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.05 }}
+              >
+                <button className="faq-question-intelly" onClick={() => toggleFaq(faq.id)}>
+                  <span>{faq.question}</span>
+                  <motion.svg 
+                    className="faq-icon-intelly" 
+                    width="20" 
+                    height="20" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2"
+                    animate={{ rotate: openFaq === faq.id ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <path d="M6 9l6 6 6-6"/>
+                  </motion.svg>
+                </button>
+                {openFaq === faq.id && (
+                  <motion.div 
+                    className="faq-answer-intelly"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <p>{faq.answer}</p>
+                  </motion.div>
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA SECTION */}
+      <section className="cta-intelly">
+        <motion.div 
+          className="cta-card-intelly"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <h2>Get <span className="gradient-word">Early Access</span></h2>
+          <p>Join {waitlistCount > 0 ? `${waitlistCount.toLocaleString()}+ ` : ''}professionals who are ready to fix their tech problems forever.</p>
+          <motion.button 
+            className="btn-primary-intelly" 
+            onClick={onJoinWaitlist}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <span className="btn-shimmer"></span>
+            <span className="btn-text">Claim Your Spot</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </motion.button>
+        </motion.div>
+      </section>
+
+      {/* CONTACT */}
+      <section className="contact-intelly" ref={contactRef} id="contact">
+        <div className="container-intelly">
+          <div className="contact-wrapper-intelly">
+            <motion.div 
+              className="contact-info-intelly"
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <span className="section-label-intelly">Contact Us</span>
+              <h2>Have questions? <span className="gradient-word">Let's talk.</span></h2>
+              <p>We'd love to hear from you. Whether you have a question about features, pricing, or anything else.</p>
+              <div className="contact-email-intelly">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="2" y="4" width="20" height="16" rx="2"/>
+                  <path d="M22 6l-10 7L2 6"/>
+                </svg>
+                <span>hello@acira.ai</span>
+              </div>
+            </motion.div>
+            
+            <motion.div 
+              className="contact-form-intelly"
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              {contactSubmitted ? (
+                <div className="success-message">
+                  <div className="success-icon-intelly">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </div>
+                  <h3>Message sent!</h3>
+                  <p>We'll get back to you soon.</p>
+                </div>
+              ) : (
+                <form onSubmit={handleContactSubmit}>
+                  <div className="form-group-intelly">
+                    <label>Name</label>
+                    <input type="text" value={contactForm.name} onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })} required placeholder="Your name" />
+                  </div>
+                  <div className="form-group-intelly">
+                    <label>Email</label>
+                    <input type="email" value={contactForm.email} onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })} required placeholder="you@example.com" />
+                  </div>
+                  <div className="form-group-intelly">
+                    <label>Message</label>
+                    <textarea value={contactForm.message} onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })} required placeholder="How can we help?" rows="4" />
+                  </div>
+                  <motion.button 
+                    type="submit" 
+                    className="btn-submit-intelly"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    Send Message
+                  </motion.button>
+                </form>
+              )}
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="footer-intelly">
+        <div className="container-intelly">
+          <div className="footer-content-intelly">
+            <div className="footer-brand-intelly">
+              <a href="#" className="nav-logo" onClick={scrollToTop}>
+                <img src="/logo.svg" alt="Acira Logo" className="logo-svg" />
+                <span className="logo-text gradient-word">Acira</span>
+              </a>
+              <p>Intelligent fixes for your tech problems.</p>
+            </div>
+            <div className="footer-links-intelly">
+              <div className="footer-column-intelly">
+                <h4>Product</h4>
+                <a href="#features" onClick={(e) => { e.preventDefault(); scrollToSection(featuresRef) }}>Features</a>
+                <a href="#faqs" onClick={(e) => { e.preventDefault(); scrollToSection(faqsRef) }}>FAQs</a>
+                <a href="#" onClick={onJoinWaitlist}>Join Waitlist</a>
+              </div>
+              <div className="footer-column-intelly">
+                <h4>Company</h4>
+                <a href="#contact" onClick={(e) => { e.preventDefault(); scrollToSection(contactRef) }}>Contact</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+              </div>
+            </div>
+          </div>
+          <div className="footer-bottom-intelly">
+            <p>© 2025 Acira AI. All rights reserved.</p>
+            <button className="back-to-top-intelly" onClick={scrollToTop}>
+              Back to top
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 15l-6-6-6 6"/>
+              </svg>
+            </button>
+          </div>
         </div>
       </footer>
     </div>
