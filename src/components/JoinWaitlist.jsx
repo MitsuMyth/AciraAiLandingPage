@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react'
 import './JoinWaitlist.css'
 
+// Counter API configuration - using Miles Hilliard's free CountAPI alternative
+const COUNTER_API_BASE = 'https://countapi.mileshilliard.com/api/v1'
+const COUNTER_KEY = 'acira-ai-waitlist-counter' // Use a unique key for your app
+
 const questions = [
   {
     id: 'troubleApps',
@@ -244,9 +248,9 @@ Submitted: ${new Date().toLocaleString()}
       if (result.success) {
         console.log('Waitlist submission successful:', result)
         
-        // Increment the waitlist counter
+        // Increment the waitlist counter using Miles Hilliard's CountAPI
         try {
-          await fetch('https://api.countapi.xyz/hit/acira-ai/waitlist')
+          await fetch(`${COUNTER_API_BASE}/hit/${COUNTER_KEY}`)
           console.log('Waitlist counter incremented')
         } catch (countError) {
           console.error('Failed to increment counter:', countError)

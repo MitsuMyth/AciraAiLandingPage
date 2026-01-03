@@ -65,6 +65,10 @@ const RotatingText = ({ words }) => {
   )
 }
 
+// Counter API configuration - using Miles Hilliard's free CountAPI alternative
+const COUNTER_API_BASE = 'https://countapi.mileshilliard.com/api/v1'
+const COUNTER_KEY = 'acira-ai-waitlist-counter' // Use a unique key for your app
+
 function LandingPage({ onJoinWaitlist }) {
   const [waitlistCount, setWaitlistCount] = useState(0)
   const [isLoadingCount, setIsLoadingCount] = useState(true)
@@ -83,14 +87,16 @@ function LandingPage({ onJoinWaitlist }) {
   useEffect(() => {
     const fetchWaitlistCount = async () => {
       try {
-        const response = await fetch('https://api.countapi.xyz/get/acira-ai/waitlist')
+        // Using Miles Hilliard's CountAPI alternative
+        const response = await fetch(`${COUNTER_API_BASE}/get/${COUNTER_KEY}`)
         const data = await response.json()
         if (data.value !== undefined) {
-          setWaitlistCount(data.value)
+          setWaitlistCount(parseInt(data.value, 10) || 0)
         }
         setIsLoadingCount(false)
       } catch (error) {
         console.error('Failed to fetch waitlist count:', error)
+        // Fallback to a default value if the API fails
         setWaitlistCount(0)
         setIsLoadingCount(false)
       }
