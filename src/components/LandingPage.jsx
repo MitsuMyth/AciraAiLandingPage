@@ -78,7 +78,7 @@ function LandingPage({ onJoinWaitlist }) {
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' })
   const [contactSubmitted, setContactSubmitted] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(false)
-  
+
   const heroRef = useRef(null)
   const featuresRef = useRef(null)
   const faqsRef = useRef(null)
@@ -287,43 +287,90 @@ function LandingPage({ onJoinWaitlist }) {
             </motion.div>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             className="hero-visual-bird"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, delay: 0.5 }}
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="hero-visual-wrapper">
-              <div className="terminal-window">
-                <div className="terminal-header">
-                  <div className="terminal-dots">
-                    <span></span><span></span><span></span>
-                  </div>
-                  <span className="terminal-title">Acira Agent</span>
-                </div>
-                <div className="terminal-body">
-                  <div className="terminal-line">
-                    <span className="terminal-prompt">$</span>
-                    <span className="terminal-text typing">"My microphone isn't working in Zoom"</span>
-                  </div>
-                  <div className="terminal-line output">
-                    <span className="terminal-status success">✓</span>
-                    <span>Scanning audio devices...</span>
-                  </div>
-                  <div className="terminal-line output">
-                    <span className="terminal-status success">✓</span>
-                    <span>Found: Microphone access blocked</span>
-                  </div>
-                  <div className="terminal-line output">
-                    <span className="terminal-status success">✓</span>
-                    <span>Fixed: Enabled microphone permissions</span>
-                  </div>
-                  <div className="terminal-line result">
-                    <span className="terminal-emoji">🎤</span>
-                    <span>Your microphone is now working!</span>
+            <div className="laptop-mockup">
+              <div className="laptop-screen">
+                <div className="laptop-camera"></div>
+                <div className="laptop-screen-content">
+                  {/* ACIRA AI PRODUCT DEMO */}
+                  <div className="acira-demo">
+
+                    {/* Cinematic Background */}
+                    <div className="demo-background"></div>
+
+                    {/* Acira Logo Intro */}
+                    <div className="acira-logo-intro">
+                      <img src="/logo.svg" alt="Acira" className="acira-logo" />
+                      <div className="acira-wordmark">
+                        <span className="acira-name">Acira</span>
+                        <span className="acira-tagline">AI</span>
+                      </div>
+                    </div>
+
+                    {/* Acira Brand - No Logo */}
+                    <div className="acira-brand-simple">
+                      <span className="brand-acira">Acira</span>
+                      <span className="brand-ai">AI</span>
+                    </div>
+
+                    {/* Text Overlay - Problem Statement */}
+                    <div className="demo-text problem-text">
+                      <h3>Microphone not working?</h3>
+                    </div>
+
+                    {/* Acira Agent Appears */}
+                    <div className="acira-agent-appear">
+                      <div className="agent-glow"></div>
+                    </div>
+
+                    {/* Text Overlay - Solution */}
+                    <div className="demo-text solution-text">
+                      <h3>Acira fixes it instantly.</h3>
+                    </div>
+
+                    {/* Particle Effect - Fix Happening */}
+                    <div className="fix-particles">
+                      <div className="particle particle-1"></div>
+                      <div className="particle particle-2"></div>
+                      <div className="particle particle-3"></div>
+                      <div className="particle particle-4"></div>
+                      <div className="particle particle-5"></div>
+                      <div className="particle particle-6"></div>
+                    </div>
+
+                    {/* Success Checkmark */}
+                    <div className="success-checkmark">
+                      <div className="check-circle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                          <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                      </div>
+                    </div>
+
+                    {/* Final Text - CTA */}
+                    <div className="demo-text final-text">
+                      <h2>Your AI-powered<br/>tech assistant.</h2>
+                      <p>Always watching. Always fixing.</p>
+                    </div>
+
+                    {/* Acira Logo Outro */}
+                    <div className="acira-logo-outro">
+                      <img src="/logo.svg" alt="Acira" className="acira-logo-outro-img" />
+                      <span className="acira-name-outro">Acira</span>
+                    </div>
+
                   </div>
                 </div>
               </div>
+              <div className="laptop-base">
+                <div className="laptop-keyboard"></div>
+              </div>
+              <div className="laptop-shadow"></div>
             </div>
           </motion.div>
         </div>
