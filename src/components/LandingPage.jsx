@@ -318,9 +318,21 @@ function LandingPage({ onJoinWaitlist }) {
                       <span className="brand-ai">AI</span>
                     </div>
 
-                    {/* Text Overlay - Problem Statement */}
-                    <div className="demo-text problem-text">
+                    {/* Problem Statements */}
+                    <div className="demo-text problem-text problem-1">
                       <h3>Microphone not working?</h3>
+                    </div>
+
+                    <div className="demo-text problem-text problem-2">
+                      <h3>Camera won't turn on?</h3>
+                    </div>
+
+                    <div className="demo-text problem-text problem-3">
+                      <h3>WiFi keeps disconnecting?</h3>
+                    </div>
+
+                    <div className="demo-text problem-text problem-4">
+                      <h3>Bluetooth not pairing?</h3>
                     </div>
 
                     {/* Acira Agent Appears */}
@@ -328,9 +340,10 @@ function LandingPage({ onJoinWaitlist }) {
                       <div className="agent-glow"></div>
                     </div>
 
-                    {/* Text Overlay - Solution */}
+                    {/* Solution Statement */}
                     <div className="demo-text solution-text">
-                      <h3>Acira fixes it instantly.</h3>
+                      <h3>Acira fixes them all.</h3>
+                      <p className="solution-subtext">Automatically.</p>
                     </div>
 
                     {/* Particle Effect - Fix Happening */}
