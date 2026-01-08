@@ -1,0 +1,268 @@
+/* ============================================
+   WHY ACIRA DETAIL PAGE
+   Professional, Same Theme as Landing
+   ============================================ */
+
+.why-detail {
+  min-height: 100vh;
+  background: var(--acira-bg, #ffffff);
+  color: var(--acira-text, #171717);
+}
+
+/* ============================================
+   CURSOR GRADIENT EFFECT
+   ============================================ */
+
+.why-detail-cursor-gradient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition: background 0.15s ease;
+  mix-blend-mode: normal;
+}
+
+html.dark-mode .why-detail-cursor-gradient {
+  opacity: 0.8;
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+
+.why-detail-hero {
+  position: relative;
+  height: 70vh;
+  min-height: 500px;
+  max-height: 800px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.why-detail-hero-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.why-detail-hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.why-detail-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 60%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+}
+
+html.dark-mode .why-detail-hero-overlay {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.1) 0%,
+    rgba(0, 0, 0, 0.3) 50%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+}
+
+.why-detail-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 60px 48px;
+}
+
+.why-detail-label {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 16px;
+}
+
+.why-detail-title {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 16px;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.why-detail-subtitle {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+/* ============================================
+   CONTENT SECTIONS
+   ============================================ */
+
+.why-detail-content {
+  padding: 80px 0 120px;
+  background: var(--acira-bg, #ffffff);
+}
+
+.why-detail-container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+
+.why-detail-section {
+  margin-bottom: 80px;
+  position: relative;
+}
+
+.why-detail-section:last-child {
+  margin-bottom: 0;
+}
+
+.why-detail-section-number {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--acira-blue, #0D52FF);
+  margin-bottom: 16px;
+  opacity: 0.8;
+}
+
+.why-detail-section-title {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  color: var(--acira-text, #171717);
+  margin: 0 0 20px;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.why-detail-section-content {
+  font-size: 16px;
+  color: var(--acira-text-secondary, #525252);
+  margin: 0;
+  line-height: 1.8;
+}
+
+/* ============================================
+   CTA SECTION
+   ============================================ */
+
+.why-detail-cta {
+  padding: 80px 0;
+  background: linear-gradient(
+    180deg,
+    var(--acira-bg, #ffffff) 0%,
+    var(--acira-bg-subtle, #fafafa) 100%
+  );
+}
+
+html.dark-mode .why-detail-cta {
+  background: linear-gradient(
+    180deg,
+    var(--acira-bg, #000000) 0%,
+    var(--acira-bg-subtle, #0a0a0a) 100%
+  );
+}
+
+.why-detail-cta-content {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 48px;
+  text-align: center;
+}
+
+.why-detail-cta-content h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  color: var(--acira-text, #171717);
+  margin: 0 0 12px;
+  letter-spacing: -0.02em;
+}
+
+.why-detail-cta-content p {
+  font-size: 16px;
+  color: var(--acira-text-secondary, #525252);
+  margin: 0 0 32px;
+}
+
+.why-detail-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  background: var(--acira-text, #171717);
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--acira-bg, #ffffff);
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.why-detail-cta-btn:hover {
+  opacity: 0.85;
+}
+
+.why-detail-cta-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+  .why-detail-hero {
+    height: 60vh;
+    min-height: 400px;
+  }
+
+  .why-detail-hero-content {
+    padding: 40px 24px;
+  }
+
+  .why-detail-container {
+    padding: 0 24px;
+  }
+
+  .why-detail-content {
+    padding: 60px 0 80px;
+  }
+
+  .why-detail-section {
+    margin-bottom: 60px;
+  }
+
+  .why-detail-cta-content {
+    padding: 0 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .why-detail-hero {
+    height: 50vh;
+    min-height: 350px;
+  }
+}

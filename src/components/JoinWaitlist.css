@@ -105,22 +105,29 @@ html.dark-mode .waitlist-header {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.875rem;
-  font-weight: 600;
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
+  color: var(--color-text);
 }
 
 .header-logo .logo-svg {
-  width: 16px;
+  width: 20px;
   height: auto;
 }
 
 .header-logo .logo-text {
-  font-family: var(--font-display);
-  letter-spacing: -0.01em;
+  font-family: 'PowerGrotesk', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 19px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--color-text);
+}
+
+html.dark-mode .header-logo,
+html.dark-mode .header-logo .logo-text {
+  color: var(--color-text);
 }
 
 .header-back {
@@ -485,9 +492,65 @@ html.dark-mode .waitlist-header {
   font-size: 0.75rem;
 }
 
+/* Field Error States */
+.form-field.has-error input {
+  border-color: #ef4444;
+}
+
+.form-field.has-error input:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.field-error {
+  display: block;
+  font-size: 0.7rem;
+  color: #ef4444;
+  margin-top: 4px;
+}
+
+/* Validation hint for other input */
+.other-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.other-input.error {
+  border-color: #ef4444 !important;
+}
+
+.other-hint {
+  font-size: 0.7rem;
+  color: #ef4444;
+  margin-top: 4px;
+}
+
+/* Validation message */
+.validation-message {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-sm);
+  color: #ef4444;
+  font-size: 0.75rem;
+  margin-bottom: 12px;
+}
+
+.validation-message svg {
+  flex-shrink: 0;
+}
+
 /* ============================================
    ACTIONS
    ============================================ */
+
+.question-actions-wrapper {
+  margin-top: 16px;
+}
 
 .question-actions {
   display: flex;

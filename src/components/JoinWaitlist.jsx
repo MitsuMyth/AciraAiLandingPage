@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import './JoinWaitlist.css'
 
 // Counter API configuration - using Miles Hilliard's free CountAPI alternative
@@ -86,6 +87,8 @@ function JoinWaitlist({ onComplete }) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isComplete, setIsComplete] = useState(false)
   const [submitError, setSubmitError] = useState(null)
+  const [fieldErrors, setFieldErrors] = useState({})
+  const [direction, setDirection] = useState(1) // 1 for forward, -1 for back
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -98,11 +101,6 @@ function JoinWaitlist({ onComplete }) {
   const handleOptionSelect = (value) => {
     if (currentQuestion.type === 'single-select') {
       setAnswers({ ...answers, [currentQuestion.id]: value })
-      setTimeout(() => {
-        if (currentStep < totalSteps - 1) {
-          setCurrentStep(currentStep + 1)
-        }
-      }, 200)
     } else if (currentQuestion.type === 'multi-select') {
       const currentAnswers = answers[currentQuestion.id] || []
       if (currentAnswers.includes(value)) {
@@ -142,25 +140,137 @@ function JoinWaitlist({ onComplete }) {
 
   const canProceed = () => {
     if (currentQuestion.type === 'contact-form') {
-      return email.trim() !== '' && email.includes('@') && name.trim() !== ''
+      return email.trim() !== '' && email.includes('@') && email.includes('.') && name.trim().length >= 2
     }
     const answer = answers[currentQuestion.id]
     if (currentQuestion.type === 'multi-select') {
-      return answer && answer.length > 0
+      if (!answer || answer.length === 0) return false
+      // If "other" is selected, ensure they've specified what it is
+      if (answer.includes('other')) {
+        const otherValue = otherText[`${currentQuestion.id}-other`]
+        if (!otherValue || otherValue.trim() === '') return false
+      }
+      return true
+    }
+    if (currentQuestion.type === 'single-select') {
+      return answer !== undefined && answer !== null
     }
     return answer !== undefined
   }
 
   const handleNext = () => {
     if (canProceed() && currentStep < totalSteps - 1) {
+      setDirection(1)
+      setShowValidation(false)
       setCurrentStep(currentStep + 1)
     }
   }
 
   const handleBack = () => {
     if (currentStep > 0) {
+      setDirection(-1)
+      setShowValidation(false)
       setCurrentStep(currentStep - 1)
     }
+  }
+
+  const validateEmail = (emailValue) => {
+    if (!emailValue.trim()) return 'Email is required'
+    if (!emailValue.includes('@')) return 'Please enter a valid email'
+    if (!emailValue.includes('.')) return 'Please enter a valid email'
+    return null
+  }
+
+  const validateName = (nameValue) => {
+    if (!nameValue.trim()) return 'Name is required'
+    if (nameValue.trim().length < 2) return 'Name is too short'
+    return null
+  }
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value
+    setEmail(value)
+    if (fieldErrors.email) {
+      setFieldErrors({ ...fieldErrors, email: validateEmail(value) })
+    }
+  }
+
+  const handleNameChange = (e) => {
+    const value = e.target.value
+    setName(value)
+    if (fieldErrors.name) {
+      setFieldErrors({ ...fieldErrors, name: validateName(value) })
+    }
+  }
+
+  const handleFieldBlur = (field) => {
+    if (field === 'email') {
+      setFieldErrors({ ...fieldErrors, email: validateEmail(email) })
+    } else if (field === 'name') {
+      setFieldErrors({ ...fieldErrors, name: validateName(name) })
+    }
+  }
+
+  // Get validation message for current step
+  const getValidationMessage = () => {
+    if (currentQuestion.type === 'single-select') {
+      const answer = answers[currentQuestion.id]
+      if (!answer) return 'Please select an option to continue'
+      return null
+    }
+    if (currentQuestion.type === 'multi-select') {
+      const answer = answers[currentQuestion.id]
+      if (!answer || answer.length === 0) return 'Please select at least one option'
+      if (answer.includes('other')) {
+        const otherValue = otherText[`${currentQuestion.id}-other`]
+        if (!otherValue || otherValue.trim() === '') return 'Please specify your "Other" selection'
+      }
+      return null
+    }
+    if (currentQuestion.type === 'contact-form') {
+      if (!name.trim()) return 'Please enter your name'
+      if (name.trim().length < 2) return 'Name must be at least 2 characters'
+      if (!email.trim()) return 'Please enter your email address'
+      if (!email.includes('@') || !email.includes('.')) return 'Please enter a valid email address'
+      return null
+    }
+    return null
+  }
+
+  const [showValidation, setShowValidation] = useState(false)
+
+  const handleContinueClick = () => {
+    if (!canProceed()) {
+      setShowValidation(true)
+      return
+    }
+    setShowValidation(false)
+    handleNext()
+  }
+
+  const handleSubmitClick = () => {
+    if (!canProceed()) {
+      setShowValidation(true)
+      return
+    }
+    setShowValidation(false)
+    handleSubmit()
+  }
+
+  // Animation variants
+  const slideVariants = {
+    enter: (dir) => ({
+      x: dir > 0 ? 100 : -100,
+      opacity: 0
+    }),
+    center: {
+      x: 0,
+      opacity: 1
+    },
+    exit: (dir) => ({
+      x: dir > 0 ? -100 : 100,
+      opacity: 0
+    })
   }
 
   const formatAnswersForEmail = () => {
@@ -284,7 +394,7 @@ Submitted: ${new Date().toLocaleString()}
           <div className="waitlist-header-content">
             <button onClick={onComplete} className="header-logo">
               <img src="/logo.svg" alt="Acira Logo" className="logo-svg" />
-              <span className="ai-label">Acira AI</span>
+              <span className="logo-text">Acira</span>
             </button>
           </div>
         </div>
@@ -320,7 +430,7 @@ Submitted: ${new Date().toLocaleString()}
         <div className="waitlist-header-content">
           <button onClick={onComplete} className="header-logo">
             <img src="/logo.svg" alt="Acira Logo" className="logo-svg" />
-            <span className="ai-label">Acira AI</span>
+            <span className="logo-text">Acira</span>
           </button>
           <button onClick={onComplete} className="header-back">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -343,134 +453,220 @@ Submitted: ${new Date().toLocaleString()}
             <span className="progress-text">Step {currentStep + 1} of {totalSteps}</span>
           </div>
 
-          <div className="question-section">
-            <div className="question-header">
-              <h1 className="question-title">{currentQuestion.question}</h1>
-              {currentQuestion.description && (
-                <p className="question-description">{currentQuestion.description}</p>
-              )}
-            </div>
+          <AnimatePresence mode="wait" custom={direction}>
+            <motion.div
+              key={currentStep}
+              custom={direction}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+              className="question-section"
+            >
+              <div className="question-header">
+                <h1 className="question-title">{currentQuestion.question}</h1>
+                {currentQuestion.description && (
+                  <p className="question-description">{currentQuestion.description}</p>
+                )}
+              </div>
 
-            <div className="question-content">
-              {currentQuestion.type === 'single-select' && (
-                <div className="options-grid">
-                  {currentQuestion.options.map((option) => (
-                    <button
-                      key={option.value}
-                      className={`option-card ${isSelected(option.value) ? 'selected' : ''} ${option.highlight ? 'highlight' : ''}`}
-                      onClick={() => handleOptionSelect(option.value)}
-                    >
-                      <span className="option-label">{option.label}</span>
-                      <div className="option-indicator">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                          <polyline points="20 6 9 17 4 12"/>
-                        </svg>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {currentQuestion.type === 'multi-select' && (
-                <div className="options-grid">
-                  {currentQuestion.options.map((option) => (
-                    <button
-                      key={option.value}
-                      className={`option-card ${isSelected(option.value) ? 'selected' : ''}`}
-                      onClick={() => handleOptionSelect(option.value)}
-                    >
-                      <span className="option-label">{option.label}</span>
-                      <div className="option-checkbox">
-                        {isSelected(option.value) && (
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <div className="question-content">
+                {currentQuestion.type === 'single-select' && (
+                  <div className="options-grid">
+                    {currentQuestion.options.map((option, index) => (
+                      <motion.button
+                        key={option.value}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.05, duration: 0.3 }}
+                        className={`option-card ${isSelected(option.value) ? 'selected' : ''} ${option.highlight ? 'highlight' : ''}`}
+                        onClick={() => handleOptionSelect(option.value)}
+                      >
+                        <span className="option-label">{option.label}</span>
+                        <div className="option-indicator">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                             <polyline points="20 6 9 17 4 12"/>
                           </svg>
-                        )}
-                      </div>
-                    </button>
-                  ))}
-                  
-                  {currentQuestion.hasOther && (
-                    <div className="other-option">
-                      <button
-                        className={`option-card ${isSelected('other') ? 'selected' : ''}`}
-                        onClick={handleOtherToggle}
+                        </div>
+                      </motion.button>
+                    ))}
+                  </div>
+                )}
+
+                {currentQuestion.type === 'multi-select' && (
+                  <div className="options-grid">
+                    {currentQuestion.options.map((option, index) => (
+                      <motion.button
+                        key={option.value}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.05, duration: 0.3 }}
+                        className={`option-card ${isSelected(option.value) ? 'selected' : ''}`}
+                        onClick={() => handleOptionSelect(option.value)}
                       >
-                        <span className="option-label">Other</span>
+                        <span className="option-label">{option.label}</span>
                         <div className="option-checkbox">
-                          {isSelected('other') && (
+                          {isSelected(option.value) && (
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                               <polyline points="20 6 9 17 4 12"/>
                             </svg>
                           )}
                         </div>
-                      </button>
-                      {isSelected('other') && (
+                      </motion.button>
+                    ))}
+
+                    {currentQuestion.hasOther && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: currentQuestion.options.length * 0.05, duration: 0.3 }}
+                        className="other-option"
+                      >
+                        <button
+                          className={`option-card ${isSelected('other') ? 'selected' : ''}`}
+                          onClick={handleOtherToggle}
+                        >
+                          <span className="option-label">Other</span>
+                          <div className="option-checkbox">
+                            {isSelected('other') && (
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                <polyline points="20 6 9 17 4 12"/>
+                              </svg>
+                            )}
+                          </div>
+                        </button>
+                        <AnimatePresence>
+                          {isSelected('other') && (
+                            <motion.input
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: 'auto' }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.2 }}
+                              type="text"
+                              className="other-input"
+                              placeholder="Please specify"
+                              value={otherText[`${currentQuestion.id}-other`] || ''}
+                              onChange={(e) => setOtherText({
+                                ...otherText,
+                                [`${currentQuestion.id}-other`]: e.target.value
+                              })}
+                              autoFocus
+                            />
+                          )}
+                        </AnimatePresence>
+                      </motion.div>
+                    )}
+                  </div>
+                )}
+
+                {currentQuestion.type === 'contact-form' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="contact-form"
+                  >
+                    <div className="form-row">
+                      <div className={`form-field ${fieldErrors.name ? 'has-error' : ''}`}>
+                        <label htmlFor="name">Full name *</label>
                         <input
                           type="text"
-                          className="other-input"
-                          placeholder="Please specify"
-                          value={otherText[`${currentQuestion.id}-other`] || ''}
-                          onChange={(e) => setOtherText({
-                            ...otherText,
-                            [`${currentQuestion.id}-other`]: e.target.value
-                          })}
+                          id="name"
+                          placeholder="John Doe"
+                          value={name}
+                          onChange={handleNameChange}
+                          onBlur={() => handleFieldBlur('name')}
                           autoFocus
                         />
-                      )}
-                    </div>
-                  )}
-                </div>
-              )}
+                        <AnimatePresence>
+                          {fieldErrors.name && (
+                            <motion.span
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -10 }}
+                              className="field-error"
+                            >
+                              {fieldErrors.name}
+                            </motion.span>
+                          )}
+                        </AnimatePresence>
+                      </div>
 
-              {currentQuestion.type === 'contact-form' && (
-                <div className="contact-form">
-                  <div className="form-row">
+                      <div className={`form-field ${fieldErrors.email ? 'has-error' : ''}`}>
+                        <label htmlFor="email">Email address *</label>
+                        <input
+                          type="email"
+                          id="email"
+                          placeholder="john@company.com"
+                          value={email}
+                          onChange={handleEmailChange}
+                          onBlur={() => handleFieldBlur('email')}
+                        />
+                        <AnimatePresence>
+                          {fieldErrors.email && (
+                            <motion.span
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -10 }}
+                              className="field-error"
+                            >
+                              {fieldErrors.email}
+                            </motion.span>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    </div>
+
                     <div className="form-field">
-                      <label htmlFor="name">Full name *</label>
+                      <label htmlFor="company">
+                        Company <span className="optional">(optional)</span>
+                      </label>
                       <input
                         type="text"
-                        id="name"
-                        placeholder="John Doe"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        autoFocus
+                        id="company"
+                        placeholder="Your company name"
+                        value={company}
+                        onChange={(e) => setCompany(e.target.value)}
                       />
                     </div>
-                    
-                    <div className="form-field">
-                      <label htmlFor="email">Email address *</label>
-                      <input
-                        type="email"
-                        id="email"
-                        placeholder="john@company.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="form-field">
-                    <label htmlFor="company">
-                      Company <span className="optional">(optional)</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="company"
-                      placeholder="Your company name"
-                      value={company}
-                      onChange={(e) => setCompany(e.target.value)}
-                    />
-                  </div>
 
-                  {submitError && (
-                    <div className="error-message">
-                      {submitError}
-                    </div>
-                  )}
-                </div>
+                    <AnimatePresence>
+                      {submitError && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          className="error-message"
+                        >
+                          {submitError}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          <div className="question-actions-wrapper">
+            <AnimatePresence>
+              {showValidation && getValidationMessage() && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="validation-message"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  {getValidationMessage()}
+                </motion.div>
               )}
-            </div>
+            </AnimatePresence>
 
             <div className="question-actions">
               {currentStep > 0 && (
@@ -481,14 +677,13 @@ Submitted: ${new Date().toLocaleString()}
                   Back
                 </button>
               )}
-              
+
               <div className="actions-spacer" />
-              
-              {currentQuestion.type === 'multi-select' && (
-                <button 
-                  className="btn-wishlist" 
-                  onClick={handleNext}
-                  disabled={!canProceed()}
+
+              {(currentQuestion.type === 'single-select' || currentQuestion.type === 'multi-select') && (
+                <button
+                  className="btn-wishlist"
+                  onClick={handleContinueClick}
                 >
                   Continue
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -496,12 +691,12 @@ Submitted: ${new Date().toLocaleString()}
                   </svg>
                 </button>
               )}
-              
+
               {currentQuestion.type === 'contact-form' && (
-                <button 
-                  className="btn-wishlist btn-submit" 
-                  onClick={handleSubmit}
-                  disabled={!canProceed() || isSubmitting}
+                <button
+                  className="btn-wishlist btn-submit"
+                  onClick={handleSubmitClick}
+                  disabled={isSubmitting}
                 >
                   {isSubmitting ? (
                     <>

@@ -1,0 +1,2910 @@
+/* ============================================
+   ACIRA LANDING PAGE
+   Framer-inspired design with spring animations
+   Clean, playful, premium SaaS aesthetic
+   ============================================ */
+
+/* ============================================
+   DESIGN TOKENS
+   ============================================ */
+:root {
+  /* Neutral Palette */
+  --acira-white: #FFFFFF;
+  --acira-gray-50: #FAFAFA;
+  --acira-gray-100: #F4F4F5;
+  --acira-gray-200: #E4E4E7;
+  --acira-gray-300: #D4D4D8;
+  --acira-gray-400: #A1A1AA;
+  --acira-gray-500: #71717A;
+  --acira-gray-600: #52525B;
+  --acira-gray-700: #3F3F46;
+  --acira-gray-800: #27272A;
+  --acira-gray-900: #18181B;
+  --acira-black: #09090B;
+
+  /* Accent Colors */
+  --acira-blue: #0D52FF;
+  --acira-cyan: #00D4FF;
+  --acira-purple: #8B5CF6;
+  --acira-gradient: linear-gradient(135deg, var(--acira-blue) 0%, var(--acira-cyan) 100%);
+  --acira-gradient-subtle: linear-gradient(135deg, rgba(13, 82, 255, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%);
+
+  /* Semantic Colors */
+  --acira-bg: var(--acira-white);
+  --acira-bg-subtle: var(--acira-gray-50);
+  --acira-bg-muted: var(--acira-gray-100);
+  --acira-surface: var(--acira-gray-50);
+  --acira-text: var(--acira-gray-900);
+  --acira-text-secondary: var(--acira-gray-600);
+  --acira-text-muted: var(--acira-gray-400);
+  --acira-border: var(--acira-gray-200);
+  --acira-border-subtle: var(--acira-gray-100);
+
+  /* Typography */
+  --acira-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Spacing */
+  --acira-space-1: 4px;
+  --acira-space-2: 8px;
+  --acira-space-3: 12px;
+  --acira-space-4: 16px;
+  --acira-space-5: 20px;
+  --acira-space-6: 24px;
+  --acira-space-8: 32px;
+  --acira-space-10: 40px;
+  --acira-space-12: 48px;
+  --acira-space-16: 64px;
+  --acira-space-20: 80px;
+  --acira-space-24: 96px;
+
+  /* Border Radius - Sharp rectangular style */
+  --acira-radius-sm: 4px;
+  --acira-radius-md: 6px;
+  --acira-radius-lg: 8px;
+  --acira-radius-xl: 12px;
+  --acira-radius-2xl: 16px;
+  --acira-radius-full: 9999px; /* Only for pills */
+
+  /* Shadows - Soft, layered */
+  --acira-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
+  --acira-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --acira-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.06), 0 5px 10px rgba(0, 0, 0, 0.04);
+  --acira-shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.08), 0 10px 20px rgba(0, 0, 0, 0.04);
+  --acira-shadow-glow: 0 0 40px rgba(13, 82, 255, 0.15);
+
+  /* Layout */
+  --acira-max-width: 1200px;
+  --acira-content-width: 720px;
+}
+
+/* Dark Mode */
+html.dark-mode {
+  --acira-bg: var(--acira-black);
+  --acira-bg-subtle: var(--acira-gray-900);
+  --acira-bg-muted: var(--acira-gray-800);
+  --acira-surface: var(--acira-gray-900);
+  --acira-text: var(--acira-gray-100);
+  --acira-text-secondary: var(--acira-gray-400);
+  --acira-text-muted: var(--acira-gray-500);
+  --acira-border: var(--acira-gray-800);
+  --acira-border-subtle: var(--acira-gray-900);
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+/* Smooth scrolling for the entire page */
+html {
+  scroll-behavior: smooth;
+}
+
+.acira-page {
+  font-family: var(--acira-font);
+  background: var(--acira-bg);
+  color: var(--acira-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Cursor gradient follow */
+.acira-cursor-gradient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition: background 0.15s ease;
+  mix-blend-mode: normal;
+}
+
+html.dark-mode .acira-cursor-gradient {
+  opacity: 0.8;
+}
+
+.acira-container {
+  max-width: var(--acira-max-width);
+  margin: 0 auto;
+  padding: 0 var(--acira-space-6);
+  position: relative;
+  z-index: 1;
+}
+
+@media (min-width: 768px) {
+  .acira-container {
+    padding: 0 var(--acira-space-12);
+  }
+}
+
+/* ============================================
+   1. NAVBAR - Professional Framer-Level
+   ============================================ */
+.acira-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 12px 20px;
+  transition: padding 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.acira-nav.scrolled {
+  padding: 8px 20px;
+}
+
+@media (min-width: 768px) {
+  .acira-nav {
+    padding: 16px 40px;
+  }
+
+  .acira-nav.scrolled {
+    padding: 10px 40px;
+  }
+}
+
+.acira-nav-wrapper {
+  max-width: 1280px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html.dark-mode .acira-nav-wrapper {
+  background: rgba(10, 10, 12, 0.85);
+  border-color: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.acira-nav.scrolled .acira-nav-wrapper {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+html.dark-mode .acira-nav.scrolled .acira-nav-wrapper {
+  background: rgba(10, 10, 12, 0.95);
+  border-color: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.acira-nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  padding: 0 16px;
+}
+
+@media (min-width: 768px) {
+  .acira-nav-inner {
+    height: 54px;
+    padding: 0 20px;
+  }
+}
+
+/* Logo */
+.acira-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--acira-text);
+}
+
+.acira-logo-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.acira-logo-icon {
+  width: 26px;
+  height: 26px;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.acira-logo:hover .acira-logo-icon {
+  transform: rotate(-8deg) scale(1.05);
+}
+
+.acira-logo-text {
+  font-family: 'PowerGrotesk', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 19px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--acira-text);
+}
+
+/* Center Navigation */
+.acira-nav-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .acira-nav-center {
+    display: block;
+  }
+}
+
+.acira-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.acira-nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--acira-text-secondary);
+  text-decoration: none;
+  transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.acira-nav-link:hover {
+  color: var(--acira-text);
+}
+
+.acira-nav-link-text {
+  position: relative;
+  z-index: 1;
+  letter-spacing: 0.01em;
+}
+
+/* Animated underline indicator - only on hover with glow */
+.acira-nav-link-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 24px;
+  height: 2px;
+  background: var(--acira-blue, #0D52FF);
+  border-radius: 2px;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:
+    0 0 8px rgba(13, 82, 255, 0.6),
+    0 0 16px rgba(13, 82, 255, 0.4);
+}
+
+.acira-nav-link:hover .acira-nav-link-indicator {
+  transform: translateX(-50%) scaleX(1);
+  opacity: 1;
+}
+
+/* Back Button (for detail pages) */
+.acira-nav-back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--acira-text-secondary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.acira-nav-back:hover {
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--acira-text);
+}
+
+html.dark-mode .acira-nav-back:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.acira-nav-back svg {
+  width: 16px;
+  height: 16px;
+}
+
+@media (max-width: 768px) {
+  .acira-nav-back span {
+    display: none;
+  }
+}
+
+/* Actions */
+.acira-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (min-width: 768px) {
+  .acira-nav-actions {
+    gap: 12px;
+  }
+}
+
+.acira-theme-toggle {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  color: var(--acira-text-secondary);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.acira-theme-toggle:hover {
+  color: var(--acira-text);
+  transform: scale(1.1);
+}
+
+.acira-theme-toggle svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* CTA Button */
+.acira-nav-cta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #FFFFFF;
+  background: var(--acira-gray-900);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html.dark-mode .acira-nav-cta {
+  background: #ffffff;
+  color: var(--acira-gray-900);
+}
+
+.acira-nav-cta:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+.acira-nav-cta:active {
+  transform: translateY(0);
+}
+
+.acira-nav-cta svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.2s ease;
+}
+
+.acira-nav-cta:hover svg {
+  transform: translateX(2px);
+}
+
+html.dark-mode .acira-nav-cta {
+  background: var(--acira-gray-100);
+  color: var(--acira-gray-900);
+}
+
+html.dark-mode .acira-nav-cta:hover {
+  background: var(--acira-white);
+}
+
+/* Hide CTA text on mobile, show arrow only */
+@media (max-width: 480px) {
+  .acira-nav-cta span {
+    display: none;
+  }
+
+  .acira-nav-cta {
+    padding: 9px 12px;
+  }
+
+  .acira-nav-cta svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* ============================================
+   2. HERO
+   ============================================ */
+.acira-hero {
+  min-height: auto;
+  display: flex;
+  align-items: center;
+  padding: 130px 0 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle dotted background - works with mouse cursor glow */
+.acira-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(13, 82, 255, 0.12) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse 100% 80% at 50% 30%, black 0%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 100% 80% at 50% 30%, black 0%, transparent 75%);
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+html.dark-mode .acira-hero::before {
+  background-image: radial-gradient(circle, rgba(13, 82, 255, 0.2) 1px, transparent 1px);
+  opacity: 0.5;
+}
+
+.acira-hero-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--acira-space-5);
+}
+
+.acira-hero-content {
+  max-width: 720px;
+}
+
+.acira-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--acira-bg-subtle);
+  border: 1px solid var(--acira-border);
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--acira-text-secondary);
+  margin-bottom: var(--acira-space-4);
+}
+
+.acira-badge-dot {
+  width: 6px;
+  height: 6px;
+  background: #10B981;
+  border-radius: 50%;
+  animation: acira-pulse 2s ease-in-out infinite;
+}
+
+@keyframes acira-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
+}
+
+.acira-hero-title {
+  font-size: clamp(40px, 5.5vw, 64px);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  color: var(--acira-text);
+  margin: 0 0 var(--acira-space-5);
+}
+
+.acira-rotating-wrapper {
+  display: inline-block;
+  position: relative;
+  height: 1.3em;
+  overflow: hidden;
+  vertical-align: baseline;
+  margin-bottom: -0.15em;
+}
+
+.acira-rotating-word {
+  display: block;
+  background: var(--acira-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  padding-bottom: 0.1em;
+}
+
+.acira-hero-description {
+  font-size: 18px;
+  line-height: 1.65;
+  color: var(--acira-text-secondary);
+  margin: 0 auto var(--acira-space-5);
+  max-width: 520px;
+  text-align: center;
+  font-weight: 400;
+}
+
+.acira-hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--acira-space-3);
+  margin-bottom: var(--acira-space-4);
+}
+
+.acira-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--acira-white);
+  background: var(--acira-text);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: -0.01em;
+}
+
+.acira-btn-primary:hover {
+  box-shadow: var(--acira-shadow-xl);
+}
+
+.acira-btn-primary.gradient {
+  background: var(--acira-gradient);
+}
+
+.acira-btn-primary.gradient:hover {
+  box-shadow: var(--acira-shadow-glow), var(--acira-shadow-xl);
+}
+
+html.dark-mode .acira-btn-primary:not(.gradient) {
+  background: var(--acira-white);
+  color: var(--acira-black);
+}
+
+.acira-btn-primary svg {
+  width: 14px;
+  height: 14px;
+}
+
+.acira-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--acira-space-2);
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--acira-text);
+  background: transparent;
+  border: 1px solid var(--acira-border);
+  border-radius: var(--acira-radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.acira-btn-secondary:hover {
+  border-color: var(--acira-text-secondary);
+}
+
+.acira-hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: var(--acira-space-8);
+  padding-top: var(--acira-space-3);
+}
+
+.acira-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.acira-stat-value {
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--acira-text);
+  line-height: 1;
+}
+
+.acira-stat-label {
+  font-size: 13px;
+  color: var(--acira-text-secondary);
+  letter-spacing: 0.01em;
+  font-weight: 450;
+}
+
+.acira-loading {
+  animation: acira-loading-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes acira-loading-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+/* Hero Visual */
+.acira-hero-visual {
+  position: relative;
+  perspective: 2000px;
+}
+
+/* MacBook Pro Style Mockup */
+.acira-macbook {
+  position: relative;
+  max-width: 560px;
+  margin: 0 auto;
+  transform-style: preserve-3d;
+}
+
+.acira-macbook-screen {
+  position: relative;
+  background: linear-gradient(180deg, #1d1d1f 0%, #0d0d0d 100%);
+  border-radius: 18px 18px 0 0;
+  padding: 12px 12px 0;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Notch */
+.acira-macbook-notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 24px;
+  background: #0d0d0d;
+  border-radius: 0 0 12px 12px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.acira-macbook-camera {
+  width: 6px;
+  height: 6px;
+  background: #2d2d3a;
+  border-radius: 50%;
+  box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Display */
+.acira-macbook-display {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: linear-gradient(180deg, #0a0a0f 0%, #0f0f14 100%);
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+}
+
+/* App UI Inside Screen */
+.acira-app-ui {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #0c0c10 0%, #111116 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+.acira-app-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.acira-window-controls {
+  display: flex;
+  gap: 6px;
+}
+
+.acira-control {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.acira-control.red { background: #ff5f57; }
+.acira-control.yellow { background: #ffbd2e; }
+.acira-control.green { background: #28c840; }
+
+.acira-app-title {
+  flex: 1;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.02em;
+}
+
+.acira-app-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.acira-status-dot {
+  width: 6px;
+  height: 6px;
+  background: #10b981;
+  border-radius: 50%;
+  animation: acira-pulse 2s ease-in-out infinite;
+}
+
+/* Chat Messages */
+.acira-app-content {
+  flex: 1;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.acira-chat-message {
+  max-width: 85%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  animation: acira-message-in 0.4s ease-out forwards;
+}
+
+.acira-chat-message.user {
+  align-self: flex-end;
+  background: linear-gradient(135deg, #0D52FF 0%, #0040dd 100%);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.acira-chat-message.assistant {
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.9);
+  border-bottom-left-radius: 4px;
+}
+
+.acira-chat-message.delayed {
+  opacity: 0;
+  animation: acira-message-in 0.4s ease-out 2s forwards;
+}
+
+/* Typing Indicator */
+.acira-typing-indicator {
+  display: flex;
+  gap: 4px;
+  padding: 4px 0;
+}
+
+.acira-typing-indicator span {
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  animation: acira-typing 1.4s ease-in-out infinite;
+}
+
+.acira-typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.acira-typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes acira-typing {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+/* Success Badge */
+.acira-fix-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  padding: 8px 12px;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #10b981;
+  opacity: 0;
+}
+
+.acira-fix-badge.delayed-2 {
+  animation: acira-message-in 0.4s ease-out 3.5s forwards;
+}
+
+.acira-fix-badge svg {
+  width: 14px;
+  height: 14px;
+}
+
+@keyframes acira-message-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Screen Reflection */
+.acira-screen-reflection {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* Base/Hinge */
+.acira-macbook-base {
+  position: relative;
+  width: 108%;
+  margin-left: -4%;
+  height: 10px;
+  background: linear-gradient(180deg, #2d2d30 0%, #1d1d1f 100%);
+  border-radius: 0 0 2px 2px;
+}
+
+.acira-macbook-base::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 3px;
+  background: linear-gradient(180deg, #3d3d40 0%, #2d2d30 100%);
+  border-radius: 0 0 3px 3px;
+}
+
+.acira-macbook-hinge {
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+}
+
+/* Demo Text Animation */
+.acira-demo {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.acira-demo-text {
+  position: absolute;
+  opacity: 0;
+  animation-duration: 18s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+.acira-demo-text h3 {
+  font-size: clamp(16px, 3vw, 28px);
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.acira-demo-text p {
+  font-size: clamp(12px, 2vw, 16px);
+  color: rgba(255, 255, 255, 0.6);
+  margin: 8px 0 0;
+}
+
+/* Problem animations - staggered appearance */
+.acira-demo-problem-1 { animation-name: demo-fade-1; }
+.acira-demo-problem-2 { animation-name: demo-fade-2; }
+.acira-demo-problem-3 { animation-name: demo-fade-3; }
+.acira-demo-problem-4 { animation-name: demo-fade-4; }
+.acira-demo-solution { animation-name: demo-fade-5; }
+.acira-demo-final { animation-name: demo-fade-6; }
+
+@keyframes demo-fade-1 {
+  0%, 5% { opacity: 0; transform: translateY(10px); }
+  6%, 14% { opacity: 1; transform: translateY(0); }
+  15%, 100% { opacity: 0; transform: translateY(-10px); }
+}
+
+@keyframes demo-fade-2 {
+  0%, 15% { opacity: 0; transform: translateY(10px); }
+  16%, 28% { opacity: 1; transform: translateY(0); }
+  29%, 100% { opacity: 0; transform: translateY(-10px); }
+}
+
+@keyframes demo-fade-3 {
+  0%, 29% { opacity: 0; transform: translateY(10px); }
+  30%, 42% { opacity: 1; transform: translateY(0); }
+  43%, 100% { opacity: 0; transform: translateY(-10px); }
+}
+
+@keyframes demo-fade-4 {
+  0%, 43% { opacity: 0; transform: translateY(10px); }
+  44%, 56% { opacity: 1; transform: translateY(0); }
+  57%, 100% { opacity: 0; transform: translateY(-10px); }
+}
+
+@keyframes demo-fade-5 {
+  0%, 57% { opacity: 0; transform: translateY(10px); }
+  58%, 74% { opacity: 1; transform: translateY(0); }
+  75%, 100% { opacity: 0; transform: translateY(-10px); }
+}
+
+@keyframes demo-fade-6 {
+  0%, 75% { opacity: 0; transform: translateY(10px); }
+  76%, 94% { opacity: 1; transform: translateY(0); }
+  95%, 100% { opacity: 0; transform: translateY(-10px); }
+}
+
+/* ============================================
+   SCROLL-ANIMATED LAPTOP SHOWCASE
+   ============================================ */
+.acira-laptop-showcase {
+  position: relative;
+  padding: 0 0 80px;
+  margin-top: -40px;
+  overflow: visible;
+}
+
+.acira-laptop-showcase-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  justify-content: center;
+  perspective: 1200px;
+}
+
+.acira-showcase-macbook {
+  width: 100%;
+  max-width: 800px;
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+
+/* Screen */
+.acira-showcase-screen {
+  position: relative;
+  background: linear-gradient(180deg, #1d1d1f 0%, #0d0d0d 100%);
+  border-radius: 16px 16px 0 0;
+  padding: 10px 10px 0;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 30px 60px -15px rgba(0, 0, 0, 0.5),
+    0 50px 100px -30px rgba(0, 0, 0, 0.3);
+}
+
+/* Notch */
+.acira-showcase-notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 28px;
+  background: #0d0d0d;
+  border-radius: 0 0 14px 14px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.acira-showcase-camera {
+  width: 8px;
+  height: 8px;
+  background: #2d2d3a;
+  border-radius: 50%;
+  box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Display */
+.acira-showcase-display {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: linear-gradient(180deg, #0a0a0f 0%, #0f0f14 100%);
+  border-radius: 6px 6px 0 0;
+  overflow: hidden;
+}
+
+/* Screen reflection effect */
+.acira-showcase-reflection {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.02) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* Base/Hinge */
+.acira-showcase-base {
+  position: relative;
+  width: 108%;
+  margin-left: -4%;
+  height: 14px;
+  background: linear-gradient(180deg, #2d2d30 0%, #1d1d1f 100%);
+  border-radius: 0 0 3px 3px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.acira-showcase-base::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 4px;
+  background: linear-gradient(180deg, #3d3d40 0%, #2d2d30 100%);
+  border-radius: 0 0 4px 4px;
+}
+
+.acira-showcase-hinge {
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+}
+
+/* Showcase Responsive */
+@media (max-width: 768px) {
+  .acira-laptop-showcase {
+    padding: 0 0 60px;
+  }
+
+  .acira-laptop-showcase-inner {
+    padding: 0 16px;
+  }
+
+  .acira-showcase-screen {
+    border-radius: 12px 12px 0 0;
+    padding: 8px 8px 0;
+  }
+
+  .acira-showcase-notch {
+    width: 80px;
+    height: 20px;
+    border-radius: 0 0 10px 10px;
+  }
+
+  .acira-showcase-camera {
+    width: 6px;
+    height: 6px;
+  }
+
+  .acira-showcase-display {
+    border-radius: 4px 4px 0 0;
+  }
+
+  .acira-showcase-base {
+    height: 10px;
+  }
+
+  .acira-showcase-hinge {
+    width: 70px;
+    height: 3px;
+  }
+}
+
+@media (max-width: 480px) {
+  .acira-laptop-showcase {
+    padding: 0 0 40px;
+  }
+
+  .acira-demo-text h3 {
+    font-size: 14px;
+  }
+
+  .acira-demo-text p {
+    font-size: 11px;
+  }
+}
+
+/* MacBook Responsive */
+@media (max-width: 768px) {
+  .acira-macbook {
+    max-width: 100%;
+  }
+
+  .acira-macbook-screen {
+    border-radius: 12px 12px 0 0;
+    padding: 8px 8px 0;
+  }
+
+  .acira-macbook-notch {
+    width: 70px;
+    height: 18px;
+  }
+
+  .acira-macbook-camera {
+    width: 4px;
+    height: 4px;
+  }
+
+  .acira-macbook-display {
+    border-radius: 6px 6px 0 0;
+  }
+
+  .acira-app-header {
+    padding: 8px 12px;
+  }
+
+  .acira-control {
+    width: 8px;
+    height: 8px;
+  }
+
+  .acira-app-title {
+    font-size: 10px;
+  }
+
+  .acira-app-status {
+    font-size: 9px;
+  }
+
+  .acira-app-content {
+    padding: 12px 10px;
+    gap: 8px;
+  }
+
+  .acira-chat-message {
+    padding: 8px 10px;
+    font-size: 10px;
+    border-radius: 10px;
+  }
+
+  .acira-fix-badge {
+    padding: 6px 10px;
+    font-size: 9px;
+  }
+
+  .acira-fix-badge svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .acira-macbook-base {
+    height: 8px;
+  }
+}
+
+/* Scroll Indicator */
+.acira-scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--acira-text-muted);
+}
+
+.acira-scroll-indicator svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ============================================
+   3. INTEGRATIONS MARQUEE
+   ============================================ */
+.acira-integrations {
+  padding: var(--acira-space-16) 0;
+  overflow: hidden;
+}
+
+.acira-integrations-label {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--acira-text-muted);
+  margin: 0 0 var(--acira-space-8);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.acira-marquee {
+  display: flex;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+}
+
+.acira-marquee-track {
+  display: flex;
+  gap: var(--acira-space-6);
+  padding-right: var(--acira-space-6);
+  will-change: transform;
+}
+
+.acira-integration-item {
+  display: flex;
+  align-items: center;
+  gap: var(--acira-space-2);
+  flex-shrink: 0;
+  padding: 8px 16px;
+  cursor: default;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.acira-integration-item:hover {
+  opacity: 1;
+}
+
+.acira-integration-item svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.acira-integration-item span {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--acira-text-secondary);
+}
+
+/* ============================================
+   4. PROBLEMS SECTION
+   ============================================ */
+.acira-problems {
+  padding: var(--acira-space-24) 0;
+}
+
+.acira-section-header {
+  text-align: center;
+  max-width: var(--acira-content-width);
+  margin: 0 auto var(--acira-space-10);
+}
+
+.acira-section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--acira-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--acira-space-3);
+}
+
+.acira-section-label::before {
+  content: '';
+  width: 12px;
+  height: 1px;
+  background: var(--acira-blue);
+  opacity: 0.5;
+}
+
+.acira-section-title {
+  font-size: clamp(26px, 4vw, 40px);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--acira-text);
+  margin: 0 0 var(--acira-space-3);
+}
+
+.acira-section-description {
+  font-size: 16px;
+  color: var(--acira-text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.acira-problems-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: var(--acira-space-4);
+  overflow: hidden;
+}
+
+.acira-problems-track {
+  overflow: visible;
+}
+
+.acira-problems-track-inner {
+  display: flex;
+  gap: var(--acira-space-3);
+  will-change: transform;
+}
+
+.acira-problem-pill {
+  display: flex;
+  align-items: center;
+  gap: var(--acira-space-2);
+  flex-shrink: 0;
+  padding: 10px 18px;
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--acira-border);
+  border-radius: var(--acira-radius-full);
+  font-size: 13px;
+  color: var(--acira-text-secondary);
+  white-space: nowrap;
+  cursor: default;
+  transition: all 0.4s ease;
+}
+
+.acira-problem-pill:hover {
+  border-color: var(--acira-text-muted);
+  color: var(--acira-text);
+  background: rgba(0, 0, 0, 0.03);
+}
+
+/* Dark mode - keep original subtle look */
+html.dark-mode .acira-problem-pill {
+  background: transparent;
+  border-color: var(--acira-border-subtle);
+  color: var(--acira-text-muted);
+}
+
+html.dark-mode .acira-problem-pill:hover {
+  border-color: var(--acira-border);
+  color: var(--acira-text-secondary);
+  background: transparent;
+}
+
+.acira-problem-pill .question-mark {
+  color: var(--acira-blue);
+  font-weight: 500;
+  opacity: 0.5;
+}
+
+/* ============================================
+   5. FEATURES BENTO - Professional Quality
+   ============================================ */
+.acira-features {
+  padding: var(--acira-space-24) 0;
+  background: transparent;
+  position: relative;
+}
+
+.acira-bento {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+@media (min-width: 768px) {
+  .acira-bento {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .acira-bento {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.acira-bento-card {
+  background: var(--acira-bg);
+  border-radius: 20px;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.03),
+    0 8px 32px rgba(0, 0, 0, 0.04);
+}
+
+html.dark-mode .acira-bento-card {
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.acira-bento-card.large {
+  grid-column: span 1;
+}
+
+@media (min-width: 768px) {
+  .acira-bento-card.large {
+    grid-column: span 2;
+  }
+}
+
+.acira-bento-visual {
+  height: 200px;
+  background: linear-gradient(135deg,
+    rgba(13, 82, 255, 0.03) 0%,
+    rgba(0, 212, 255, 0.02) 50%,
+    rgba(13, 82, 255, 0.04) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+html.dark-mode .acira-bento-visual {
+  background: linear-gradient(135deg,
+    rgba(13, 82, 255, 0.08) 0%,
+    rgba(0, 212, 255, 0.04) 50%,
+    rgba(13, 82, 255, 0.06) 100%
+  );
+}
+
+.acira-bento-card.large .acira-bento-visual {
+  height: 320px;
+  padding: 24px 0;
+}
+
+/* ============================================
+   BENTO MACBOOK - Clean MacBook Style
+   ============================================ */
+.acira-bento-macbook {
+  width: 90%;
+  max-width: 500px;
+}
+
+.acira-bento-macbook-screen {
+  position: relative;
+  background: linear-gradient(180deg, #1d1d1f 0%, #0d0d0d 100%);
+  border-radius: 12px 12px 0 0;
+  padding: 8px 8px 0;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 20px 40px -10px rgba(0, 0, 0, 0.4);
+}
+
+.acira-bento-macbook-notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 20px;
+  background: #0d0d0d;
+  border-radius: 0 0 10px 10px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.acira-bento-macbook-camera {
+  width: 6px;
+  height: 6px;
+  background: #2d2d3a;
+  border-radius: 50%;
+  box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.acira-bento-macbook-display {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: linear-gradient(180deg, #0a0a0f 0%, #0f0f14 100%);
+  border-radius: 4px 4px 0 0;
+  overflow: hidden;
+}
+
+.acira-bento-macbook-reflection {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.02) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 5;
+}
+
+.acira-bento-macbook-base {
+  position: relative;
+  width: 108%;
+  margin-left: -4%;
+  height: 10px;
+  background: linear-gradient(180deg, #2d2d30 0%, #1d1d1f 100%);
+  border-radius: 0 0 3px 3px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.acira-bento-macbook-base::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 3px;
+  background: linear-gradient(180deg, #3d3d40 0%, #2d2d30 100%);
+  border-radius: 0 0 3px 3px;
+}
+
+.acira-bento-macbook-hinge {
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+}
+
+/* Dashboard inside bento macbook */
+.acira-bento-dashboard {
+  width: 100%;
+  height: 100%;
+  background: var(--acira-bg);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+html.dark-mode .acira-bento-dashboard {
+  background: #0a0a0c;
+}
+
+.acira-bento-dashboard-header {
+  display: flex;
+  gap: 5px;
+  padding-bottom: 8px;
+}
+
+.acira-bento-dashboard-stats {
+  display: flex;
+  gap: 8px;
+}
+
+.acira-bento-dashboard-stat {
+  flex: 1;
+  padding: 10px 8px;
+  background: var(--acira-surface);
+  border-radius: 8px;
+  text-align: center;
+}
+
+html.dark-mode .acira-bento-dashboard-stat {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.acira-bento-stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--acira-text);
+  letter-spacing: -0.02em;
+}
+
+.acira-bento-stat-label {
+  font-size: 9px;
+  color: var(--acira-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+}
+
+.acira-bento-dashboard-chart {
+  flex: 1;
+  background: var(--acira-surface);
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  align-items: flex-end;
+  min-height: 50px;
+}
+
+html.dark-mode .acira-bento-dashboard-chart {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .acira-bento-macbook {
+    width: 95%;
+    max-width: 400px;
+  }
+
+  .acira-bento-macbook-screen {
+    border-radius: 10px 10px 0 0;
+    padding: 6px 6px 0;
+  }
+
+  .acira-bento-macbook-notch {
+    width: 60px;
+    height: 16px;
+    border-radius: 0 0 8px 8px;
+  }
+
+  .acira-bento-macbook-camera {
+    width: 5px;
+    height: 5px;
+  }
+
+  .acira-bento-macbook-base {
+    height: 8px;
+  }
+
+  .acira-bento-stat-value {
+    font-size: 16px;
+  }
+
+  .acira-bento-stat-label {
+    font-size: 8px;
+  }
+}
+
+.acira-bento-header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--acira-space-3);
+  padding: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.acira-bento-number {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--acira-blue);
+  flex-shrink: 0;
+  margin-top: 3px;
+  opacity: 0.8;
+}
+
+.acira-bento-content {
+  flex: 1;
+}
+
+.acira-bento-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--acira-text);
+  margin: 0 0 6px;
+  letter-spacing: -0.02em;
+}
+
+.acira-bento-description {
+  font-size: 14px;
+  color: var(--acira-text-secondary);
+  margin: 0;
+  line-height: 1.55;
+}
+
+/* Realistic Laptop Mockup */
+.acira-laptop {
+  width: 95%;
+  max-width: 420px;
+  perspective: 1000px;
+}
+
+.acira-laptop-screen {
+  background: linear-gradient(145deg, #2a2a2e 0%, #1a1a1e 100%);
+  border-radius: 12px 12px 0 0;
+  padding: 8px 8px 0 8px;
+  position: relative;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+html.dark-mode .acira-laptop-screen {
+  background: linear-gradient(145deg, #1f1f23 0%, #141418 100%);
+}
+
+.acira-laptop-bezel {
+  height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.acira-laptop-camera {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #1a1a1e 0%, #2a2a2e 100%);
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.acira-laptop-display {
+  background: #000;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 16 / 10;
+}
+
+/* Subtle screen gloss effect */
+.acira-laptop-gloss {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    transparent 40%,
+    rgba(255, 255, 255, 0.03) 42%,
+    rgba(255, 255, 255, 0.05) 44%,
+    rgba(255, 255, 255, 0.03) 46%,
+    transparent 48%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 10;
+}
+
+.acira-laptop-base {
+  background: linear-gradient(180deg, #2a2a2e 0%, #1e1e22 100%);
+  border-radius: 0 0 12px 12px;
+  padding: 6px 12px 10px;
+  position: relative;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+html.dark-mode .acira-laptop-base {
+  background: linear-gradient(180deg, #1f1f23 0%, #141418 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 4px 12px rgba(0, 0, 0, 0.5),
+    0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.acira-laptop-notch {
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(180deg, #3a3a3e 0%, #2a2a2e 100%);
+  border-radius: 0 0 3px 3px;
+  margin: 0 auto 6px;
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.acira-laptop-keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.1) 100%);
+  border-radius: 4px;
+}
+
+.acira-keyboard-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.acira-keyboard-row {
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+}
+
+.acira-key {
+  width: 12px;
+  height: 8px;
+  background: linear-gradient(180deg, #3a3a3e 0%, #2a2a2e 100%);
+  border-radius: 1.5px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+.acira-key.space {
+  width: 48px;
+}
+
+.acira-trackpad {
+  width: 60%;
+  height: 28px;
+  margin: 6px auto 0;
+  background: linear-gradient(180deg, #323236 0%, #2a2a2e 100%);
+  border-radius: 4px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+    0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Dashboard Mockup inside laptop */
+.acira-laptop-display .acira-dashboard-mock {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  background: var(--acira-bg);
+  border-radius: 0;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: none;
+}
+
+html.dark-mode .acira-laptop-display .acira-dashboard-mock {
+  background: #0a0a0c;
+  box-shadow: none;
+}
+
+/* Dashboard Mockup - Professional UI (standalone fallback) */
+.acira-dashboard-mock {
+  width: 92%;
+  max-width: 420px;
+  background: var(--acira-bg);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+}
+
+html.dark-mode .acira-dashboard-mock {
+  background: rgba(20, 20, 24, 0.9);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.acira-mock-header {
+  display: flex;
+  gap: 6px;
+  padding-bottom: 12px;
+}
+
+.acira-mock-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.acira-mock-dot.red { background: #FF5F57; }
+.acira-mock-dot.yellow { background: #FEBC2E; }
+.acira-mock-dot.green { background: #28C840; }
+
+.acira-mock-stats {
+  display: flex;
+  gap: 10px;
+}
+
+.acira-mock-stat {
+  flex: 1;
+  padding: 14px 12px;
+  background: var(--acira-surface);
+  border-radius: 12px;
+  text-align: center;
+}
+
+html.dark-mode .acira-mock-stat {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.acira-mock-stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--acira-text);
+  letter-spacing: -0.02em;
+}
+
+.acira-mock-stat-label {
+  font-size: 10px;
+  color: var(--acira-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 4px;
+}
+
+.acira-mock-chart {
+  flex: 1;
+  background: var(--acira-surface);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  align-items: flex-end;
+  min-height: 60px;
+}
+
+html.dark-mode .acira-mock-chart {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Laptop display specific adjustments */
+.acira-laptop-display .acira-mock-header {
+  padding-bottom: 8px;
+}
+
+.acira-laptop-display .acira-mock-dot {
+  width: 8px;
+  height: 8px;
+}
+
+.acira-laptop-display .acira-mock-stats {
+  gap: 6px;
+}
+
+.acira-laptop-display .acira-mock-stat {
+  padding: 10px 8px;
+  border-radius: 8px;
+}
+
+.acira-laptop-display .acira-mock-stat-value {
+  font-size: 18px;
+}
+
+.acira-laptop-display .acira-mock-stat-label {
+  font-size: 8px;
+  margin-top: 2px;
+}
+
+.acira-laptop-display .acira-mock-chart {
+  border-radius: 8px;
+  padding: 10px;
+  min-height: 40px;
+}
+
+/* Icon Grid - Professional Device Icons */
+.acira-icon-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  width: 85%;
+  max-width: 180px;
+  padding: 16px;
+}
+
+.acira-icon-item {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--acira-bg);
+  border-radius: 14px;
+  cursor: default;
+}
+
+html.dark-mode .acira-icon-item {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.acira-icon-item svg {
+  width: 24px;
+  height: 24px;
+  color: var(--acira-text-secondary);
+}
+
+/* Stats Row - Professional Display */
+.acira-stats-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  gap: 40px;
+  padding: 24px;
+}
+
+.acira-stat-block {
+  text-align: center;
+  position: relative;
+}
+
+.acira-stat-block::after {
+  content: '';
+  position: absolute;
+  right: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 36px;
+  background: var(--acira-border);
+}
+
+.acira-stat-block:last-child::after {
+  display: none;
+}
+
+.acira-stat-block-value {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--acira-text);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.acira-stat-block-label {
+  font-size: 11px;
+  color: var(--acira-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 6px;
+}
+
+/* Flow - Professional Process Display */
+.acira-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  height: 100%;
+  padding: 24px;
+}
+
+.acira-flow-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.acira-flow-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 24px;
+  left: calc(100% + 6px);
+  width: calc(24px - 12px);
+  height: 2px;
+  background: linear-gradient(90deg, var(--acira-blue) 0%, var(--acira-cyan) 100%);
+  border-radius: 1px;
+  opacity: 0.4;
+}
+
+.acira-flow-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--acira-bg);
+  border-radius: 14px;
+  position: relative;
+}
+
+html.dark-mode .acira-flow-icon {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.acira-flow-icon svg {
+  width: 22px;
+  height: 22px;
+  color: var(--acira-text-secondary);
+}
+
+.acira-flow-icon.success {
+  background: rgba(16, 185, 129, 0.1);
+}
+
+html.dark-mode .acira-flow-icon.success {
+  background: rgba(16, 185, 129, 0.15);
+}
+
+.acira-flow-icon.success svg {
+  color: #10B981;
+}
+
+.acira-flow-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--acira-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ============================================
+   6. WHY ACIRA
+   ============================================ */
+.acira-why {
+  padding: var(--acira-space-24) 0;
+  position: relative;
+}
+
+.acira-why-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--acira-space-6);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .acira-why-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--acira-space-8);
+  }
+}
+
+.acira-why-card {
+  display: flex;
+  flex-direction: column;
+  padding: var(--acira-space-6);
+  background: var(--acira-bg);
+  border-radius: 16px;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.03),
+    0 8px 32px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.4s ease, transform 0.4s ease;
+}
+
+html.dark-mode .acira-why-card {
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.acira-why-card:hover {
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.05),
+    0 12px 40px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+html.dark-mode .acira-why-card:hover {
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.25),
+    0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.acira-why-image {
+  aspect-ratio: 16 / 10;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: var(--acira-space-5);
+}
+
+.acira-why-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.acira-why-card:hover .acira-why-image img {
+  transform: scale(1.03);
+}
+
+.acira-why-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--acira-space-2);
+}
+
+.acira-why-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(13, 82, 255, 0.08) 0%, rgba(0, 212, 255, 0.05) 100%);
+  border-radius: 10px;
+  margin-bottom: var(--acira-space-3);
+}
+
+html.dark-mode .acira-why-icon {
+  background: linear-gradient(135deg, rgba(13, 82, 255, 0.15) 0%, rgba(0, 212, 255, 0.08) 100%);
+}
+
+.acira-why-icon svg {
+  width: 20px;
+  height: 20px;
+  color: var(--acira-blue);
+}
+
+.acira-why-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--acira-text);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.acira-why-description {
+  font-size: 14px;
+  color: var(--acira-text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.acira-why-readmore {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--acira-space-4);
+  padding: 0;
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--acira-blue);
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.acira-why-readmore:hover {
+  opacity: 0.8;
+}
+
+.acira-why-readmore svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s ease;
+}
+
+.acira-why-readmore:hover svg {
+  transform: translateX(3px);
+}
+
+/* ============================================
+   7. FAQ
+   ============================================ */
+.acira-faq {
+  padding: var(--acira-space-24) 0;
+  background: transparent;
+}
+
+.acira-faq-list {
+  max-width: var(--acira-content-width);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--acira-space-3);
+}
+
+.acira-faq-item {
+  background: transparent;
+  border-bottom: 1px solid var(--acira-border-subtle);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.acira-faq-item:first-child {
+  border-top: 1px solid var(--acira-border-subtle);
+}
+
+.acira-faq-question {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  background: none;
+  border: none;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--acira-text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.acira-faq-chevron {
+  width: 20px;
+  height: 20px;
+  color: var(--acira-text-muted);
+  flex-shrink: 0;
+}
+
+.acira-faq-answer {
+  overflow: hidden;
+}
+
+.acira-faq-answer p {
+  padding: 0 0 20px;
+  font-size: 14px;
+  color: var(--acira-text-secondary);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ============================================
+   8. CTA
+   ============================================ */
+.acira-cta {
+  padding: var(--acira-space-24) 0;
+}
+
+.acira-cta-card {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+  padding: var(--acira-space-16) var(--acira-space-6);
+  position: relative;
+}
+
+.acira-cta-title {
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--acira-text);
+  margin: 0 0 var(--acira-space-4);
+  position: relative;
+}
+
+.acira-cta-description {
+  font-size: 17px;
+  color: var(--acira-text-secondary);
+  margin: 0 0 var(--acira-space-8);
+  position: relative;
+}
+
+/* ============================================
+   9. CONTACT
+   ============================================ */
+.acira-contact {
+  padding: var(--acira-space-24) 0;
+  background: transparent;
+}
+
+.acira-contact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--acira-space-12);
+}
+
+@media (min-width: 768px) {
+  .acira-contact-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.acira-contact-info h2 {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--acira-text);
+  margin: var(--acira-space-4) 0;
+}
+
+.acira-contact-info > p {
+  font-size: 16px;
+  color: var(--acira-text-secondary);
+  margin: 0 0 var(--acira-space-8);
+  line-height: 1.7;
+}
+
+.acira-contact-email {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--acira-space-3);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--acira-text);
+  cursor: pointer;
+}
+
+.acira-contact-email svg {
+  width: 22px;
+  height: 22px;
+  color: var(--acira-blue);
+}
+
+.acira-contact-form {
+  background: transparent;
+  padding: 0;
+}
+
+.acira-form-group {
+  margin-bottom: var(--acira-space-5);
+}
+
+.acira-form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--acira-text);
+  margin-bottom: var(--acira-space-2);
+}
+
+.acira-form-group input,
+.acira-form-group textarea {
+  width: 100%;
+  padding: 12px 0;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--acira-text);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--acira-border-subtle);
+  border-radius: 0;
+  transition: border-color 0.3s ease;
+}
+
+.acira-form-group input:focus,
+.acira-form-group textarea:focus {
+  outline: none;
+  border-bottom-color: var(--acira-blue);
+}
+
+.acira-form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.acira-form-submit {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--acira-white);
+  background: var(--acira-text);
+  border: none;
+  border-radius: var(--acira-radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+html.dark-mode .acira-form-submit {
+  background: var(--acira-white);
+  color: var(--acira-black);
+}
+
+.acira-form-submit:hover {
+  opacity: 0.9;
+}
+
+.acira-form-success {
+  text-align: center;
+  padding: var(--acira-space-12);
+}
+
+.acira-form-success svg {
+  width: 56px;
+  height: 56px;
+  color: #10B981;
+  margin-bottom: var(--acira-space-4);
+}
+
+.acira-form-success h3 {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--acira-text);
+  margin: 0 0 var(--acira-space-2);
+}
+
+.acira-form-success p {
+  font-size: 15px;
+  color: var(--acira-text-secondary);
+  margin: 0;
+}
+
+/* ============================================
+   10. FOOTER
+   ============================================ */
+.acira-footer {
+  padding: var(--acira-space-16) 0 var(--acira-space-8);
+}
+
+.acira-footer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--acira-space-10);
+  margin-bottom: var(--acira-space-12);
+}
+
+@media (min-width: 768px) {
+  .acira-footer-grid {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+}
+
+.acira-footer-brand p {
+  font-size: 14px;
+  color: var(--acira-text-secondary);
+  margin: var(--acira-space-4) 0 0;
+  max-width: 280px;
+}
+
+.acira-footer-column h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--acira-text);
+  margin: 0 0 var(--acira-space-4);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.acira-footer-column a {
+  display: block;
+  font-size: 14px;
+  color: var(--acira-text-secondary);
+  text-decoration: none;
+  margin-bottom: var(--acira-space-3);
+  transition: color 0.2s ease;
+}
+
+.acira-footer-column a:hover {
+  color: var(--acira-text);
+}
+
+.acira-footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--acira-space-8);
+}
+
+.acira-footer-bottom p {
+  font-size: 13px;
+  color: var(--acira-text-muted);
+  margin: 0;
+}
+
+.acira-back-to-top {
+  display: flex;
+  align-items: center;
+  gap: var(--acira-space-2);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--acira-text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.acira-back-to-top:hover {
+  color: var(--acira-text);
+}
+
+.acira-back-to-top svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ============================================
+   MOBILE MENU
+   ============================================ */
+.acira-mobile-menu-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.acira-mobile-menu-btn:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+html.dark-mode .acira-mobile-menu-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.acira-hamburger {
+  width: 18px;
+  height: 12px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.acira-hamburger span {
+  display: block;
+  width: 100%;
+  height: 1.5px;
+  background: var(--acira-text);
+  border-radius: 1px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+}
+
+.acira-mobile-menu-btn.open .acira-hamburger span:first-child {
+  transform: translateY(5.25px) rotate(45deg);
+}
+
+.acira-mobile-menu-btn.open .acira-hamburger span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.acira-mobile-menu-btn.open .acira-hamburger span:last-child {
+  transform: translateY(-5.25px) rotate(-45deg);
+}
+
+/* Mobile Menu Overlay */
+.acira-mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(2px);
+  z-index: 998;
+}
+
+/* Mobile Menu Panel - Compact dropdown */
+.acira-mobile-menu {
+  position: fixed;
+  top: 72px;
+  right: 16px;
+  width: auto;
+  min-width: 180px;
+  max-width: 220px;
+  background: var(--acira-bg);
+  z-index: 999;
+  padding: 6px;
+  border-radius: 12px;
+  border: 1px solid var(--acira-border);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1), 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+html.dark-mode .acira-mobile-menu {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.acira-mobile-menu-links {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.acira-mobile-menu-link {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--acira-text);
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.acira-mobile-menu-link:hover {
+  background: var(--acira-bg-subtle);
+}
+
+.acira-mobile-menu-divider {
+  height: 1px;
+  background: var(--acira-border);
+  margin: 6px 0;
+}
+
+.acira-mobile-menu-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.acira-mobile-theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.acira-mobile-theme-toggle:hover {
+  background: var(--acira-bg-subtle);
+}
+
+.acira-mobile-theme-toggle span {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--acira-text);
+}
+
+.acira-mobile-theme-toggle svg {
+  width: 16px;
+  height: 16px;
+  color: var(--acira-text-secondary);
+}
+
+.acira-mobile-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 14px;
+  background: var(--acira-text);
+  color: var(--acira-bg);
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-top: 2px;
+}
+
+html.dark-mode .acira-mobile-cta {
+  background: var(--acira-white);
+  color: var(--acira-black);
+}
+
+.acira-mobile-cta:hover {
+  opacity: 0.9;
+}
+
+.acira-mobile-cta svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Show hamburger on mobile, hide on desktop */
+.acira-mobile-menu-btn {
+  display: flex;
+}
+
+@media (min-width: 768px) {
+  .acira-mobile-menu-btn {
+    display: none;
+  }
+}
+
+/* Hide desktop elements on mobile */
+.acira-desktop-only {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .acira-desktop-only {
+    display: flex;
+  }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 640px) {
+  .acira-hero-stats {
+    flex-direction: column;
+    gap: var(--acira-space-4);
+  }
+
+  .acira-why-grid {
+    grid-template-columns: 1fr;
+    gap: var(--acira-space-4);
+  }
+
+  .acira-why-card {
+    padding: var(--acira-space-4);
+  }
+
+  .acira-why-image {
+    aspect-ratio: 16 / 9;
+    margin-bottom: var(--acira-space-4);
+  }
+
+  .acira-why-title {
+    font-size: 15px;
+  }
+
+  .acira-why-description {
+    font-size: 13px;
+  }
+
+  .acira-footer-bottom {
+    flex-direction: column;
+    gap: var(--acira-space-4);
+    text-align: center;
+  }
+
+  .acira-flow {
+    gap: var(--acira-space-4);
+  }
+
+  .acira-flow-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .acira-flow-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Small mobile adjustments */
+@media (max-width: 480px) {
+  .acira-why {
+    padding: var(--acira-space-16) 0;
+  }
+
+  .acira-section-header {
+    margin-bottom: var(--acira-space-8);
+  }
+
+  .acira-section-title {
+    font-size: clamp(24px, 6vw, 36px);
+  }
+
+  .acira-why-card {
+    padding: var(--acira-space-3);
+  }
+
+  .acira-why-image {
+    border-radius: 10px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

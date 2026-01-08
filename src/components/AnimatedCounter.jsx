@@ -1,11 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 
-export const useCountUp = (end, duration = 2000, startWhen = true) => {
+export const useCountUp = (end, duration = 2000, startWhen = true, resetKey = 0) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    if (!startWhen) return;
-    
+    if (!startWhen) {
+      setCount(0);
+      return;
+    }
+
     let startTime;
     let animationFrame;
 
@@ -13,10 +16,10 @@ export const useCountUp = (end, duration = 2000, startWhen = true) => {
       if (!startTime) startTime = timestamp;
       const progress = timestamp - startTime;
       const percentage = Math.min(progress / duration, 1);
-      
+
       // Easing function for smooth animation
       const easeOutQuart = 1 - Math.pow(1 - percentage, 4);
-      
+
       setCount(Math.floor(end * easeOutQuart));
 
       if (percentage < 1) {
@@ -31,36 +34,47 @@ export const useCountUp = (end, duration = 2000, startWhen = true) => {
         cancelAnimationFrame(animationFrame);
       }
     };
-  }, [end, duration, startWhen]);
+  }, [end, duration, startWhen, resetKey]);
 
   return count;
 };
 
-export const AnimatedCounter = ({ value, suffix = '', prefix = '' }) => {
+export const AnimatedCounter = ({ value, suffix = '', prefix = '', replayOnView = true }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [resetKey, setResetKey] = useState(0);
   const ref = useRef(null);
-  const count = useCountUp(value, 2000, isVisible);
+  const wasVisible = useRef(false);
+  const count = useCountUp(value, 1500, isVisible, resetKey);
 
   useEffect(() => {
+    const currentRef = ref.current;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
+          // Only reset if we were previously not visible and replayOnView is enabled
+          if (replayOnView && wasVisible.current) {
+            setResetKey(prev => prev + 1);
+          }
           setIsVisible(true);
+          wasVisible.current = true;
+        } else if (replayOnView) {
+          setIsVisible(false);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.1 }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
-  }, []);
+  }, [replayOnView]);
 
   return (
     <span ref={ref}>
