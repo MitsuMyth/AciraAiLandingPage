@@ -214,15 +214,8 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
   const lastScrollY = useRef(0)
   const [activeNav, setActiveNav] = useState('')
   const [openFaq, setOpenFaq] = useState(null)
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    // Check localStorage first
-    const saved = localStorage.getItem('acira-theme')
-    if (saved !== null) {
-      return saved === 'dark'
-    }
-    // Fall back to device preference
-    return window.matchMedia('(prefers-color-scheme: dark)').matches
-  })
+  const [activeVisionTab, setActiveVisionTab] = useState('individuals')
+  // Light mode only - dark mode removed
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' })
   const [contactSubmitted, setContactSubmitted] = useState(false)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
@@ -230,13 +223,17 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
   const [isLoadingCount, setIsLoadingCount] = useState(true)
   const [pageKey, setPageKey] = useState(0) // For re-triggering animations on tab return
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [isFeaturesPinned, setIsFeaturesPinned] = useState(false)
+  const [featuresHeight, setFeaturesHeight] = useState(0)
 
   const featuresRef = useRef(null)
+  const featuresWrapperRef = useRef(null)
   const faqRef = useRef(null)
   const contactRef = useRef(null)
   const heroRef = useRef(null)
   const whyRef = useRef(null)
-  const laptopSectionRef = useRef(null)
+  const glowBoxRef = useRef(null)
+  const [isInDarkSection, setIsInDarkSection] = useState(false)
 
   // Parallax for hero
   const { scrollYProgress } = useScroll({
@@ -246,15 +243,15 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 150])
   const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
 
-  // Scroll-based laptop tilt animation
-  const { scrollYProgress: laptopScrollProgress } = useScroll({
-    target: laptopSectionRef,
+  // Scroll-based glow box tilt animation (like the laptop had)
+  const { scrollYProgress: glowBoxScrollProgress } = useScroll({
+    target: glowBoxRef,
     offset: ["start 0.95", "center center"]
   })
-  const laptopRotateX = useTransform(laptopScrollProgress, [0, 1], [20, 0])
-  const laptopScale = useTransform(laptopScrollProgress, [0, 1], [0.92, 1])
-  const laptopY = useTransform(laptopScrollProgress, [0, 1], [20, 0])
-  const laptopOpacity = useTransform(laptopScrollProgress, [0, 1], [0.9, 1])
+  const glowBoxRotateX = useTransform(glowBoxScrollProgress, [0, 1], [20, 0])
+  const glowBoxScale = useTransform(glowBoxScrollProgress, [0, 1], [0.92, 1])
+  const glowBoxY = useTransform(glowBoxScrollProgress, [0, 1], [30, 0])
+  const glowBoxOpacity = useTransform(glowBoxScrollProgress, [0, 1], [0.8, 1])
 
   // Track mouse for gradient effect
   useEffect(() => {
@@ -289,9 +286,9 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
   useEffect(() => {
     const scrollToTarget = (target) => {
       const refs = {
+        'vision': whyRef,
         'why-acira': whyRef,
         'about': whyRef,
-        'why-us': whyRef,
         'features': featuresRef,
         'faq': faqRef,
         'contact': contactRef
@@ -373,10 +370,27 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
           }
         }
       }
+
+      // Check if we're in the dark (Vision) section
+      if (whyRef.current) {
+        const visionRect = whyRef.current.getBoundingClientRect()
+        const isInVision = visionRect.top <= 80 && visionRect.bottom >= 80
+        setIsInDarkSection(isInVision)
+      }
+
+      // Check if Features should be pinned (scroll-triggered overlay)
+      if (featuresWrapperRef.current && featuresRef.current) {
+        const wrapperRect = featuresWrapperRef.current.getBoundingClientRect()
+        const shouldPin = wrapperRect.top <= 0
+        setIsFeaturesPinned(shouldPin)
+        if (!featuresHeight) {
+          setFeaturesHeight(featuresRef.current.offsetHeight)
+        }
+      }
     }
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [featuresHeight])
 
   // Page visibility - trigger elegant re-entry animation when returning to tab
   useEffect(() => {
@@ -390,15 +404,10 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
   }, [])
 
+  // Ensure light mode only
   useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark-mode')
-    } else {
-      document.documentElement.classList.remove('dark-mode')
-    }
-    // Save preference to localStorage
-    localStorage.setItem('acira-theme', isDarkMode ? 'dark' : 'light')
-  }, [isDarkMode])
+    document.documentElement.classList.remove('dark-mode')
+  }, [])
 
   const scrollToSection = (ref, sectionId) => {
     if (sectionId) {
@@ -429,15 +438,13 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
       <div
         className="acira-cursor-gradient"
         style={{
-          background: isDarkMode
-            ? `radial-gradient(900px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(13, 82, 255, 0.045) 0%, transparent 70%)`
-            : `radial-gradient(1000px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(13, 82, 255, 0.12) 0%, rgba(0, 180, 216, 0.06) 30%, rgba(0, 180, 216, 0.025) 50%, transparent 70%)`
+          background: `radial-gradient(1000px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(13, 82, 255, 0.12) 0%, rgba(0, 180, 216, 0.06) 30%, rgba(0, 180, 216, 0.025) 50%, transparent 70%)`
         }}
       />
 
       {/* ========== 1. NAVBAR - Professional Framer-Level ========== */}
       <motion.nav
-        className={`acira-nav ${isScrolled ? 'scrolled' : ''} ${!navVisible ? 'nav-hidden' : ''}`}
+        className={`acira-nav ${isScrolled ? 'scrolled' : ''} ${!navVisible ? 'nav-hidden' : ''} ${isInDarkSection ? 'nav-dark' : ''}`}
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: navVisible ? 0 : -100, opacity: navVisible ? 1 : 0 }}
         transition={{ duration: 0.4, ease: smoothEase }}
@@ -463,8 +470,8 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
             <div className="acira-nav-center">
               <div className="acira-nav-links">
                 {[
-                  { id: 'features', label: 'Features', ref: featuresRef },
-                  { id: 'why-us', label: 'Why Us', ref: whyRef },
+                  { id: 'features', label: 'Product', ref: featuresRef },
+                  { id: 'vision', label: 'Vision', ref: whyRef },
                   { id: 'faq', label: 'FAQ', ref: faqRef },
                   { id: 'contact', label: 'Contact', ref: contactRef }
                 ].map((item) => (
@@ -486,49 +493,6 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
 
             {/* Actions */}
             <div className="acira-nav-actions">
-              {/* Desktop theme toggle - hidden on mobile */}
-              <motion.button
-                className="acira-theme-toggle acira-desktop-only"
-                onClick={() => setIsDarkMode(!isDarkMode)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ duration: 0.3, ease: smoothEase }}
-                aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-              >
-                <AnimatePresence mode="wait">
-                  {isDarkMode ? (
-                    <motion.svg
-                      key="sun"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      initial={{ rotate: -90, opacity: 0 }}
-                      animate={{ rotate: 0, opacity: 1 }}
-                      exit={{ rotate: 90, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: smoothEase }}
-                    >
-                      <circle cx="12" cy="12" r="4"/>
-                      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
-                    </motion.svg>
-                  ) : (
-                    <motion.svg
-                      key="moon"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      initial={{ rotate: 90, opacity: 0 }}
-                      animate={{ rotate: 0, opacity: 1 }}
-                      exit={{ rotate: -90, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: smoothEase }}
-                    >
-                      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                    </motion.svg>
-                  )}
-                </AnimatePresence>
-              </motion.button>
-
               {/* Desktop CTA - hidden on mobile */}
               <motion.button
                 className="acira-nav-cta acira-desktop-only"
@@ -585,8 +549,8 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
             >
               <div className="acira-mobile-menu-links">
                 {[
-                  { id: 'features', label: 'Features', ref: featuresRef },
-                  { id: 'why-us', label: 'Why Us', ref: whyRef },
+                  { id: 'features', label: 'Product', ref: featuresRef },
+                  { id: 'vision', label: 'Vision', ref: whyRef },
                   { id: 'faq', label: 'FAQ', ref: faqRef },
                   { id: 'contact', label: 'Contact', ref: contactRef }
                 ].map((item) => (
@@ -608,24 +572,6 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
               <div className="acira-mobile-menu-divider" />
 
               <div className="acira-mobile-menu-footer">
-                {/* Theme Toggle */}
-                <button
-                  className="acira-mobile-theme-toggle"
-                  onClick={() => setIsDarkMode(!isDarkMode)}
-                >
-                  <span>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>
-                  {isDarkMode ? (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <circle cx="12" cy="12" r="4"/>
-                      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
-                    </svg>
-                  ) : (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                    </svg>
-                  )}
-                </button>
-
                 {/* CTA Button */}
                 <motion.button
                   className="acira-mobile-cta"
@@ -659,29 +605,18 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
             animate="animate"
             variants={staggerContainer}
           >
-            <motion.div
-              className="acira-hero-badge"
-              variants={fadeInUp}
-              whileHover={{ scale: 1.05, y: -2 }}
-              transition={springBouncy}
-            >
-              <span className="acira-badge-dot"></span>
-              <span>Limited Early Access</span>
-            </motion.div>
-
             <motion.h1 className="acira-hero-title" variants={fadeInUp}>
-              Your computer fixes itself.{' '}
-              <RotatingText words={['Automatically.', 'Instantly.', 'Intelligently.']} />
+              <span className="acira-title-line-1">Revolutionizing IT.</span>
+              <span className="acira-title-line-2">Introducing Acira v1</span>
             </motion.h1>
 
             <motion.p className="acira-hero-description" variants={fadeInUp}>
-              Describe your problem in plain language. Acira analyzes your system across apps
-              and applies the fix automatically. No searching, no troubleshooting.
+              Acira is the IT support expert that lives on your desktop. We are starting with instant fixes for system errors and audio & video glitches for a couple of apps, but Acira is rapidly evolving to handle every part of your digital workspace.
             </motion.p>
 
             <motion.div className="acira-hero-cta" variants={fadeInUp}>
               <MagneticButton className="acira-btn-primary" onClick={onJoinWaitlist}>
-                <span>Join Waitlist</span>
+                <span>Start tracking for free</span>
                 <motion.svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -712,55 +647,83 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
         </motion.div>
       </section>
 
-      {/* ========== SCROLL-ANIMATED LAPTOP SECTION ========== */}
-      <section className="acira-laptop-showcase" ref={laptopSectionRef}>
-        <div className="acira-laptop-showcase-inner">
+      {/* ========== GLOW BOX SHOWCASE WITH SCROLL ANIMATION ========== */}
+      <section className="acira-glow-showcase" ref={glowBoxRef}>
+        <div className="acira-glow-showcase-inner">
           <motion.div
-            className="acira-showcase-macbook"
+            className="acira-glow-box-shell"
             style={{
-              rotateX: laptopRotateX,
-              scale: laptopScale,
-              y: laptopY,
-              opacity: laptopOpacity,
+              rotateX: glowBoxRotateX,
+              scale: glowBoxScale,
+              y: glowBoxY,
+              opacity: glowBoxOpacity,
               transformPerspective: 1200,
             }}
           >
-            {/* Screen */}
-            <div className="acira-showcase-screen">
-              <div className="acira-showcase-notch">
-                <div className="acira-showcase-camera"></div>
-              </div>
-              <div className="acira-showcase-display">
-                {/* Rotating Problem Text */}
-                <div className="acira-demo">
-                  <div className="acira-demo-text acira-demo-problem-1">
-                    <h3>Microphone not working?</h3>
-                  </div>
-                  <div className="acira-demo-text acira-demo-problem-2">
-                    <h3>Camera won't turn on?</h3>
-                  </div>
-                  <div className="acira-demo-text acira-demo-problem-3">
-                    <h3>WiFi keeps disconnecting?</h3>
-                  </div>
-                  <div className="acira-demo-text acira-demo-problem-4">
-                    <h3>Bluetooth not pairing?</h3>
-                  </div>
-                  <div className="acira-demo-text acira-demo-solution">
-                    <h3>Acira fixes them all.</h3>
-                    <p>Automatically.</p>
-                  </div>
-                  <div className="acira-demo-text acira-demo-final">
-                    <h3>Your AI tech assistant.</h3>
-                    <p>Always watching. Always fixing.</p>
-                  </div>
+            {/* Glow effect */}
+            <div className="acira-glow-box-glow">
+              <div className="acira-glow-box-glow-inner"></div>
+            </div>
+            {/* Gradient border */}
+            <div className="acira-glow-box-border"></div>
+            {/* White interior */}
+            <div className="acira-glow-box-content">
+              <div className="acira-rotating-text-container">
+                <div className="acira-demo-text acira-demo-problem-1">
+                  <h3>Microphone not working?</h3>
                 </div>
-                <div className="acira-showcase-reflection"></div>
+                <div className="acira-demo-text acira-demo-problem-2">
+                  <h3>Camera won't turn on?</h3>
+                </div>
+                <div className="acira-demo-text acira-demo-problem-3">
+                  <h3>WiFi keeps disconnecting?</h3>
+                </div>
+                <div className="acira-demo-text acira-demo-problem-4">
+                  <h3>Bluetooth not pairing?</h3>
+                </div>
+                <div className="acira-demo-text acira-demo-solution">
+                  <h3>Acira fixes them all.</h3>
+                  <p>Automatically.</p>
+                </div>
+                <div className="acira-demo-text acira-demo-final">
+                  <h3>Your AI tech assistant.</h3>
+                  <p>Always watching. Always fixing.</p>
+                </div>
               </div>
             </div>
+          </motion.div>
+        </div>
+      </section>
 
-            {/* Base/Keyboard */}
-            <div className="acira-showcase-base">
-              <div className="acira-showcase-hinge"></div>
+      {/* ========== PRODUCT INTRO SECTION ========== */}
+      <section className="acira-product-intro">
+        <div className="acira-container">
+          <motion.div
+            className="acira-product-intro-content"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.3 }}
+            transition={{ duration: 0.8, ease: smoothEase }}
+          >
+            <div className="acira-product-paragraphs">
+              <motion.p
+                className="acira-product-paragraph"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.5 }}
+                transition={{ duration: 0.7, ease: smoothEase }}
+              >
+                Acira is a local IT agent that lives on your computer. You simply chat with it to report deep system errors or audio and video glitches, and it accesses your local settings to execute the technical fix immediately.
+              </motion.p>
+              <motion.p
+                className="acira-product-paragraph"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.5 }}
+                transition={{ delay: 0.1, duration: 0.7, ease: smoothEase }}
+              >
+                We are building Acira to become fully autonomous. It solves your current technical problems today while learning how to detect and prevent system failures in the future so you never have to troubleshoot your computer again.
+              </motion.p>
             </div>
           </motion.div>
         </div>
@@ -802,328 +765,125 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
         </div>
       </motion.section>
 
-      {/* ========== 4. PROBLEMS SECTION ========== */}
-      <section className="acira-problems">
-        <div className="acira-container">
-          <motion.div
-            className="acira-section-header"
-            initial={{ opacity: 0, y: 35 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.3 }}
-            transition={{ duration: 0.9, ease: smoothEase }}
-          >
-            <span className="acira-section-label">The Problem</span>
-            <h2 className="acira-section-title">Sound familiar?</h2>
-            <p className="acira-section-description">
-              Tech problems waste hours of your week. Acira solves them instantly.
-            </p>
-          </motion.div>
-        </div>
-
-        <motion.div
-          className="acira-problems-scroll"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: false, amount: 0.2 }}
-          transition={{ duration: 0.9, ease: smoothEase }}
-        >
-          {problems.map((row, rowIdx) => (
+      {/* ========== 5. FEATURES - ACIRA HELPS YOU WITH (Sticky - Vision scrolls over) ========== */}
+      <div className="acira-features-wrapper" ref={featuresWrapperRef}>
+        <section className="acira-features" ref={featuresRef} id="features">
+          <div className="acira-container">
             <motion.div
-              key={rowIdx}
-              className={`acira-problems-track ${rowIdx % 2 === 1 ? 'reverse' : ''}`}
-              initial={{ opacity: 0, y: 25 }}
+              className="acira-section-header"
+              initial={{ opacity: 0, y: 35 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: false, amount: 0.3 }}
-              transition={{ delay: rowIdx * 0.15, duration: 0.8, ease: smoothEase }}
+              transition={{ duration: 0.9, ease: smoothEase }}
             >
-              <motion.div
-                className="acira-problems-track-inner"
-                animate={{ x: rowIdx % 2 === 0 ? [0, -1000] : [-1000, 0] }}
-                transition={{ duration: 25 + rowIdx * 5, repeat: Infinity, ease: "linear" }}
-                style={{ display: 'flex', gap: 'var(--acira-space-3)' }}
-              >
-                {[...row, ...row, ...row].map((problem, idx) => (
-                  <motion.div
-                    key={idx}
-                    className="acira-problem-pill"
-                    whileHover={{ scale: 1.04, y: -2 }}
-                    transition={{ duration: 0.4, ease: smoothEase }}
-                  >
-                    <span className="question-mark">?</span>
-                    <span>{problem}</span>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </motion.div>
-          ))}
-        </motion.div>
-      </section>
-
-      {/* ========== 5. FEATURES BENTO ========== */}
-      <section className="acira-features" ref={featuresRef} id="features">
-        <div className="acira-container">
-          <motion.div
-            className="acira-section-header"
-            initial={{ opacity: 0, y: 35 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.3 }}
-            transition={{ duration: 0.9, ease: smoothEase }}
-          >
-            <span className="acira-section-label">Features</span>
-            <h2 className="acira-section-title">Everything you need</h2>
-            <p className="acira-section-description">
-              Powerful diagnostics and automatic fixes, all in one place.
-            </p>
-          </motion.div>
-
-          <motion.div
-            className="acira-bento"
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: false, amount: 0.2 }}
-          >
-            {/* Main Card */}
-            <motion.div
-              className="acira-bento-card large"
-              variants={fadeInUp}
-            >
-              <div className="acira-bento-visual">
-                {/* MacBook-style Laptop Mockup */}
-                <div className="acira-bento-macbook">
-                  {/* Screen */}
-                  <div className="acira-bento-macbook-screen">
-                    <div className="acira-bento-macbook-notch">
-                      <div className="acira-bento-macbook-camera"></div>
-                    </div>
-                    <div className="acira-bento-macbook-display">
-                      {/* Dashboard Content */}
-                      <div className="acira-bento-dashboard">
-                        <div className="acira-bento-dashboard-header">
-                          <span className="acira-mock-dot red"></span>
-                          <span className="acira-mock-dot yellow"></span>
-                          <span className="acira-mock-dot green"></span>
-                        </div>
-                        <div className="acira-bento-dashboard-stats">
-                          <div className="acira-bento-dashboard-stat">
-                            <div className="acira-bento-stat-value"><AnimatedCounter value={95} suffix="%" /></div>
-                            <div className="acira-bento-stat-label">Success</div>
-                          </div>
-                          <div className="acira-bento-dashboard-stat">
-                            <div className="acira-bento-stat-value"><AnimatedCounter value={847} /></div>
-                            <div className="acira-bento-stat-label">Fixed</div>
-                          </div>
-                        </div>
-                        <div className="acira-bento-dashboard-chart">
-                          <svg viewBox="0 0 200 40" style={{ width: '100%', height: '100%' }}>
-                            <motion.path
-                              d="M0,35 Q30,30 50,25 T100,18 T150,12 T200,8"
-                              fill="none"
-                              stroke="url(#bentoChartGradient)"
-                              strokeWidth="2"
-                              initial={{ pathLength: 0 }}
-                              whileInView={{ pathLength: 1 }}
-                              viewport={{ once: false, amount: 0.5 }}
-                              transition={{ duration: 1.5, ease: "easeOut" }}
-                            />
-                            <defs>
-                              <linearGradient id="bentoChartGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" stopColor="#0D52FF" />
-                                <stop offset="100%" stopColor="#00D4FF" />
-                              </linearGradient>
-                            </defs>
-                          </svg>
-                        </div>
-                      </div>
-                      <div className="acira-bento-macbook-reflection"></div>
-                    </div>
-                  </div>
-                  {/* Base/Hinge */}
-                  <div className="acira-bento-macbook-base">
-                    <div className="acira-bento-macbook-hinge"></div>
-                  </div>
-                </div>
-              </div>
-              <div className="acira-bento-header">
-                <span className="acira-bento-number">01</span>
-                <div className="acira-bento-content">
-                  <h3 className="acira-bento-title">Real-time Diagnostics</h3>
-                  <p className="acira-bento-description">
-                    Monitor your system health and get insights into potential issues before they become problems.
-                  </p>
-                </div>
-              </div>
+              <span className="acira-section-label">Features</span>
+              <h2 className="acira-section-title">Acira helps you with...</h2>
             </motion.div>
 
-            {/* Device Support Card */}
-            <motion.div
-              className="acira-bento-card"
-              variants={fadeInUp}
-            >
-              <div className="acira-bento-visual">
-                <div className="acira-icon-grid">
-                  {[
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>,
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>,
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z"/><path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>,
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-                  ].map((icon, i) => (
-                    <motion.div
-                      key={i}
-                      className="acira-icon-item"
-                      initial={{ opacity: 0, y: 10 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: false, amount: 0.5 }}
-                      transition={{ delay: i * 0.08, duration: 0.4, ease: smoothEase }}
-                    >
-                      {icon}
-                    </motion.div>
-                  ))}
+            <div className="acira-features-grid">
+              {/* Card 1: Fix Plans for Windows */}
+              <div className="acira-feature-card">
+                <div className="acira-feature-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    <path d="M3 9h18"/>
+                    <path d="M9 21V9"/>
+                  </svg>
                 </div>
+                <h3 className="acira-feature-title">Fix Plans for Windows</h3>
+                <p className="acira-feature-description">
+                  Acira diagnoses system failures and applies the right settings changes for you, fast and safely.
+                </p>
               </div>
-              <div className="acira-bento-header">
-                <span className="acira-bento-number">02</span>
-                <div className="acira-bento-content">
-                  <h3 className="acira-bento-title">All Devices</h3>
-                  <p className="acira-bento-description">
-                    Microphones, cameras, speakers, headphones, and displays. All supported.
-                  </p>
-                </div>
-              </div>
-            </motion.div>
 
-            {/* Stats Card */}
-            <motion.div
-              className="acira-bento-card"
-              variants={fadeInUp}
-            >
-              <div className="acira-bento-visual">
-                <div className="acira-stats-row">
-                  <div className="acira-stat-block">
-                    <span className="acira-stat-block-value"><AnimatedCounter value={30} suffix="s" /></span>
-                    <span className="acira-stat-block-label">Avg Fix</span>
-                  </div>
-                  <div className="acira-stat-block">
-                    <span className="acira-stat-block-value"><AnimatedCounter value={4} suffix="h+" /></span>
-                    <span className="acira-stat-block-label">Saved/Mo</span>
-                  </div>
+              {/* Card 2: Meeting audio and video fixes */}
+              <div className="acira-feature-card">
+                <div className="acira-feature-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <polygon points="23 7 16 12 23 17 23 7"/>
+                    <rect x="1" y="5" width="15" height="14" rx="2"/>
+                  </svg>
                 </div>
+                <h3 className="acira-feature-title">Meeting audio and video fixes</h3>
+                <p className="acira-feature-description">
+                  Get back on the call quickly when mic, speaker, or camera breaks in Zoom, Teams, Slack, Discord, and WhatsApp.
+                </p>
               </div>
-              <div className="acira-bento-header">
-                <span className="acira-bento-number">03</span>
-                <div className="acira-bento-content">
-                  <h3 className="acira-bento-title">Time Saved</h3>
-                  <p className="acira-bento-description">
-                    No more hours lost to troubleshooting. Acira works in seconds.
-                  </p>
-                </div>
-              </div>
-            </motion.div>
 
-            {/* Flow Card */}
-            <motion.div
-              className="acira-bento-card large"
-              variants={fadeInUp}
-            >
-              <div className="acira-bento-visual">
-                <div className="acira-flow">
-                  {['Detect', 'Analyze', 'Resolve'].map((step, i) => (
-                    <motion.div
-                      key={step}
-                      className="acira-flow-step"
-                      initial={{ opacity: 0, y: 15 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: false, amount: 0.5 }}
-                      transition={{ delay: i * 0.15, duration: 0.5, ease: smoothEase }}
-                    >
-                      <div className={`acira-flow-icon ${step === 'Resolve' ? 'success' : ''}`}>
-                        {step === 'Detect' && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>}
-                        {step === 'Analyze' && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>}
-                        {step === 'Resolve' && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>}
-                      </div>
-                      <span className="acira-flow-label">{step}</span>
-                    </motion.div>
-                  ))}
+              {/* Card 3: Approval before changes */}
+              <div className="acira-feature-card">
+                <div className="acira-feature-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M9 11l3 3L22 4"/>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                  </svg>
                 </div>
+                <h3 className="acira-feature-title">Approval before changes</h3>
+                <p className="acira-feature-description">
+                  You can review what Acira found, edit the request, and approve anything important before it runs.
+                </p>
               </div>
-              <div className="acira-bento-header">
-                <span className="acira-bento-number">04</span>
-                <div className="acira-bento-content">
-                  <h3 className="acira-bento-title">Automatic Resolution</h3>
-                  <p className="acira-bento-description">
-                    From detection to fix, Acira handles everything automatically. Just describe your problem.
-                  </p>
+
+              {/* Card 4: Rollback in one click */}
+              <div className="acira-feature-card">
+                <div className="acira-feature-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                    <path d="M3 3v5h5"/>
+                  </svg>
                 </div>
+                <h3 className="acira-feature-title">Rollback in one click</h3>
+                <p className="acira-feature-description">
+                  If a fix does not feel right, you can undo and return to your previous state with a clear change history.
+                </p>
               </div>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ========== 6. WHY ACIRA ========== */}
-      <section className="acira-why" ref={whyRef}>
-        <div className="acira-container">
-          <motion.div
-            className="acira-section-header"
-            initial={{ opacity: 0, y: 35 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.3 }}
-            transition={{ duration: 0.9, ease: smoothEase }}
-          >
-            <span className="acira-section-label">Why Acira</span>
-            <h2 className="acira-section-title">What makes us different</h2>
-          </motion.div>
-
-          <div className="acira-why-grid">
-            {[
-              {
-                id: 'real-time-fixes',
-                img: "https://framerusercontent.com/images/qw5i7oWkaryHAWzlESHgFYJEs.png",
-                title: "Real-Time Fixes",
-                desc: "Problems resolved instantly, without interrupting your workflow."
-              },
-              {
-                id: 'ai-intelligence',
-                img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80",
-                title: "AI Intelligence",
-                desc: "Machine learning that understands your unique system."
-              },
-              {
-                id: 'privacy-first',
-                img: "https://images.unsplash.com/photo-1510915228340-29c85a43dcfe?w=800&q=80",
-                title: "Privacy First",
-                desc: "Your data stays on your machine. We only collect what's needed."
-              }
-            ].map((card, i) => (
-              <motion.div
-                key={card.title}
-                className="acira-why-card"
-                initial={{ opacity: 0, y: 35 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.3 }}
-                transition={{ delay: i * 0.15, duration: 0.8, ease: smoothEase }}
-              >
-                <div className="acira-why-image">
-                  <img src={card.img} alt={card.title} />
-                </div>
-                <div className="acira-why-content">
-                  <h3 className="acira-why-title">{card.title}</h3>
-                  <p className="acira-why-description">{card.desc}</p>
-                  <motion.button
-                    className="acira-why-readmore"
-                    onClick={() => onNavigateToWhyDetail && onNavigateToWhyDetail(card.id)}
-                    whileHover={{ x: 4 }}
-                    transition={{ duration: 0.2, ease: smoothEase }}
-                  >
-                    Read more
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
-                  </motion.button>
-                </div>
-              </motion.div>
-            ))}
+            </div>
           </div>
+        </section>
+        {/* Spacer - Vision starts overlapping during this space */}
+        <div className="acira-features-spacer" />
+      </div>
+
+      {/* ========== BOTTOM LAYER - Scrolls over sticky features ========== */}
+      <div className="acira-bottom-layer">
+      {/* ========== 6. VISION SECTION - Two Columns ========== */}
+      <section className="acira-vision" ref={whyRef} id="vision">
+        <div className="acira-container">
+          <motion.div
+            className="acira-section-header"
+            initial={{ opacity: 0, y: 35 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.3 }}
+            transition={{ duration: 0.9, ease: smoothEase }}
+          >
+            <span className="acira-section-label">Vision</span>
+            <h2 className="acira-section-title">Your Trusted 24/7 IT Agent</h2>
+          </motion.div>
+
+          {/* Vision Two Columns */}
+          <motion.div
+            className="acira-vision-columns"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.3 }}
+            transition={{ delay: 0.1, duration: 0.7, ease: smoothEase }}
+          >
+            {/* For Individuals - with card background */}
+            <div className="acira-vision-card">
+              <h3 className="acira-vision-card-title">For Individuals</h3>
+              <p className="acira-vision-card-text">
+                We are building Acira into an IT agent that lives on your desktop. You describe what is going wrong and Acira finds the cause and applies the fix, not just advice.
+              </p>
+            </div>
+
+            {/* For IT Teams and OEMs */}
+            <div className="acira-vision-column">
+              <h3 className="acira-vision-column-title">For IT Teams and OEMs</h3>
+              <p className="acira-vision-column-text">
+                We are building Acira to be the first line of support for fleets, not just one computer. It diagnoses common failures across devices, applies approved fixes consistently, and documents every change so IT teams can audit and standardize outcomes.
+              </p>
+            </div>
+          </motion.div>
         </div>
       </section>
 
@@ -1137,8 +897,7 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
             viewport={{ once: false, amount: 0.3 }}
             transition={{ duration: 0.9, ease: smoothEase }}
           >
-            <span className="acira-section-label">FAQ</span>
-            <h2 className="acira-section-title">Common questions</h2>
+            <h2 className="acira-section-title">Questions</h2>
           </motion.div>
 
           <div className="acira-faq-list">
@@ -1422,6 +1181,8 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
           </div>
         </div>
       </footer>
+      </div>
+      {/* ========== END BOTTOM LAYER ========== */}
     </div>
   )
 }

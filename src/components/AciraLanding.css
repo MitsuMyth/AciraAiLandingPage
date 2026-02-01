@@ -77,18 +77,7 @@
   --acira-content-width: 720px;
 }
 
-/* Dark Mode */
-html.dark-mode {
-  --acira-bg: var(--acira-black);
-  --acira-bg-subtle: var(--acira-gray-900);
-  --acira-bg-muted: var(--acira-gray-800);
-  --acira-surface: var(--acira-gray-900);
-  --acira-text: var(--acira-gray-100);
-  --acira-text-secondary: var(--acira-gray-400);
-  --acira-text-muted: var(--acira-gray-500);
-  --acira-border: var(--acira-gray-800);
-  --acira-border-subtle: var(--acira-gray-900);
-}
+/* Light mode only - dark mode removed */
 
 /* ============================================
    BASE STYLES
@@ -104,8 +93,16 @@ html {
   color: var(--acira-text);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow-x: clip; /* clip instead of hidden - doesn't break sticky */
   position: relative;
+}
+
+/* Bottom content wrapper - scrolls over the fixed features */
+.acira-bottom-layer {
+  position: relative;
+  z-index: 10;
+  margin-top: -100vh;
+  padding-top: 0;
 }
 
 /* Cursor gradient follow */
@@ -145,46 +142,84 @@ html.dark-mode .acira-cursor-gradient {
   left: 0;
   right: 0;
   z-index: 1000;
-  padding: 12px 20px;
-  transition: padding 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .acira-nav.scrolled {
-  padding: 8px 20px;
+  padding: 0;
 }
 
 @media (min-width: 768px) {
   .acira-nav {
-    padding: 16px 40px;
+    padding: 0;
   }
 
   .acira-nav.scrolled {
-    padding: 10px 40px;
+    padding: 0;
   }
 }
 
 .acira-nav-wrapper {
-  max-width: 1280px;
-  margin: 0 auto;
-  background: rgba(255, 255, 255, 0.85);
+  max-width: 100%;
+  margin: 0;
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(16px) saturate(150%);
   -webkit-backdrop-filter: blur(16px) saturate(150%);
-  border: 1px solid rgba(0, 0, 0, 0.04);
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 0;
+  box-shadow: none;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 html.dark-mode .acira-nav-wrapper {
-  background: rgba(10, 10, 12, 0.85);
-  border-color: rgba(255, 255, 255, 0.04);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  background: rgba(10, 10, 12, 0.92);
+  border-color: rgba(255, 255, 255, 0.06);
+  box-shadow: none;
 }
 
 .acira-nav.scrolled .acira-nav-wrapper {
-  background: rgba(255, 255, 255, 0.92);
-  border-color: rgba(0, 0, 0, 0.06);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* Dark navbar when in Vision section */
+.acira-nav.nav-dark .acira-nav-wrapper {
+  background: rgba(10, 10, 15, 0.95);
+  border-color: rgba(255, 255, 255, 0.08);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+}
+
+.acira-nav.nav-dark .acira-logo-text {
+  color: #ffffff;
+}
+
+.acira-nav.nav-dark .acira-nav-link {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.acira-nav.nav-dark .acira-nav-link:hover {
+  color: #ffffff;
+}
+
+.acira-nav.nav-dark .acira-theme-toggle {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.acira-nav.nav-dark .acira-theme-toggle:hover {
+  color: #ffffff;
+}
+
+.acira-nav.nav-dark .acira-nav-cta {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+  color: #ffffff;
+}
+
+.acira-nav.nav-dark .acira-hamburger span {
+  background: #ffffff;
 }
 
 html.dark-mode .acira-nav.scrolled .acira-nav-wrapper {
@@ -197,14 +232,16 @@ html.dark-mode .acira-nav.scrolled .acira-nav-wrapper {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 52px;
-  padding: 0 16px;
+  height: 56px;
+  padding: 0 24px;
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
 @media (min-width: 768px) {
   .acira-nav-inner {
-    height: 54px;
-    padding: 0 20px;
+    height: 60px;
+    padding: 0 48px;
   }
 }
 
@@ -268,8 +305,8 @@ html.dark-mode .acira-nav.scrolled .acira-nav-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 16px;
-  font-size: 13px;
+  padding: 10px 20px;
+  font-size: 15px;
   font-weight: 500;
   color: var(--acira-text-secondary);
   text-decoration: none;
@@ -387,27 +424,23 @@ html.dark-mode .acira-nav-back:hover {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 18px;
+  padding: 10px 20px;
   font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0;
   color: #FFFFFF;
-  background: var(--acira-gray-900);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
   border: none;
-  border-radius: 10px;
+  border-radius: 50px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-html.dark-mode .acira-nav-cta {
-  background: #ffffff;
-  color: var(--acira-gray-900);
-}
-
 .acira-nav-cta:hover {
-  opacity: 0.85;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #9333ea 100%);
   transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
 }
 
 .acira-nav-cta:active {
@@ -421,16 +454,16 @@ html.dark-mode .acira-nav-cta {
 }
 
 .acira-nav-cta:hover svg {
-  transform: translateX(2px);
+  transform: translateX(3px);
 }
 
 html.dark-mode .acira-nav-cta {
-  background: var(--acira-gray-100);
-  color: var(--acira-gray-900);
+  background: #ffffff;
+  color: #18181B;
 }
 
 html.dark-mode .acira-nav-cta:hover {
-  background: var(--acira-white);
+  background: #F4F4F5;
 }
 
 /* Hide CTA text on mobile, show arrow only */
@@ -519,12 +552,24 @@ html.dark-mode .acira-hero::before {
 }
 
 .acira-hero-title {
-  font-size: clamp(40px, 5.5vw, 64px);
+  font-size: clamp(48px, 7vw, 80px);
   font-weight: 600;
-  line-height: 1.08;
-  letter-spacing: -0.035em;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
   color: var(--acira-text);
-  margin: 0 0 var(--acira-space-5);
+  margin: 0 0 var(--acira-space-6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.acira-title-line-1 {
+  display: block;
+}
+
+.acira-title-line-2 {
+  display: block;
 }
 
 .acira-rotating-wrapper {
@@ -546,11 +591,11 @@ html.dark-mode .acira-hero::before {
 }
 
 .acira-hero-description {
-  font-size: 18px;
-  line-height: 1.65;
+  font-size: 20px;
+  line-height: 1.6;
   color: var(--acira-text-secondary);
-  margin: 0 auto var(--acira-space-5);
-  max-width: 520px;
+  margin: 0 auto var(--acira-space-8);
+  max-width: 640px;
   text-align: center;
   font-weight: 400;
 }
@@ -566,39 +611,33 @@ html.dark-mode .acira-hero::before {
 .acira-btn-primary {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px 28px;
-  font-size: 15px;
+  gap: 12px;
+  padding: 16px 32px;
+  font-size: 16px;
   font-weight: 500;
-  color: var(--acira-white);
-  background: var(--acira-text);
+  color: #ffffff;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
   border: none;
-  border-radius: 12px;
+  border-radius: 50px;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   letter-spacing: -0.01em;
 }
 
 .acira-btn-primary:hover {
-  box-shadow: var(--acira-shadow-xl);
-}
-
-.acira-btn-primary.gradient {
-  background: var(--acira-gradient);
-}
-
-.acira-btn-primary.gradient:hover {
-  box-shadow: var(--acira-shadow-glow), var(--acira-shadow-xl);
-}
-
-html.dark-mode .acira-btn-primary:not(.gradient) {
-  background: var(--acira-white);
-  color: var(--acira-black);
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #9333ea 100%);
+  box-shadow: 0 10px 40px rgba(139, 92, 246, 0.3);
+  transform: translateY(-2px);
 }
 
 .acira-btn-primary svg {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s ease;
+}
+
+.acira-btn-primary:hover svg {
+  transform: translateX(3px);
 }
 
 .acira-btn-secondary {
@@ -1251,16 +1290,16 @@ html.dark-mode .acira-btn-primary:not(.gradient) {
    3. INTEGRATIONS MARQUEE
    ============================================ */
 .acira-integrations {
-  padding: var(--acira-space-16) 0;
+  padding: var(--acira-space-20) 0;
   overflow: hidden;
 }
 
 .acira-integrations-label {
   text-align: center;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
   color: var(--acira-text-muted);
-  margin: 0 0 var(--acira-space-8);
+  margin: 0 0 var(--acira-space-10);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -1282,9 +1321,9 @@ html.dark-mode .acira-btn-primary:not(.gradient) {
 .acira-integration-item {
   display: flex;
   align-items: center;
-  gap: var(--acira-space-2);
+  gap: var(--acira-space-3);
   flex-shrink: 0;
-  padding: 8px 16px;
+  padding: 12px 24px;
   cursor: default;
   opacity: 0.7;
   transition: opacity 0.3s ease;
@@ -1295,13 +1334,13 @@ html.dark-mode .acira-btn-primary:not(.gradient) {
 }
 
 .acira-integration-item svg {
-  width: 20px;
-  height: 20px;
+  width: 28px;
+  height: 28px;
   flex-shrink: 0;
 }
 
 .acira-integration-item span {
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 500;
   color: var(--acira-text-secondary);
 }
@@ -1340,12 +1379,12 @@ html.dark-mode .acira-btn-primary:not(.gradient) {
 }
 
 .acira-section-title {
-  font-size: clamp(26px, 4vw, 40px);
+  font-size: clamp(32px, 5vw, 52px);
   font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
   color: var(--acira-text);
-  margin: 0 0 var(--acira-space-3);
+  margin: 0 0 var(--acira-space-4);
 }
 
 .acira-section-description {
@@ -1416,10 +1455,25 @@ html.dark-mode .acira-problem-pill:hover {
 /* ============================================
    5. FEATURES BENTO - Professional Quality
    ============================================ */
+/* Features wrapper - controls when sticky behavior ends */
+.acira-features-wrapper {
+  position: relative;
+  z-index: 1;
+}
+
+/* Features - sticky within wrapper, Vision overlays it */
 .acira-features {
   padding: var(--acira-space-24) 0;
+  padding-bottom: var(--acira-space-24);
   background: transparent;
-  position: relative;
+  position: sticky;
+  top: 0;
+}
+
+/* Spacer after Features - determines when sticky Features ends */
+.acira-features-spacer {
+  height: 100vh;
+  pointer-events: none;
 }
 
 .acira-bento {
@@ -2299,11 +2353,16 @@ html.dark-mode .acira-why-icon {
 }
 
 /* ============================================
-   7. FAQ
+   7. FAQ - LIGHT THEME
    ============================================ */
 .acira-faq {
   padding: var(--acira-space-24) 0;
-  background: transparent;
+  background: #0a0a0f;
+}
+
+.acira-faq .acira-section-title {
+  color: #ffffff;
+  font-size: clamp(36px, 6vw, 56px);
 }
 
 .acira-faq-list {
@@ -2311,18 +2370,17 @@ html.dark-mode .acira-why-icon {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: var(--acira-space-3);
+  gap: 0;
 }
 
 .acira-faq-item {
   background: transparent;
-  border-bottom: 1px solid var(--acira-border-subtle);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   overflow: hidden;
-  transition: all 0.3s ease;
 }
 
 .acira-faq-item:first-child {
-  border-top: 1px solid var(--acira-border-subtle);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .acira-faq-question {
@@ -2330,20 +2388,25 @@ html.dark-mode .acira-why-icon {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 0;
+  padding: 24px 0;
   background: none;
   border: none;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
-  color: var(--acira-text);
+  color: #ffffff;
   text-align: left;
   cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.acira-faq-question:hover {
+  opacity: 0.8;
 }
 
 .acira-faq-chevron {
   width: 20px;
   height: 20px;
-  color: var(--acira-text-muted);
+  color: rgba(255, 255, 255, 0.5);
   flex-shrink: 0;
 }
 
@@ -2352,9 +2415,9 @@ html.dark-mode .acira-why-icon {
 }
 
 .acira-faq-answer p {
-  padding: 0 0 20px;
-  font-size: 14px;
-  color: var(--acira-text-secondary);
+  padding: 0 0 24px;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.7);
   line-height: 1.7;
   margin: 0;
 }
@@ -2364,6 +2427,7 @@ html.dark-mode .acira-why-icon {
    ============================================ */
 .acira-cta {
   padding: var(--acira-space-24) 0;
+  background: transparent;
 }
 
 .acira-cta-card {
@@ -2467,9 +2531,14 @@ html.dark-mode .acira-why-icon {
   color: var(--acira-text);
   background: transparent;
   border: none;
-  border-bottom: 1px solid var(--acira-border-subtle);
+  border-bottom: 1px solid var(--acira-border);
   border-radius: 0;
   transition: border-color 0.3s ease;
+}
+
+.acira-form-group input::placeholder,
+.acira-form-group textarea::placeholder {
+  color: var(--acira-text-muted);
 }
 
 .acira-form-group input:focus,
@@ -2485,20 +2554,15 @@ html.dark-mode .acira-why-icon {
 
 .acira-form-submit {
   width: 100%;
-  padding: 12px;
-  font-size: 14px;
+  padding: 14px;
+  font-size: 15px;
   font-weight: 500;
-  color: var(--acira-white);
+  color: #ffffff;
   background: var(--acira-text);
   border: none;
   border-radius: var(--acira-radius-md);
   cursor: pointer;
   transition: all 0.2s ease;
-}
-
-html.dark-mode .acira-form-submit {
-  background: var(--acira-white);
-  color: var(--acira-black);
 }
 
 .acira-form-submit:hover {
@@ -2535,6 +2599,7 @@ html.dark-mode .acira-form-submit {
    ============================================ */
 .acira-footer {
   padding: var(--acira-space-16) 0 var(--acira-space-8);
+  background: transparent;
 }
 
 .acira-footer-grid {
@@ -2584,6 +2649,7 @@ html.dark-mode .acira-form-submit {
   justify-content: space-between;
   align-items: center;
   padding-top: var(--acira-space-8);
+  border-top: 1px solid var(--acira-border);
 }
 
 .acira-footer-bottom p {
@@ -2774,31 +2840,33 @@ html.dark-mode .acira-mobile-menu {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 10px 14px;
-  background: var(--acira-text);
-  color: var(--acira-bg);
+  gap: 10px;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+  color: #ffffff;
   border: none;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s ease;
-  margin-top: 2px;
-}
-
-html.dark-mode .acira-mobile-cta {
-  background: var(--acira-white);
-  color: var(--acira-black);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-top: 8px;
+  width: 100%;
 }
 
 .acira-mobile-cta:hover {
-  opacity: 0.9;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #9333ea 100%);
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
 }
 
 .acira-mobile-cta svg {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s ease;
+}
+
+.acira-mobile-cta:hover svg {
+  transform: translateX(3px);
 }
 
 /* Show hamburger on mobile, hide on desktop */
@@ -2906,5 +2974,389 @@ html.dark-mode .acira-mobile-cta {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   GLOW BOX SHOWCASE WITH SCROLL ANIMATION
+   ============================================ */
+.acira-glow-showcase {
+  position: relative;
+  padding: 40px 0 100px;
+  overflow: visible;
+}
+
+.acira-glow-showcase-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  justify-content: center;
+  perspective: 1200px;
+}
+
+/* Glow Box Shell */
+.acira-glow-box-shell {
+  --bw: 2px;
+  --outerRadius: 32px;
+  --innerRadius: 28px;
+  --grad: linear-gradient(90deg, #60A5FA, #22D3EE, #C084FC, #F472B6, #60A5FA);
+  --gradSize: 400% 100%;
+
+  width: min(900px, 92vw);
+  height: clamp(240px, 45vh, 400px);
+  position: relative;
+  isolation: isolate;
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+
+/* Glow effect */
+.acira-glow-box-glow {
+  position: absolute;
+  inset: -8px;
+  border-radius: var(--outerRadius);
+  overflow: hidden;
+  z-index: 0;
+  filter: blur(16px);
+  opacity: 0.55;
+  transition: opacity 0.5s;
+  pointer-events: none;
+}
+
+.acira-glow-box-glow-inner {
+  width: 100%;
+  height: 100%;
+  background: var(--grad);
+  background-size: var(--gradSize);
+  animation: glow-gradient-flow 6s ease-in-out infinite;
+}
+
+/* Gradient border ring */
+.acira-glow-box-border {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--innerRadius);
+  z-index: 1;
+  pointer-events: none;
+  background: var(--grad);
+  background-size: var(--gradSize);
+  animation: glow-gradient-flow 6s ease-in-out infinite;
+  padding: var(--bw);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* White interior content */
+.acira-glow-box-content {
+  position: absolute;
+  inset: var(--bw);
+  border-radius: calc(var(--innerRadius) - var(--bw));
+  background: #fff;
+  z-index: 2;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.acira-glow-box-shell:hover .acira-glow-box-glow {
+  opacity: 0.75;
+}
+
+@keyframes glow-gradient-flow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Rotating text inside glow box */
+.acira-rotating-text-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+}
+
+.acira-rotating-text-container .acira-demo-text {
+  position: absolute;
+  opacity: 0;
+  animation-duration: 18s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+.acira-rotating-text-container .acira-demo-text h3 {
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 600;
+  color: var(--acira-text);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.acira-rotating-text-container .acira-demo-text p {
+  font-size: clamp(18px, 3vw, 24px);
+  color: var(--acira-text-secondary);
+  margin: 16px 0 0;
+}
+
+/* Reuse the same keyframe animations */
+.acira-rotating-text-container .acira-demo-problem-1 { animation-name: demo-fade-1; }
+.acira-rotating-text-container .acira-demo-problem-2 { animation-name: demo-fade-2; }
+.acira-rotating-text-container .acira-demo-problem-3 { animation-name: demo-fade-3; }
+.acira-rotating-text-container .acira-demo-problem-4 { animation-name: demo-fade-4; }
+.acira-rotating-text-container .acira-demo-solution { animation-name: demo-fade-5; }
+.acira-rotating-text-container .acira-demo-final { animation-name: demo-fade-6; }
+
+@media (max-width: 768px) {
+  .acira-glow-showcase {
+    padding: 20px 0 60px;
+  }
+
+  .acira-glow-box-shell {
+    --outerRadius: 24px;
+    --innerRadius: 20px;
+    height: clamp(200px, 35vh, 300px);
+  }
+
+  .acira-glow-box-glow {
+    filter: blur(12px);
+  }
+
+  .acira-rotating-text-container {
+    padding: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .acira-glow-box-glow-inner,
+  .acira-glow-box-border {
+    animation: none;
+    background-position: 0% 50%;
+  }
+}
+
+/* ============================================
+   PRODUCT INTRO SECTION
+   ============================================ */
+.acira-product-intro {
+  padding: var(--acira-space-16) 0 var(--acira-space-24);
+}
+
+.acira-product-intro-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.acira-product-paragraphs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--acira-space-10);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.acira-product-paragraph {
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--acira-text);
+  text-align: left;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 768px) {
+  .acira-product-intro {
+    padding: var(--acira-space-12) 0 var(--acira-space-16);
+  }
+
+  .acira-product-paragraph {
+    font-size: clamp(22px, 5vw, 28px);
+    text-align: left;
+  }
+}
+
+/* ============================================
+   FEATURES GRID (4 CARDS)
+   ============================================ */
+.acira-features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .acira-features-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+.acira-feature-card {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 20px;
+  padding: var(--acira-space-8);
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+}
+
+.acira-feature-icon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(139, 92, 246, 0.08) 100%);
+  border-radius: 14px;
+  margin-bottom: auto;
+}
+
+.acira-feature-icon svg {
+  width: 26px;
+  height: 26px;
+  color: #6366f1;
+}
+
+.acira-feature-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--acira-text);
+  margin: var(--acira-space-8) 0 var(--acira-space-3);
+  letter-spacing: -0.02em;
+}
+
+.acira-feature-description {
+  font-size: 16px;
+  color: var(--acira-text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+@media (max-width: 480px) {
+  .acira-feature-card {
+    padding: var(--acira-space-6);
+  }
+
+  .acira-feature-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .acira-feature-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .acira-feature-title {
+    font-size: 16px;
+  }
+
+  .acira-feature-description {
+    font-size: 13px;
+  }
+}
+
+/* ============================================
+   VISION SECTION - DARK WITH CURVED TOP
+   ============================================ */
+.acira-vision {
+  position: relative;
+  padding: 140px 0 80px;
+  margin-top: 0;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  width: 100vw;
+  background: #0a0a0f;
+  color: #ffffff;
+  overflow: visible;
+  border-radius: 48px 48px 0 0;
+}
+
+.acira-vision .acira-section-label {
+  color: var(--acira-cyan);
+}
+
+.acira-vision .acira-section-title {
+  color: #ffffff;
+}
+
+.acira-vision .acira-section-header {
+  padding: 0 24px;
+}
+
+/* Vision Two-Column Layout */
+.acira-vision-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--acira-space-8);
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* For Individuals - Card with darker background */
+.acira-vision-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: var(--acira-space-8);
+}
+
+.acira-vision-card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 var(--acira-space-4);
+}
+
+.acira-vision-card-text {
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+/* For IT Teams - No card, just text */
+.acira-vision-column {
+  padding: var(--acira-space-8) 0;
+}
+
+.acira-vision-column-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 var(--acira-space-4);
+}
+
+.acira-vision-column-text {
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .acira-vision {
+    padding: 100px 0 60px;
+    margin-top: 0;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    width: 100vw;
+    border-radius: 32px 32px 0 0;
+  }
+
+  .acira-vision-columns {
+    grid-template-columns: 1fr;
+    gap: var(--acira-space-6);
   }
 }

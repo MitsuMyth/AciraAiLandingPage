@@ -84,38 +84,7 @@
   --duration-base: 200ms;
 }
 
-/* ============================================
-   3. DARK MODE VARIABLES
-   ============================================ */
-
-html.dark-mode {
-  --color-white: #000000;
-  --color-black: #FFFFFF;
-  --color-gray-50: #0A0A0A;
-  --color-gray-100: #141414;
-  --color-gray-200: #1F1F1F;
-  --color-gray-300: #2E2E2E;
-  --color-gray-400: #6B6B6B;
-  --color-gray-500: #9B9B9B;
-  --color-gray-600: #CCCCCC;
-  --color-gray-700: #E0E0E0;
-  --color-gray-800: #F0F0F0;
-  --color-gray-900: #FAFAFA;
-  
-  --color-bg: var(--color-white);
-  --color-surface: var(--color-gray-50);
-  --color-border: var(--color-gray-200);
-  --color-text: var(--color-black);
-  --color-text-secondary: var(--color-gray-600);
-  --color-text-tertiary: var(--color-gray-400);
-  
-  /* Dotted Grid - Dark Mode */
-  --dot-color: rgba(13, 82, 255, 0.18);
-  
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.6);
-}
+/* Light mode only - dark mode removed */
 
 /* ============================================
    4. RESET
