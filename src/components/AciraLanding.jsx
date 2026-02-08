@@ -218,7 +218,6 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
   // Light mode only - dark mode removed
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' })
   const [contactSubmitted, setContactSubmitted] = useState(false)
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [waitlistCount, setWaitlistCount] = useState(0)
   const [isLoadingCount, setIsLoadingCount] = useState(true)
   const [pageKey, setPageKey] = useState(0) // For re-triggering animations on tab return
@@ -252,15 +251,6 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
   const glowBoxScale = useTransform(glowBoxScrollProgress, [0, 1], [0.92, 1])
   const glowBoxY = useTransform(glowBoxScrollProgress, [0, 1], [30, 0])
   const glowBoxOpacity = useTransform(glowBoxScrollProgress, [0, 1], [0.8, 1])
-
-  // Track mouse for gradient effect
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY })
-    }
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
 
   // Save scroll position on scroll (for page refresh restoration)
   useEffect(() => {
@@ -434,13 +424,7 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
       {/* Scroll Progress Indicator */}
       <ScrollProgress />
 
-      {/* Cursor gradient follow effect */}
-      <div
-        className="acira-cursor-gradient"
-        style={{
-          background: `radial-gradient(1000px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(13, 82, 255, 0.12) 0%, rgba(0, 180, 216, 0.06) 30%, rgba(0, 180, 216, 0.025) 50%, transparent 70%)`
-        }}
-      />
+      {/* Cursor gradient follow effect - removed for clean white SaaS style */}
 
       {/* ========== 1. NAVBAR - Professional Framer-Level ========== */}
       <motion.nav
@@ -611,7 +595,7 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
             </motion.h1>
 
             <motion.p className="acira-hero-description" variants={fadeInUp}>
-              Acira is the IT support expert that lives on your desktop. We are starting with instant fixes for system errors and audio & video glitches for a couple of apps, but Acira is rapidly evolving to handle every part of your digital workspace.
+              Your AI-powered IT agent that fixes system errors and audio & video issues instantly.
             </motion.p>
 
             <motion.div className="acira-hero-cta" variants={fadeInUp}>
@@ -713,7 +697,7 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
                 viewport={{ once: false, amount: 0.5 }}
                 transition={{ duration: 0.7, ease: smoothEase }}
               >
-                Acira is a local IT agent that lives on your computer. You simply chat with it to report deep system errors or audio and video glitches, and it accesses your local settings to execute the technical fix immediately.
+                Chat with Acira about any system issue and it applies the fix automatically.
               </motion.p>
               <motion.p
                 className="acira-product-paragraph"
@@ -722,7 +706,7 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
                 viewport={{ once: false, amount: 0.5 }}
                 transition={{ delay: 0.1, duration: 0.7, ease: smoothEase }}
               >
-                We are building Acira to become fully autonomous. It solves your current technical problems today while learning how to detect and prevent system failures in the future so you never have to troubleshoot your computer again.
+                Solving problems today, preventing failures tomorrow — so you never troubleshoot again.
               </motion.p>
             </div>
           </motion.div>

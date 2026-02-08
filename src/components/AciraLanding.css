@@ -41,7 +41,8 @@
   --acira-border-subtle: var(--acira-gray-100);
 
   /* Typography */
-  --acira-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --acira-font: 'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --acira-font-display: 'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
   /* Spacing */
   --acira-space-1: 4px;
@@ -214,7 +215,7 @@ html.dark-mode .acira-nav-wrapper {
 }
 
 .acira-nav.nav-dark .acira-nav-cta {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+  background: rgba(255, 255, 255, 0.12);
   color: #ffffff;
 }
 
@@ -232,7 +233,7 @@ html.dark-mode .acira-nav.scrolled .acira-nav-wrapper {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 56px;
+  height: 48px;
   padding: 0 24px;
   max-width: 1280px;
   margin: 0 auto;
@@ -240,7 +241,7 @@ html.dark-mode .acira-nav.scrolled .acira-nav-wrapper {
 
 @media (min-width: 768px) {
   .acira-nav-inner {
-    height: 60px;
+    height: 52px;
     padding: 0 48px;
   }
 }
@@ -273,10 +274,10 @@ html.dark-mode .acira-nav.scrolled .acira-nav-wrapper {
 }
 
 .acira-logo-text {
-  font-family: 'PowerGrotesk', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 19px;
-  font-weight: 400;
-  letter-spacing: 0.02em;
+  font-family: var(--acira-font-display);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
   color: var(--acira-text);
 }
 
@@ -305,16 +306,16 @@ html.dark-mode .acira-nav.scrolled .acira-nav-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 20px;
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--acira-text-secondary);
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--acira-gray-500);
   text-decoration: none;
-  transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: color 0.2s ease;
 }
 
 .acira-nav-link:hover {
-  color: var(--acira-text);
+  color: var(--acira-gray-800);
 }
 
 .acira-nav-link-text {
@@ -323,26 +324,9 @@ html.dark-mode .acira-nav.scrolled .acira-nav-wrapper {
   letter-spacing: 0.01em;
 }
 
-/* Animated underline indicator - only on hover with glow */
+/* Nav link indicator - hidden for clean SaaS style */
 .acira-nav-link-indicator {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%) scaleX(0);
-  width: 24px;
-  height: 2px;
-  background: var(--acira-blue, #0D52FF);
-  border-radius: 2px;
-  opacity: 0;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow:
-    0 0 8px rgba(13, 82, 255, 0.6),
-    0 0 16px rgba(13, 82, 255, 0.4);
-}
-
-.acira-nav-link:hover .acira-nav-link-indicator {
-  transform: translateX(-50%) scaleX(1);
-  opacity: 1;
+  display: none;
 }
 
 /* Back Button (for detail pages) */
@@ -419,51 +403,40 @@ html.dark-mode .acira-nav-back:hover {
   height: 20px;
 }
 
-/* CTA Button */
+/* CTA Button - text-only with subtle background */
 .acira-nav-cta {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
+  gap: 6px;
+  padding: 8px 18px;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  letter-spacing: 0;
-  color: #FFFFFF;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+  letter-spacing: -0.01em;
+  color: #18181B;
+  background: var(--acira-gray-100);
   border: none;
-  border-radius: 50px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s ease;
 }
 
 .acira-nav-cta:hover {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #9333ea 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+  background: var(--acira-gray-200);
 }
 
 .acira-nav-cta:active {
-  transform: translateY(0);
+  background: var(--acira-gray-300);
 }
 
 .acira-nav-cta svg {
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
   transition: transform 0.2s ease;
 }
 
 .acira-nav-cta:hover svg {
-  transform: translateX(3px);
-}
-
-html.dark-mode .acira-nav-cta {
-  background: #ffffff;
-  color: #18181B;
-}
-
-html.dark-mode .acira-nav-cta:hover {
-  background: #F4F4F5;
+  transform: translateX(2px);
 }
 
 /* Hide CTA text on mobile, show arrow only */
@@ -489,27 +462,22 @@ html.dark-mode .acira-nav-cta:hover {
   min-height: auto;
   display: flex;
   align-items: center;
-  padding: 130px 0 24px;
+  padding: 140px 0 80px;
   position: relative;
   overflow: hidden;
 }
 
-/* Subtle dotted background - works with mouse cursor glow */
+/* Diamond-star dotted grid behind hero - Framer style, fades to edges */
 .acira-hero::before {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle, rgba(13, 82, 255, 0.12) 1px, transparent 1px);
-  background-size: 28px 28px;
-  mask-image: radial-gradient(ellipse 100% 80% at 50% 30%, black 0%, transparent 75%);
-  -webkit-mask-image: radial-gradient(ellipse 100% 80% at 50% 30%, black 0%, transparent 75%);
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 22 C30.2 27 27 30.2 22 30 C27 29.8 29.8 33 30 38 C29.8 33 33 29.8 38 30 C33 30.2 30.2 27 30 22Z' fill='%23000' fill-opacity='0.18'/%3E%3C/svg%3E");
+  background-size: 60px 60px;
+  background-position: center center;
+  mask-image: radial-gradient(ellipse 40% 40% at 50% 40%, black 0%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 40% 40% at 50% 40%, black 0%, transparent 70%);
   pointer-events: none;
-  opacity: 0.6;
-}
-
-html.dark-mode .acira-hero::before {
-  background-image: radial-gradient(circle, rgba(13, 82, 255, 0.2) 1px, transparent 1px);
-  opacity: 0.5;
 }
 
 .acira-hero-grid {
@@ -552,8 +520,9 @@ html.dark-mode .acira-hero::before {
 }
 
 .acira-hero-title {
-  font-size: clamp(48px, 7vw, 80px);
-  font-weight: 600;
+  font-family: 'General Sans', var(--acira-font);
+  font-size: clamp(36px, 5vw, 57px);
+  font-weight: 500;
   line-height: 1.1;
   letter-spacing: -0.03em;
   color: var(--acira-text);
@@ -611,9 +580,9 @@ html.dark-mode .acira-hero::before {
 .acira-btn-primary {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px 32px;
-  font-size: 16px;
+  gap: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
   font-weight: 500;
   color: #ffffff;
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
@@ -626,13 +595,13 @@ html.dark-mode .acira-hero::before {
 
 .acira-btn-primary:hover {
   background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #9333ea 100%);
-  box-shadow: 0 10px 40px rgba(139, 92, 246, 0.3);
-  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.25);
+  transform: translateY(-1px);
 }
 
 .acira-btn-primary svg {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   transition: transform 0.3s ease;
 }
 
@@ -675,7 +644,7 @@ html.dark-mode .acira-hero::before {
 
 .acira-stat-value {
   font-size: 26px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.02em;
   color: var(--acira-text);
   line-height: 1;
@@ -975,7 +944,7 @@ html.dark-mode .acira-hero::before {
 
 .acira-demo-text h3 {
   font-size: clamp(16px, 3vw, 28px);
-  font-weight: 600;
+  font-weight: 500;
   color: #ffffff;
   margin: 0;
   letter-spacing: -0.02em;
@@ -1363,7 +1332,7 @@ html.dark-mode .acira-hero::before {
   align-items: center;
   gap: 6px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--acira-blue);
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -1380,8 +1349,8 @@ html.dark-mode .acira-hero::before {
 
 .acira-section-title {
   font-size: clamp(32px, 5vw, 52px);
-  font-weight: 600;
-  line-height: 1.15;
+  font-weight: 500;
+  line-height: 1.1;
   letter-spacing: -0.03em;
   color: var(--acira-text);
   margin: 0 0 var(--acira-space-4);
@@ -1538,14 +1507,6 @@ html.dark-mode .acira-bento-card {
   position: relative;
 }
 
-html.dark-mode .acira-bento-visual {
-  background: linear-gradient(135deg,
-    rgba(13, 82, 255, 0.08) 0%,
-    rgba(0, 212, 255, 0.04) 50%,
-    rgba(13, 82, 255, 0.06) 100%
-  );
-}
-
 .acira-bento-card.large .acira-bento-visual {
   height: 320px;
   padding: 24px 0;
@@ -1687,7 +1648,7 @@ html.dark-mode .acira-bento-dashboard-stat {
 
 .acira-bento-stat-value {
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--acira-text);
   letter-spacing: -0.02em;
 }
@@ -1761,7 +1722,7 @@ html.dark-mode .acira-bento-dashboard-chart {
 
 .acira-bento-number {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--acira-blue);
   flex-shrink: 0;
   margin-top: 3px;
@@ -1774,7 +1735,7 @@ html.dark-mode .acira-bento-dashboard-chart {
 
 .acira-bento-title {
   font-size: 17px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--acira-text);
   margin: 0 0 6px;
   letter-spacing: -0.02em;
@@ -2001,7 +1962,7 @@ html.dark-mode .acira-mock-stat {
 
 .acira-mock-stat-value {
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--acira-text);
   letter-spacing: -0.02em;
 }
@@ -2124,7 +2085,7 @@ html.dark-mode .acira-icon-item {
 
 .acira-stat-block-value {
   font-size: 36px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--acira-text);
   letter-spacing: -0.03em;
   line-height: 1;
@@ -2298,10 +2259,6 @@ html.dark-mode .acira-why-card:hover {
   margin-bottom: var(--acira-space-3);
 }
 
-html.dark-mode .acira-why-icon {
-  background: linear-gradient(135deg, rgba(13, 82, 255, 0.15) 0%, rgba(0, 212, 255, 0.08) 100%);
-}
-
 .acira-why-icon svg {
   width: 20px;
   height: 20px;
@@ -2310,7 +2267,7 @@ html.dark-mode .acira-why-icon {
 
 .acira-why-title {
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--acira-text);
   margin: 0;
   letter-spacing: -0.01em;
@@ -2440,8 +2397,8 @@ html.dark-mode .acira-why-icon {
 
 .acira-cta-title {
   font-size: clamp(24px, 4vw, 36px);
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-weight: 500;
+  letter-spacing: -0.03em;
   color: var(--acira-text);
   margin: 0 0 var(--acira-space-4);
   position: relative;
@@ -2476,7 +2433,7 @@ html.dark-mode .acira-why-icon {
 
 .acira-contact-info h2 {
   font-size: 32px;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: -0.02em;
   color: var(--acira-text);
   margin: var(--acira-space-4) 0;
@@ -2583,7 +2540,7 @@ html.dark-mode .acira-why-icon {
 
 .acira-form-success h3 {
   font-size: 22px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--acira-text);
   margin: 0 0 var(--acira-space-2);
 }
@@ -2624,7 +2581,7 @@ html.dark-mode .acira-why-icon {
 
 .acira-footer-column h4 {
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--acira-text);
   margin: 0 0 var(--acira-space-4);
   text-transform: uppercase;
@@ -2840,13 +2797,13 @@ html.dark-mode .acira-mobile-menu {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 14px 24px;
+  gap: 8px;
+  padding: 12px 20px;
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
   color: #ffffff;
   border: none;
   border-radius: 50px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -3011,38 +2968,26 @@ html.dark-mode .acira-mobile-menu {
   will-change: transform, opacity;
 }
 
-/* Glow effect */
+/* Glow effect - hidden, using box-shadow on border instead */
 .acira-glow-box-glow {
-  position: absolute;
-  inset: -8px;
-  border-radius: var(--outerRadius);
-  overflow: hidden;
-  z-index: 0;
-  filter: blur(16px);
-  opacity: 0.55;
-  transition: opacity 0.5s;
-  pointer-events: none;
+  display: none;
 }
 
-.acira-glow-box-glow-inner {
-  width: 100%;
-  height: 100%;
-  background: var(--grad);
-  background-size: var(--gradSize);
-  animation: glow-gradient-flow 6s ease-in-out infinite;
-}
-
-/* Gradient border ring */
+/* Gradient border ring + glow */
 .acira-glow-box-border {
   position: absolute;
   inset: 0;
-  border-radius: var(--innerRadius);
+  border-radius: var(--outerRadius);
   z-index: 1;
   pointer-events: none;
   background: var(--grad);
   background-size: var(--gradSize);
   animation: glow-gradient-flow 6s ease-in-out infinite;
   padding: var(--bw);
+  box-shadow:
+    0 0 30px rgba(96, 165, 250, 0.35),
+    0 0 60px rgba(34, 211, 238, 0.2),
+    0 0 90px rgba(192, 132, 252, 0.15);
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
@@ -3054,17 +2999,25 @@ html.dark-mode .acira-mobile-menu {
 .acira-glow-box-content {
   position: absolute;
   inset: var(--bw);
-  border-radius: calc(var(--innerRadius) - var(--bw));
+  border-radius: calc(var(--outerRadius) - var(--bw));
   background: #fff;
   z-index: 2;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.06),
+    0 0 30px rgba(96, 165, 250, 0.3),
+    0 0 60px rgba(34, 211, 238, 0.15),
+    0 0 90px rgba(192, 132, 252, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.acira-glow-box-shell:hover .acira-glow-box-glow {
-  opacity: 0.75;
+.acira-glow-box-shell:hover .acira-glow-box-content {
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.06),
+    0 0 40px rgba(96, 165, 250, 0.4),
+    0 0 80px rgba(34, 211, 238, 0.25),
+    0 0 110px rgba(192, 132, 252, 0.15);
 }
 
 @keyframes glow-gradient-flow {
@@ -3095,7 +3048,7 @@ html.dark-mode .acira-mobile-menu {
 
 .acira-rotating-text-container .acira-demo-text h3 {
   font-size: clamp(28px, 5vw, 48px);
-  font-weight: 600;
+  font-weight: 500;
   color: var(--acira-text);
   margin: 0;
   letter-spacing: -0.02em;
@@ -3126,8 +3079,12 @@ html.dark-mode .acira-mobile-menu {
     height: clamp(200px, 35vh, 300px);
   }
 
-  .acira-glow-box-glow {
-    filter: blur(12px);
+  .acira-glow-box-content {
+    box-shadow:
+      0 1px 2px rgba(0,0,0,0.06),
+      0 0 20px rgba(96, 165, 250, 0.25),
+      0 0 40px rgba(34, 211, 238, 0.12),
+      0 0 60px rgba(192, 132, 252, 0.08);
   }
 
   .acira-rotating-text-container {
@@ -3228,8 +3185,8 @@ html.dark-mode .acira-mobile-menu {
 }
 
 .acira-feature-title {
-  font-size: 22px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 500;
   color: var(--acira-text);
   margin: var(--acira-space-8) 0 var(--acira-space-3);
   letter-spacing: -0.02em;
@@ -3314,7 +3271,7 @@ html.dark-mode .acira-mobile-menu {
 
 .acira-vision-card-title {
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 500;
   color: #ffffff;
   margin: 0 0 var(--acira-space-4);
 }
@@ -3333,7 +3290,7 @@ html.dark-mode .acira-mobile-menu {
 
 .acira-vision-column-title {
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 500;
   color: #ffffff;
   margin: 0 0 var(--acira-space-4);
 }
