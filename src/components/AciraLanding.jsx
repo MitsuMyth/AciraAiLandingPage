@@ -642,7 +642,7 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
             <div className="acira-glow-box-content">
               <video
                 className="acira-glow-box-video"
-                src="/Acira raw demo_1.mov"
+                src="/acira-demo.mp4"
                 autoPlay
                 loop
                 muted
