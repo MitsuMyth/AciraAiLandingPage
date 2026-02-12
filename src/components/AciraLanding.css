@@ -1487,12 +1487,6 @@ html.dark-mode .acira-problem-pill:hover {
   pointer-events: none;
 }
 
-@media (max-width: 768px) {
-  .acira-features-spacer {
-    height: 160vh;
-  }
-}
-
 .acira-bento {
   display: grid;
   grid-template-columns: 1fr;
