@@ -23,8 +23,8 @@ const integrations = [
     icon: <svg viewBox="0 0 24 24" fill="none"><path d="M20.625 6.547h-5.11v8.828h5.422a.937.937 0 00.938-.937V7.797a1.25 1.25 0 00-1.25-1.25z" fill="#5059C9"/><circle cx="18.75" cy="4.219" r="1.875" fill="#5059C9"/><path d="M14.063 6.547H5.938a1.25 1.25 0 00-1.25 1.25v7.187a4.064 4.064 0 004.062 4.063h2.5a4.064 4.064 0 004.063-4.063V7.797a1.25 1.25 0 00-1.25-1.25z" fill="#7B83EB"/><circle cx="10" cy="4.219" r="2.5" fill="#7B83EB"/></svg>
   },
   {
-    name: 'Google Meet',
-    icon: <svg viewBox="0 0 24 24" fill="none"><path d="M14.5 10.25v3.5l4 3V7.25l-4 3z" fill="#00832D"/><path d="M5.5 6.5h6a2 2 0 012 2v7a2 2 0 01-2 2h-6a2 2 0 01-2-2v-7a2 2 0 012-2z" fill="#00AC47"/><path d="M14.5 10.25l4-3v2.25l-4 2.5v-1.75z" fill="#FFBC00"/><path d="M14.5 13.75v-1.75l4 2.5v2.25l-4-3z" fill="#0066DA"/><path d="M5.5 6.5h6a2 2 0 012 2v.5l-8 5.5V8.5a2 2 0 012-2z" fill="#00832D"/></svg>
+    name: 'WhatsApp',
+    icon: <svg viewBox="0 0 24 24" fill="none"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2z" fill="#25D366"/><path d="M17.47 14.38c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.49s1.07 2.89 1.22 3.09c.15.2 2.1 3.21 5.1 4.5.71.31 1.27.49 1.7.63.72.23 1.37.2 1.88.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.13-.27-.2-.57-.35z" fill="#fff"/></svg>
   },
   {
     name: 'Discord',
@@ -33,18 +33,6 @@ const integrations = [
   {
     name: 'Slack',
     icon: <svg viewBox="0 0 24 24" fill="none"><path d="M6.77 14.33a1.79 1.79 0 11-1.79-1.79h1.79v1.79zm.9 0a1.79 1.79 0 113.57 0v4.47a1.79 1.79 0 11-3.58 0v-4.47z" fill="#E01E5A"/><path d="M9.67 6.77a1.79 1.79 0 111.79-1.79v1.79H9.67zm0 .9a1.79 1.79 0 110 3.57H5.2a1.79 1.79 0 110-3.58h4.47z" fill="#36C5F0"/><path d="M17.23 9.67a1.79 1.79 0 111.79 1.79h-1.79V9.67zm-.9 0a1.79 1.79 0 11-3.57 0V5.2a1.79 1.79 0 113.58 0v4.47z" fill="#2EB67D"/><path d="M14.33 17.23a1.79 1.79 0 11-1.79 1.79v-1.79h1.79zm0-.9a1.79 1.79 0 110-3.57h4.47a1.79 1.79 0 110 3.58h-4.47z" fill="#ECB22E"/></svg>
-  },
-  {
-    name: 'Skype',
-    icon: <svg viewBox="0 0 24 24" fill="none"><path d="M20.17 14.2a8.64 8.64 0 00.2-1.87 8.33 8.33 0 00-8.7-7.93 8.6 8.6 0 00-1.5.13 4.93 4.93 0 00-6.64 6.27 8.64 8.64 0 00-.2 1.87 8.33 8.33 0 008.7 7.93c.51 0 1.01-.04 1.5-.13a4.93 4.93 0 006.64-6.27z" fill="#00AFF0"/><path d="M15.4 14.62c-.18.47-.47.88-.84 1.2-.38.33-.85.58-1.4.75-.55.17-1.19.26-1.9.26-.85 0-1.57-.11-2.16-.33a4.1 4.1 0 01-1.5-.92 2.63 2.63 0 01-.73-1.1 1.04 1.04 0 01.27-.77c.2-.21.47-.32.81-.32.28 0 .51.08.7.23.18.15.34.37.48.66.16.34.34.62.53.85.19.22.44.4.75.54.31.14.73.21 1.25.21.52 0 .97-.1 1.35-.3.37-.2.56-.49.56-.86 0-.3-.1-.54-.29-.72-.2-.18-.47-.33-.8-.44-.34-.11-.79-.23-1.35-.35-.74-.16-1.37-.36-1.89-.6a2.87 2.87 0 01-1.17-.9c-.28-.38-.42-.86-.42-1.43 0-.54.15-1.02.46-1.43.31-.41.75-.73 1.33-.95a5.6 5.6 0 012.02-.33c.62 0 1.16.07 1.63.2.47.14.87.32 1.18.55.32.23.55.48.7.75.16.27.24.54.24.82 0 .28-.1.53-.3.75-.21.22-.47.33-.78.33-.27 0-.48-.06-.64-.19-.15-.13-.31-.33-.5-.6a2.33 2.33 0 00-.65-.73c-.24-.17-.6-.25-1.09-.25-.45 0-.83.08-1.13.25-.3.17-.45.38-.45.62 0 .16.05.3.14.42.1.12.23.22.4.32.17.1.36.17.55.23.2.06.5.14.9.24.52.11 1 .24 1.43.39.44.15.82.33 1.14.56.33.22.58.5.77.85.18.34.27.76.27 1.26 0 .58-.15 1.1-.45 1.57z" fill="#fff"/></svg>
-  },
-  {
-    name: 'WebEx',
-    icon: <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#00B140"/><path d="M12 6.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zm0 9.5a4 4 0 110-8 4 4 0 010 8z" fill="#fff"/><circle cx="12" cy="12" r="2" fill="#fff"/></svg>
-  },
-  {
-    name: 'FaceTime',
-    icon: <svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#34C759"/><path d="M6 8.5v7a1 1 0 001 1h7a1 1 0 001-1v-7a1 1 0 00-1-1H7a1 1 0 00-1 1z" fill="#fff"/><path d="M15 10.5l3.5-2v7l-3.5-2v-3z" fill="#fff"/></svg>
   },
 ]
 
@@ -248,8 +236,8 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
     offset: ["start 0.95", "center center"]
   })
   const glowBoxRotateX = useTransform(glowBoxScrollProgress, [0, 1], [20, 0])
-  const glowBoxScale = useTransform(glowBoxScrollProgress, [0, 1], [0.92, 1])
-  const glowBoxY = useTransform(glowBoxScrollProgress, [0, 1], [30, 0])
+  const glowBoxScale = useTransform(glowBoxScrollProgress, [0, 1], [0.88, 1.02])
+  const glowBoxY = useTransform(glowBoxScrollProgress, [0, 1], [40, 0])
   const glowBoxOpacity = useTransform(glowBoxScrollProgress, [0, 1], [0.8, 1])
 
   // Save scroll position on scroll (for page refresh restoration)
@@ -600,7 +588,7 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
 
             <motion.div className="acira-hero-cta" variants={fadeInUp}>
               <MagneticButton className="acira-btn-primary" onClick={onJoinWaitlist}>
-                <span>Start tracking for free</span>
+                <span>Get Early Access</span>
                 <motion.svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -652,28 +640,14 @@ function AciraLanding({ onJoinWaitlist, onNavigateToWhyDetail, scrollTarget }) {
             <div className="acira-glow-box-border"></div>
             {/* White interior */}
             <div className="acira-glow-box-content">
-              <div className="acira-rotating-text-container">
-                <div className="acira-demo-text acira-demo-problem-1">
-                  <h3>Microphone not working?</h3>
-                </div>
-                <div className="acira-demo-text acira-demo-problem-2">
-                  <h3>Camera won't turn on?</h3>
-                </div>
-                <div className="acira-demo-text acira-demo-problem-3">
-                  <h3>WiFi keeps disconnecting?</h3>
-                </div>
-                <div className="acira-demo-text acira-demo-problem-4">
-                  <h3>Bluetooth not pairing?</h3>
-                </div>
-                <div className="acira-demo-text acira-demo-solution">
-                  <h3>Acira fixes them all.</h3>
-                  <p>Automatically.</p>
-                </div>
-                <div className="acira-demo-text acira-demo-final">
-                  <h3>Your AI tech assistant.</h3>
-                  <p>Always watching. Always fixing.</p>
-                </div>
-              </div>
+              <video
+                className="acira-glow-box-video"
+                src="/Acira raw demo_1.mov"
+                autoPlay
+                loop
+                muted
+                playsInline
+              />
             </div>
           </motion.div>
         </div>

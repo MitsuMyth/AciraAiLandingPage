@@ -215,7 +215,7 @@ html.dark-mode .acira-nav-wrapper {
 }
 
 .acira-nav.nav-dark .acira-nav-cta {
-  background: rgba(255, 255, 255, 0.12);
+  background: transparent;
   color: #ffffff;
 }
 
@@ -403,7 +403,7 @@ html.dark-mode .acira-nav-back:hover {
   height: 20px;
 }
 
-/* CTA Button - text-only with subtle background */
+/* CTA Button - transparent */
 .acira-nav-cta {
   display: flex;
   align-items: center;
@@ -414,7 +414,7 @@ html.dark-mode .acira-nav-back:hover {
   font-weight: 500;
   letter-spacing: -0.01em;
   color: #18181B;
-  background: var(--acira-gray-100);
+  background: transparent;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -422,11 +422,11 @@ html.dark-mode .acira-nav-back:hover {
 }
 
 .acira-nav-cta:hover {
-  background: var(--acira-gray-200);
+  background: transparent;
 }
 
 .acira-nav-cta:active {
-  background: var(--acira-gray-300);
+  background: transparent;
 }
 
 .acira-nav-cta svg {
@@ -467,16 +467,18 @@ html.dark-mode .acira-nav-back:hover {
   overflow: hidden;
 }
 
-/* Diamond-star dotted grid behind hero - Framer style, fades to edges */
+/* Plus-sign grid behind hero - fades out from center around title */
 .acira-hero::before {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 22 C30.2 27 27 30.2 22 30 C27 29.8 29.8 33 30 38 C29.8 33 33 29.8 38 30 C33 30.2 30.2 27 30 22Z' fill='%23000' fill-opacity='0.18'/%3E%3C/svg%3E");
-  background-size: 60px 60px;
+  background-image: url("data:image/svg+xml,%3Csvg width='48' height='48' viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cline x1='24' y1='19' x2='24' y2='29' stroke='%23C0C0CC' stroke-width='1' stroke-linecap='round'/%3E%3Cline x1='19' y1='24' x2='29' y2='24' stroke='%23C0C0CC' stroke-width='1' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size: 48px 48px;
   background-position: center center;
-  mask-image: radial-gradient(ellipse 40% 40% at 50% 40%, black 0%, transparent 70%);
-  -webkit-mask-image: radial-gradient(ellipse 40% 40% at 50% 40%, black 0%, transparent 70%);
+  mask-image: radial-gradient(ellipse 30% 32% at 50% 42%, transparent 0%, transparent 85%, black 100%), radial-gradient(ellipse 65% 60% at 50% 42%, black 0%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 30% 32% at 50% 42%, transparent 0%, transparent 85%, black 100%), radial-gradient(ellipse 65% 60% at 50% 42%, black 0%, transparent 70%);
+  mask-composite: intersect;
+  -webkit-mask-composite: source-in;
   pointer-events: none;
 }
 
@@ -578,31 +580,71 @@ html.dark-mode .acira-nav-back:hover {
 }
 
 .acira-btn-primary {
+  --grad: linear-gradient(90deg, #60A5FA, #22D3EE, #C084FC, #F472B6, #60A5FA);
+  --gradSize: 400% 100%;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  font-size: 14px;
+  gap: 12px;
+  padding: 18px 36px;
+  font-size: 17px;
   font-weight: 500;
-  color: #ffffff;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+  color: #3042E6;
+  background: #ffffff;
   border: none;
   border-radius: 50px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   letter-spacing: -0.01em;
+  position: relative;
+  isolation: isolate;
+  z-index: 0;
+  box-shadow:
+    0 0 12px rgba(96, 165, 250, 0.25),
+    0 0 24px rgba(34, 211, 238, 0.15),
+    0 0 36px rgba(192, 132, 252, 0.1);
+}
+
+/* No pseudo glow — using box-shadow instead */
+.acira-btn-primary::before {
+  display: none;
+}
+
+/* Gradient border ring — mask out the interior so only the edge shows */
+.acira-btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: -1.5px;
+  border-radius: 50px;
+  background: var(--grad);
+  background-size: var(--gradSize);
+  animation: gradient-flow 6s ease-in-out infinite;
+  opacity: 0.55;
+  z-index: -1;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1.5px;
 }
 
 .acira-btn-primary:hover {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #9333ea 100%);
-  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.25);
   transform: translateY(-1px);
+  box-shadow:
+    0 0 16px rgba(96, 165, 250, 0.35),
+    0 0 32px rgba(34, 211, 238, 0.2),
+    0 0 48px rgba(192, 132, 252, 0.15);
+}
+
+.acira-btn-primary:hover::after {
+  opacity: 0.65;
 }
 
 .acira-btn-primary svg {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   transition: transform 0.3s ease;
+  stroke: #3042E6;
 }
 
 .acira-btn-primary:hover svg {
@@ -2511,19 +2553,19 @@ html.dark-mode .acira-why-card:hover {
 
 .acira-form-submit {
   width: 100%;
-  padding: 14px;
-  font-size: 15px;
+  padding: 16px;
+  font-size: 16px;
   font-weight: 500;
   color: #ffffff;
-  background: var(--acira-text);
+  background: #3042E6;
   border: none;
-  border-radius: var(--acira-radius-md);
+  border-radius: 50px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background 0.2s ease;
 }
 
 .acira-form-submit:hover {
-  opacity: 0.9;
+  background: #2535c4;
 }
 
 .acira-form-success {
@@ -2794,32 +2836,59 @@ html.dark-mode .acira-mobile-menu {
 }
 
 .acira-mobile-cta {
+  --grad: linear-gradient(90deg, #60A5FA, #22D3EE, #C084FC, #F472B6, #60A5FA);
+  --gradSize: 400% 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 12px 20px;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
-  color: #ffffff;
+  gap: 12px;
+  padding: 16px 20px;
+  background: transparent;
+  color: #3042E6;
   border: none;
   border-radius: 50px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   margin-top: 8px;
   width: 100%;
+  position: relative;
+  isolation: isolate;
+  z-index: 0;
+}
+
+.acira-mobile-cta::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50px;
+  background: var(--grad);
+  background-size: var(--gradSize);
+  animation: gradient-flow 6s ease-in-out infinite;
+  filter: blur(10px);
+  opacity: 0.4;
+  z-index: -2;
+}
+
+.acira-mobile-cta::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50px;
+  background: #ffffff;
+  z-index: -1;
 }
 
 .acira-mobile-cta:hover {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #9333ea 100%);
-  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+  transform: translateY(-1px);
 }
 
 .acira-mobile-cta svg {
   width: 16px;
   height: 16px;
   transition: transform 0.2s ease;
+  stroke: #3042E6;
 }
 
 .acira-mobile-cta:hover svg {
@@ -2939,12 +3008,12 @@ html.dark-mode .acira-mobile-menu {
    ============================================ */
 .acira-glow-showcase {
   position: relative;
-  padding: 40px 0 100px;
+  padding: 0 0 30vh;
   overflow: visible;
 }
 
 .acira-glow-showcase-inner {
-  max-width: 1000px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 24px;
   display: flex;
@@ -2955,39 +3024,49 @@ html.dark-mode .acira-mobile-menu {
 /* Glow Box Shell */
 .acira-glow-box-shell {
   --bw: 2px;
-  --outerRadius: 32px;
-  --innerRadius: 28px;
+  --radius: 32px;
   --grad: linear-gradient(90deg, #60A5FA, #22D3EE, #C084FC, #F472B6, #60A5FA);
   --gradSize: 400% 100%;
 
-  width: min(900px, 92vw);
-  height: clamp(240px, 45vh, 400px);
+  width: min(960px, 90vw);
+  height: clamp(340px, 60vh, 600px);
   position: relative;
   isolation: isolate;
   transform-style: preserve-3d;
   will-change: transform, opacity;
 }
 
-/* Glow effect - hidden, using box-shadow on border instead */
+/* Glow - gradient directly on element, blurred, fully rounded */
 .acira-glow-box-glow {
+  position: absolute;
+  inset: -14px;
+  border-radius: calc(var(--radius) + 14px);
+  background: var(--grad);
+  background-size: var(--gradSize);
+  animation: gradient-flow 6s ease-in-out infinite;
+  filter: blur(20px);
+  opacity: 0.55;
+  transition: opacity 0.5s;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Inner not needed — hide it */
+.acira-glow-box-glow-inner {
   display: none;
 }
 
-/* Gradient border ring + glow */
+/* Gradient border ring */
 .acira-glow-box-border {
   position: absolute;
   inset: 0;
-  border-radius: var(--outerRadius);
+  border-radius: var(--radius);
   z-index: 1;
   pointer-events: none;
   background: var(--grad);
   background-size: var(--gradSize);
-  animation: glow-gradient-flow 6s ease-in-out infinite;
+  animation: gradient-flow 6s ease-in-out infinite;
   padding: var(--bw);
-  box-shadow:
-    0 0 30px rgba(96, 165, 250, 0.35),
-    0 0 60px rgba(34, 211, 238, 0.2),
-    0 0 90px rgba(192, 132, 252, 0.15);
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
@@ -2999,28 +3078,29 @@ html.dark-mode .acira-mobile-menu {
 .acira-glow-box-content {
   position: absolute;
   inset: var(--bw);
-  border-radius: calc(var(--outerRadius) - var(--bw));
+  border-radius: calc(var(--radius) - var(--bw));
   background: #fff;
   z-index: 2;
-  box-shadow:
-    0 1px 2px rgba(0,0,0,0.06),
-    0 0 30px rgba(96, 165, 250, 0.3),
-    0 0 60px rgba(34, 211, 238, 0.15),
-    0 0 90px rgba(192, 132, 252, 0.1);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.acira-glow-box-shell:hover .acira-glow-box-content {
-  box-shadow:
-    0 1px 2px rgba(0,0,0,0.06),
-    0 0 40px rgba(96, 165, 250, 0.4),
-    0 0 80px rgba(34, 211, 238, 0.25),
-    0 0 110px rgba(192, 132, 252, 0.15);
+.acira-glow-box-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: inherit;
 }
 
-@keyframes glow-gradient-flow {
+.acira-glow-box-shell:hover .acira-glow-box-glow {
+  opacity: 0.75;
+}
+
+@keyframes gradient-flow {
   0%   { background-position: 0% 50%; }
   50%  { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
@@ -3070,21 +3150,16 @@ html.dark-mode .acira-mobile-menu {
 
 @media (max-width: 768px) {
   .acira-glow-showcase {
-    padding: 20px 0 60px;
+    padding: 20px 0 20vh;
   }
 
   .acira-glow-box-shell {
-    --outerRadius: 24px;
-    --innerRadius: 20px;
-    height: clamp(200px, 35vh, 300px);
+    --radius: 24px;
+    height: clamp(220px, 45vh, 400px);
   }
 
   .acira-glow-box-content {
-    box-shadow:
-      0 1px 2px rgba(0,0,0,0.06),
-      0 0 20px rgba(96, 165, 250, 0.25),
-      0 0 40px rgba(34, 211, 238, 0.12),
-      0 0 60px rgba(192, 132, 252, 0.08);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
   }
 
   .acira-rotating-text-container {
@@ -3093,8 +3168,10 @@ html.dark-mode .acira-mobile-menu {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .acira-glow-box-glow-inner,
-  .acira-glow-box-border {
+  .acira-glow-box-glow,
+  .acira-glow-box-border,
+  .acira-btn-primary::before,
+  .acira-mobile-cta::before {
     animation: none;
     background-position: 0% 50%;
   }
