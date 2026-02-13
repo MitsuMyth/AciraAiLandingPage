@@ -475,8 +475,14 @@ html.dark-mode .acira-nav-back:hover {
   background-image: url("data:image/svg+xml,%3Csvg width='48' height='48' viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cline x1='24' y1='19' x2='24' y2='29' stroke='%23C0C0CC' stroke-width='1' stroke-linecap='round'/%3E%3Cline x1='19' y1='24' x2='29' y2='24' stroke='%23C0C0CC' stroke-width='1' stroke-linecap='round'/%3E%3C/svg%3E");
   background-size: 48px 48px;
   background-position: center center;
-  mask-image: radial-gradient(ellipse 30% 32% at 50% 42%, transparent 0%, transparent 85%, black 100%), radial-gradient(ellipse 65% 60% at 50% 42%, black 0%, transparent 70%);
-  -webkit-mask-image: radial-gradient(ellipse 30% 32% at 50% 42%, transparent 0%, transparent 85%, black 100%), radial-gradient(ellipse 65% 60% at 50% 42%, black 0%, transparent 70%);
+  mask-image:
+    radial-gradient(ellipse 28% 30% at 50% 42%, transparent 0%, transparent 90%, black 100%),
+    linear-gradient(to right, transparent 0%, black 25%, black 75%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 18%, black 75%, transparent 100%);
+  -webkit-mask-image:
+    radial-gradient(ellipse 28% 30% at 50% 42%, transparent 0%, transparent 90%, black 100%),
+    linear-gradient(to right, transparent 0%, black 25%, black 75%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 18%, black 75%, transparent 100%);
   mask-composite: intersect;
   -webkit-mask-composite: source-in;
   pointer-events: none;
